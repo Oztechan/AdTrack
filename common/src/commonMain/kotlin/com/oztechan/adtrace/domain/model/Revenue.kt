@@ -8,9 +8,10 @@ import kotlinx.datetime.LocalDate
 
 enum class Period {
     TODAY,
-    LAST_7_DAYS,
-    THIS_MONTH,
-    LAST_90_DAYS
+    LAST_30_DAYS,
+    LAST_90_DAYS,
+    LAST_365_DAYS,
+    LIFETIME
 }
 
 data class RevenueSummary(

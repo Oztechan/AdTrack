@@ -32,9 +32,10 @@ import kotlin.math.abs
 
 fun Period.label(): String = when (this) {
     Period.TODAY -> "Today"
-    Period.LAST_7_DAYS -> "Last 7 Days"
-    Period.THIS_MONTH -> "This Month"
+    Period.LAST_30_DAYS -> "Last 30 Days"
     Period.LAST_90_DAYS -> "Last 90 Days"
+    Period.LAST_365_DAYS -> "Last Year"
+    Period.LIFETIME -> "Lifetime"
 }
 
 @Composable
@@ -144,7 +145,7 @@ fun AppRevenueRow(
 @Composable
 private fun SummaryCardPreview() {
     AdTraceTheme {
-        SummaryCard(RevenueSummary(Period.LAST_7_DAYS, "USD", 128.42, 15_420, 312, 101.1, 27.0))
+        SummaryCard(RevenueSummary(Period.LAST_30_DAYS, "USD", 128.42, 15_420, 312, 101.1, 27.0))
     }
 }
 
@@ -160,6 +161,6 @@ private fun AppRevenueRowPreview() {
 @Composable
 private fun PeriodSelectorPreview() {
     AdTraceTheme {
-        PeriodSelector(selected = Period.LAST_7_DAYS, onSelected = {})
+        PeriodSelector(selected = Period.LAST_30_DAYS, onSelected = {})
     }
 }

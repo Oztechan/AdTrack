@@ -46,7 +46,7 @@ class AppDetailViewModelTest {
     @Test
     fun load_resolves_the_app_and_its_series() = runTest(dispatcher) {
         val repository = repository()
-        val viewModel = AppDetailViewModel(repository, appId = "app1", appName = "App One", period = Period.LAST_7_DAYS)
+        val viewModel = AppDetailViewModel(repository, appId = "app1", appName = "App One", period = Period.LAST_30_DAYS)
         advanceUntilIdle()
 
         assertEquals("app1", viewModel.state.value.app?.appId)

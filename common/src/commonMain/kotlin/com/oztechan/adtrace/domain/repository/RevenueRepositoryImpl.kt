@@ -37,12 +37,13 @@ class RevenueRepositoryImpl(
     override suspend fun getSummary(period: Period): RevenueSummary = cached("summary_$period") {
         val account = getAccount()
         val current = report(account, periodCalculator.currentRange(period, account.reportingTimeZone))
-        val previous = report(account, periodCalculator.previousRange(period, account.reportingTimeZone))
+        val previousEarnings = periodCalculator.previousRange(period, account.reportingTimeZone)
+            ?.let { ReportMapper.totalEarnings(report(account, it)) }
         ReportMapper.toSummary(
             rows = current,
             period = period,
             currencyCode = account.currencyCode,
-            previousEarnings = ReportMapper.totalEarnings(previous)
+            previousEarnings = previousEarnings
         )
     }
 

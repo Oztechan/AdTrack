@@ -84,7 +84,7 @@ class RevenueRepositoryImplTest {
                 )
             )
         }
-        repo(api).getAppRevenueSeries(Period.LAST_7_DAYS, appId = "app-77")
+        repo(api).getAppRevenueSeries(Period.LAST_30_DAYS, appId = "app-77")
 
         val filter = api.specs.last().dimensionFilters?.firstOrNull()
         assertEquals("APP", filter?.dimension)
@@ -94,7 +94,7 @@ class RevenueRepositoryImplTest {
     @Test
     fun app_breakdown_requests_app_dimension() = runTest {
         val api = FakeAdMobApi { _, _ -> emptyList() }
-        repo(api).getAppBreakdown(Period.THIS_MONTH)
+        repo(api).getAppBreakdown(Period.LAST_90_DAYS)
         assertTrue(api.specs.last().dimensions.contains("APP"))
     }
 }

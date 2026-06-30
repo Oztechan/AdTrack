@@ -159,7 +159,7 @@ private fun AppDetailLoadedPreview() {
         AppDetailScreenContent(
             state = AppDetailState(
                 appName = "Currency Converter",
-                period = Period.LAST_7_DAYS,
+                period = Period.LAST_30_DAYS,
                 isLoading = false,
                 app = AppRevenue("app1", "Currency Converter", 84.10, 9000, 180),
                 series = (1..7).map { RevenuePoint(LocalDate(2026, 1, it), 8.0 + it * 2.0) },

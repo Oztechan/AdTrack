@@ -59,10 +59,10 @@ class DashboardViewModelTest {
         val viewModel = DashboardViewModel(FakeRevenueRepository())
         advanceUntilIdle()
 
-        viewModel.event.onPeriodSelected(Period.LAST_7_DAYS)
+        viewModel.event.onPeriodSelected(Period.LAST_30_DAYS)
         advanceUntilIdle()
 
-        assertEquals(Period.LAST_7_DAYS, viewModel.state.value.selectedPeriod)
+        assertEquals(Period.LAST_30_DAYS, viewModel.state.value.selectedPeriod)
     }
 
     @Test

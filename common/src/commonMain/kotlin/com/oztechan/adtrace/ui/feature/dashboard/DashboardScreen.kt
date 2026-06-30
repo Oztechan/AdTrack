@@ -173,7 +173,7 @@ private fun ErrorState(message: String, onRetry: () -> Unit) {
 
 // region Previews
 private fun sampleSummary() = RevenueSummary(
-    period = Period.LAST_7_DAYS,
+    period = Period.LAST_30_DAYS,
     currencyCode = "USD",
     earnings = 128.42,
     impressions = 15_420,
@@ -197,7 +197,7 @@ private fun DashboardLoadedPreview() {
     AdTraceTheme {
         DashboardScreenContent(
             state = DashboardState(
-                selectedPeriod = Period.LAST_7_DAYS,
+                selectedPeriod = Period.LAST_30_DAYS,
                 summary = sampleSummary(),
                 apps = sampleApps(),
                 series = sampleSeries()

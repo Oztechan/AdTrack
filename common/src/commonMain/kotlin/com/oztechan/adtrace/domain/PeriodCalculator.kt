@@ -24,23 +24,25 @@ class PeriodCalculator {
         val today = today(timeZoneId)
         return when (period) {
             Period.TODAY -> DateRange(today.toApiDate(), today.toApiDate())
-            Period.LAST_7_DAYS -> lastNDays(today, DAYS_IN_WEEK)
-            Period.THIS_MONTH -> DateRange(LocalDate(today.year, today.month, 1).toApiDate(), today.toApiDate())
+            Period.LAST_30_DAYS -> lastNDays(today, DAYS_IN_MONTH)
             Period.LAST_90_DAYS -> lastNDays(today, DAYS_IN_QUARTER)
+            Period.LAST_365_DAYS -> lastNDays(today, DAYS_IN_YEAR)
+            Period.LIFETIME -> DateRange(LIFETIME_START.toApiDate(), today.toApiDate())
         }
     }
 
-    /** The immediately preceding comparable range, used for the period-over-period delta. */
-    fun previousRange(period: Period, timeZoneId: String): DateRange {
+    /**
+     * The immediately preceding comparable range, used for the period-over-period delta.
+     * Null for [Period.LIFETIME], which has no meaningful "previous" period.
+     */
+    fun previousRange(period: Period, timeZoneId: String): DateRange? {
         val today = today(timeZoneId)
         return when (period) {
             Period.TODAY -> today.minus(DatePeriod(days = 1)).let { DateRange(it.toApiDate(), it.toApiDate()) }
-            Period.LAST_7_DAYS -> previousNDays(today, DAYS_IN_WEEK)
-            Period.THIS_MONTH -> {
-                val prevEnd = LocalDate(today.year, today.month, 1).minus(DatePeriod(days = 1))
-                DateRange(LocalDate(prevEnd.year, prevEnd.month, 1).toApiDate(), prevEnd.toApiDate())
-            }
+            Period.LAST_30_DAYS -> previousNDays(today, DAYS_IN_MONTH)
             Period.LAST_90_DAYS -> previousNDays(today, DAYS_IN_QUARTER)
+            Period.LAST_365_DAYS -> previousNDays(today, DAYS_IN_YEAR)
+            Period.LIFETIME -> null
         }
     }
 
@@ -61,7 +63,11 @@ class PeriodCalculator {
     private fun LocalDate.toApiDate() = ApiDate(year = year, month = monthNumber, day = dayOfMonth)
 
     companion object {
-        private const val DAYS_IN_WEEK = 7
+        private const val DAYS_IN_MONTH = 30
         private const val DAYS_IN_QUARTER = 90
+        private const val DAYS_IN_YEAR = 365
+
+        // AdMob predates this; earlier dates simply return no rows. Captures an account's full history.
+        private val LIFETIME_START = LocalDate(2010, 1, 1)
     }
 }
