@@ -4,6 +4,9 @@ captures/
 .cxx
 local.properties
 secret.properties
+# Firebase config + GPG-encrypted secret blobs (provided via CI secrets, never committed)
+androidApp/google-services.json
+*.asc
 .DS_Store
 *.iml
 .idea/

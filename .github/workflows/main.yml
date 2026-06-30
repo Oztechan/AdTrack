@@ -1,0 +1,92 @@
+name: AdTrace CI
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+
+concurrency:
+  # develop: unique group per run so all builds run freely; PRs: group by branch so they can be cancelled
+  group: ${{ github.ref == 'refs/heads/develop' && github.run_id || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/develop' }}
+
+env:
+  GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+  CI: true
+
+jobs:
+
+  CodeAnalysis:
+    runs-on: ubuntu-24.04
+    steps:
+
+      - name: Setup Gradle Repo
+        uses: Oztechan/Global/actions/setup-gradle-repo@8610938e630b3ed86127765237fe3647b9fabd4f
+
+      - name: Detekt
+        run: ./gradlew detektAll
+
+      - name: Cancel other jobs if this fails
+        if: failure()
+        uses: andymckay/cancel-action@0.5
+
+  Test:
+    runs-on: macos-15
+    steps:
+
+      - name: Setup Gradle Repo
+        uses: Oztechan/Global/actions/setup-gradle-repo@8610938e630b3ed86127765237fe3647b9fabd4f
+
+      - name: Test (Android + iOS)
+        run: ./gradlew testDebugUnitTest iosSimulatorArm64Test
+
+      - name: Cancel other jobs if this fails
+        if: failure()
+        uses: andymckay/cancel-action@0.5
+
+  AndroidBuild:
+    runs-on: ubuntu-24.04
+    steps:
+
+      - name: Setup Gradle Repo
+        uses: Oztechan/Global/actions/setup-gradle-repo@8610938e630b3ed86127765237fe3647b9fabd4f
+
+      - name: Adding secret files
+        uses: ./.github/actions/add-secret-files
+        with:
+          SECRET_PASSWORD: ${{ secrets.SECRET_PASSWORD }}
+          GOOGLE_SERVICES_JSON_ASC: ${{ secrets.GOOGLE_SERVICES_JSON_ASC }}
+
+      - name: Assemble Debug
+        run: ./gradlew :androidApp:assembleDebug
+
+      - name: Upload Android Debug APK
+        uses: actions/upload-artifact@v7.0.1
+        if: github.event_name == 'push'
+        with:
+          name: androidApp-debug
+          path: androidApp/build/outputs/apk/debug/androidApp-debug.apk
+
+      - name: Cancel other jobs if this fails
+        if: failure()
+        uses: andymckay/cancel-action@0.5
+
+  iOSBuild:
+    runs-on: macos-15
+    steps:
+
+      - name: Setup Gradle Repo
+        uses: Oztechan/Global/actions/setup-gradle-repo@8610938e630b3ed86127765237fe3647b9fabd4f
+
+      - name: Set up Xcode
+        run: sudo xcode-select --switch /Applications/Xcode_16.4.app
+
+      # Builds the shared Kotlin framework the iOS app links against. A full .ipa build
+      # needs Fastlane + signing setup (see release notes) — not configured yet.
+      - name: Link iOS Framework
+        run: ./gradlew :common:linkDebugFrameworkIosSimulatorArm64
+
+      - name: Cancel other jobs if this fails
+        if: failure()
+        uses: andymckay/cancel-action@0.5
