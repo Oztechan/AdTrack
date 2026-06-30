@@ -1,0 +1,113 @@
+/*
+ * Copyright (c) 2026 Mustafa Ozhan. All rights reserved.
+ */
+
+package com.oztechan.adtrace.domain.repository
+
+import com.oztechan.adtrace.data.admob.api.AdMobApi
+import com.oztechan.adtrace.data.admob.mapper.ReportMapper
+import com.oztechan.adtrace.data.admob.model.AdMobAccount
+import com.oztechan.adtrace.data.admob.model.DateRange
+import com.oztechan.adtrace.data.admob.model.DimensionFilter
+import com.oztechan.adtrace.data.admob.model.LocalizationSettings
+import com.oztechan.adtrace.data.admob.model.NetworkReportSpec
+import com.oztechan.adtrace.data.admob.model.ReportRow
+import com.oztechan.adtrace.data.admob.model.StringList
+import com.oztechan.adtrace.domain.PeriodCalculator
+import com.oztechan.adtrace.domain.model.AppRevenue
+import com.oztechan.adtrace.domain.model.Period
+import com.oztechan.adtrace.domain.model.RevenuePoint
+import com.oztechan.adtrace.domain.model.RevenueSummary
+import kotlin.time.Clock
+
+private const val CACHE_TTL_SECONDS = 300L
+
+class RevenueRepositoryImpl(
+    private val adMobApi: AdMobApi,
+    private val periodCalculator: PeriodCalculator
+) : RevenueRepository {
+
+    private val cache = mutableMapOf<String, CacheEntry>()
+    private var cachedAccount: AdMobAccount? = null
+
+    override suspend fun getAccount(): AdMobAccount =
+        cachedAccount ?: adMobApi.getAccounts().firstOrNull()?.also { cachedAccount = it }
+            ?: throw NoAdMobAccountException()
+
+    override suspend fun getSummary(period: Period): RevenueSummary = cached("summary_$period") {
+        val account = getAccount()
+        val current = report(account, periodCalculator.currentRange(period, account.reportingTimeZone))
+        val previous = report(account, periodCalculator.previousRange(period, account.reportingTimeZone))
+        ReportMapper.toSummary(
+            rows = current,
+            period = period,
+            currencyCode = account.currencyCode,
+            previousEarnings = ReportMapper.totalEarnings(previous)
+        )
+    }
+
+    override suspend fun getAppBreakdown(period: Period): List<AppRevenue> = cached("apps_$period") {
+        val account = getAccount()
+        val rows = report(
+            account = account,
+            range = periodCalculator.currentRange(period, account.reportingTimeZone),
+            dimensions = listOf(AdMobApi.Dimension.APP)
+        )
+        ReportMapper.toAppRevenues(rows)
+    }
+
+    override suspend fun getRevenueSeries(period: Period): List<RevenuePoint> = cached("series_$period") {
+        val account = getAccount()
+        val rows = report(account, periodCalculator.currentRange(period, account.reportingTimeZone))
+        ReportMapper.toSeries(rows)
+    }
+
+    override suspend fun getAppRevenueSeries(
+        period: Period,
+        appId: String
+    ): List<RevenuePoint> = cached("appseries_${period}_$appId") {
+        val account = getAccount()
+        val rows = report(
+            account = account,
+            range = periodCalculator.currentRange(period, account.reportingTimeZone),
+            appIdFilter = appId.takeIf { it.isNotBlank() }
+        )
+        ReportMapper.toSeries(rows)
+    }
+
+    override fun invalidate() {
+        cache.clear()
+        cachedAccount = null
+    }
+
+    private suspend fun report(
+        account: AdMobAccount,
+        range: DateRange,
+        dimensions: List<String> = listOf(AdMobApi.Dimension.DATE),
+        appIdFilter: String? = null
+    ): List<ReportRow> = adMobApi.generateNetworkReport(
+        publisherId = account.publisherId,
+        spec = NetworkReportSpec(
+            dateRange = range,
+            dimensions = dimensions,
+            metrics = listOf(
+                AdMobApi.Metric.ESTIMATED_EARNINGS,
+                AdMobApi.Metric.IMPRESSIONS,
+                AdMobApi.Metric.CLICKS
+            ),
+            localizationSettings = LocalizationSettings(currencyCode = account.currencyCode),
+            dimensionFilters = appIdFilter?.let {
+                listOf(DimensionFilter(AdMobApi.Dimension.APP, StringList(listOf(it))))
+            }
+        )
+    )
+
+    @Suppress("UNCHECKED_CAST")
+    private suspend fun <T> cached(key: String, block: suspend () -> T): T {
+        val now = Clock.System.now().epochSeconds
+        cache[key]?.let { if (now < it.expiry) return it.value as T }
+        return block().also { cache[key] = CacheEntry(it as Any, now + CACHE_TTL_SECONDS) }
+    }
+
+    private data class CacheEntry(val value: Any, val expiry: Long)
+}

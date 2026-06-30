@@ -1,0 +1,73 @@
+[versions]
+kotlin = "2.3.21"
+androidGradlePlugin = "9.2.1"
+jetbrainsCompose = "1.9.0"
+navigationCompose = "2.9.2"
+lifecycle = "2.9.2"
+googleServices = "4.5.0"
+firebaseBom = "34.15.0"
+koin = "4.2.1"
+ktor = "3.4.3"
+coroutines = "1.11.0"
+kotlinXDateTime = "0.8.0-0.6.x-compat"
+multiplatformSettings = "1.3.0"
+kermit = "2.1.0"
+buildKonfig = "0.21.2"
+detekt = "1.23.8"
+mokkery = "3.3.0"
+kotlinCryptoHash = "0.6.1"
+activityCompose = "1.13.0"
+androidxBrowser = "1.8.0"
+androidxSecurityCrypto = "1.1.0-alpha06"
+androidDesugaring = "2.1.5"
+
+[libraries]
+# COMMON
+common-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+common-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+common-coroutinesTest = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+common-kotlinXDateTime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinXDateTime" }
+common-kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
+common-sha2 = { module = "org.kotlincrypto.hash:sha2", version.ref = "kotlinCryptoHash" }
+common-multiplatformSettings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatformSettings" }
+common-multiplatformSettingsTest = { module = "com.russhwolf:multiplatform-settings-test", version.ref = "multiplatformSettings" }
+common-navigationCompose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+common-lifecycleViewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycle" }
+common-lifecycleViewmodelCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+common-lifecycleRuntimeCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
+common-koinCore = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+common-koinCompose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
+common-koinComposeViewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
+common-ktorCore = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+common-ktorContentNegotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+common-ktorJson = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+common-ktorLogging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+common-ktorAuth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
+common-ktorClientMock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
+common-detektFormatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
+
+# ANDROID
+android-ktor = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+android-activityCompose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+android-koinAndroid = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+android-browser = { module = "androidx.browser:browser", version.ref = "androidxBrowser" }
+android-securityCrypto = { module = "androidx.security:security-crypto", version.ref = "androidxSecurityCrypto" }
+android-desugaring = { module = "com.android.tools:desugar_jdk_libs", version.ref = "androidDesugaring" }
+android-firebaseBom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+android-firebaseAnalytics = { module = "com.google.firebase:firebase-analytics" }
+
+# IOS
+ios-ktor = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+
+[plugins]
+kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "jetbrainsCompose" }
+kotlinPluginCompose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+androidApplication = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+androidLibrary = { id = "com.android.library", version.ref = "androidGradlePlugin" }
+googleServices = { id = "com.google.gms.google-services", version.ref = "googleServices" }
+serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+buildKonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildKonfig" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+mokkery = { id = "dev.mokkery", version.ref = "mokkery" }

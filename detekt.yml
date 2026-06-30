@@ -1,0 +1,34 @@
+# https://github.com/detekt/detekt/blob/main/detekt-core/src/main/resources/default-detekt-config.yml
+# This file is used to override default detekt rules
+# the rules are not listed here will be used from default detekt config listed in the link above
+
+config:
+  validation: true
+  warningsAsErrors: true
+  checkExhaustiveness: false
+
+style:
+  WildcardImport:
+    active: true
+    excludeImports: [ ] # default config excludes java.util.*
+  MagicNumber:
+    active: false # noisy for Compose UI (dp sizes, color literals)
+  UnusedPrivateMember:
+    ignoreAnnotated: [ 'Preview' ] # @Preview functions are invoked by tooling, not code
+
+complexity:
+  NamedArguments:
+    active: true
+  LongMethod:
+    ignoreAnnotated: [ 'Composable' ]
+  CyclomaticComplexMethod:
+    ignoreAnnotated: [ 'Composable' ]
+  LongParameterList:
+    ignoreAnnotated: [ 'Composable' ]
+  TooManyFunctions:
+    ignoreAnnotatedFunctions: [ 'Composable' ] # screens are made of many composables
+
+naming:
+  FunctionNaming:
+    active: true
+    ignoreAnnotated: [ 'Composable' ]

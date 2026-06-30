@@ -1,0 +1,19 @@
+.gradle
+build/
+captures/
+.cxx
+local.properties
+secret.properties
+.DS_Store
+*.iml
+.idea/
+.kotlin/
+
+# iOS / Xcode
+xcuserdata/
+*.xcuserstate
+ios/Pods/
+ios/build/
+DerivedData/
+
+.claude
