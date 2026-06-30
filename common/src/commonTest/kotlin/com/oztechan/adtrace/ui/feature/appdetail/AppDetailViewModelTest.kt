@@ -22,7 +22,6 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AppDetailViewModelTest {
@@ -46,7 +45,12 @@ class AppDetailViewModelTest {
     @Test
     fun load_resolves_the_app_and_its_series() = runTest(dispatcher) {
         val repository = repository()
-        val viewModel = AppDetailViewModel(repository, appId = "app1", appName = "App One", period = Period.LAST_30_DAYS)
+        val viewModel = AppDetailViewModel(
+            repository,
+            appId = "app1",
+            appName = "App One",
+            period = Period.LAST_30_DAYS
+        )
         advanceUntilIdle()
 
         assertEquals("app1", viewModel.state.value.app?.appId)

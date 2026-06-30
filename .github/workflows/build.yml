@@ -7,12 +7,15 @@ on:
 
 env:
   GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+  SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
   CI: true
 
 jobs:
 
   Build:
     runs-on: macos-15
+    outputs:
+      status: ${{ steps.status.outputs.status }}
     steps:
 
       - name: Setup Gradle Repo
@@ -30,3 +33,21 @@ jobs:
       # Full graph: detekt + all tests + Android assemble + iOS framework link.
       - name: Build
         run: ./gradlew build
+
+      - name: Set Job Status
+        id: status
+        run: echo "status=success" >> $GITHUB_OUTPUT
+
+  Notify:
+    runs-on: ubuntu-24.04
+    needs: [ Build ]
+    if: always()
+    steps:
+
+      - name: Notify slack fail
+        if: false == (needs.Build.outputs.status == 'success')
+        uses: voxmedia/github-action-slack-notify-build@v2
+        with:
+          channel: adtrace-github
+          status: FAILED
+          color: danger

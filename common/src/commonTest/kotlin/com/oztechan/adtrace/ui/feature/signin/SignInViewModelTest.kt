@@ -6,8 +6,8 @@ package com.oztechan.adtrace.ui.feature.signin
 
 import com.oztechan.adtrace.data.auth.browser.AuthCancelledException
 import com.oztechan.adtrace.fakes.FakeAuthRepository
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher

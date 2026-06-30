@@ -13,12 +13,15 @@ concurrency:
 
 env:
   GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+  SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
   CI: true
 
 jobs:
 
   CodeAnalysis:
     runs-on: ubuntu-24.04
+    outputs:
+      status: ${{ steps.status.outputs.status }}
     steps:
 
       - name: Setup Gradle Repo
@@ -31,8 +34,14 @@ jobs:
         if: failure()
         uses: andymckay/cancel-action@0.5
 
+      - name: Set Job Status
+        id: status
+        run: echo "status=success" >> $GITHUB_OUTPUT
+
   Test:
     runs-on: macos-15
+    outputs:
+      status: ${{ steps.status.outputs.status }}
     steps:
 
       - name: Setup Gradle Repo
@@ -45,8 +54,14 @@ jobs:
         if: failure()
         uses: andymckay/cancel-action@0.5
 
+      - name: Set Job Status
+        id: status
+        run: echo "status=success" >> $GITHUB_OUTPUT
+
   AndroidBuild:
     runs-on: ubuntu-24.04
+    outputs:
+      status: ${{ steps.status.outputs.status }}
     steps:
 
       - name: Setup Gradle Repo
@@ -72,8 +87,14 @@ jobs:
         if: failure()
         uses: andymckay/cancel-action@0.5
 
+      - name: Set Job Status
+        id: status
+        run: echo "status=success" >> $GITHUB_OUTPUT
+
   iOSBuild:
     runs-on: macos-15
+    outputs:
+      status: ${{ steps.status.outputs.status }}
     steps:
 
       - name: Setup Gradle Repo
@@ -90,3 +111,24 @@ jobs:
       - name: Cancel other jobs if this fails
         if: failure()
         uses: andymckay/cancel-action@0.5
+
+      - name: Set Job Status
+        id: status
+        run: echo "status=success" >> $GITHUB_OUTPUT
+
+  Notify:
+    runs-on: ubuntu-24.04
+    needs: [ CodeAnalysis, Test, AndroidBuild, iOSBuild ]
+    if: always()
+    steps:
+
+      - name: Notify slack fail
+        if: false == (needs.CodeAnalysis.outputs.status == 'success') ||
+          false == (needs.Test.outputs.status == 'success') ||
+          false == (needs.AndroidBuild.outputs.status == 'success') ||
+          false == (needs.iOSBuild.outputs.status == 'success')
+        uses: voxmedia/github-action-slack-notify-build@v2
+        with:
+          channel: adtrace-github
+          status: FAILED
+          color: danger
