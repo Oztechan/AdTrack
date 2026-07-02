@@ -1,0 +1,21 @@
+name: 'Add Secret Files'
+description: 'Decrypt and place the secret files needed to build AdTrace'
+inputs:
+  SECRET_PASSWORD:
+    description: 'Passphrase used to GPG-decrypt the secret files'
+    required: true
+  GOOGLE_SERVICES_JSON_ASC:
+    description: 'GPG-encrypted (armored) google-services.json for the Android app'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Add Secret Files'
+      shell: bash
+      env:
+        SECRET_PASSWORD: ${{ inputs.SECRET_PASSWORD }}
+        GOOGLE_SERVICES_JSON_ASC: ${{ inputs.GOOGLE_SERVICES_JSON_ASC }}
+      run: |
+        # Firebase config required by the com.google.gms.google-services plugin in :androidApp.
+        echo "$GOOGLE_SERVICES_JSON_ASC" > google-services.json.asc
+        gpg -d --passphrase "$SECRET_PASSWORD" --batch google-services.json.asc > androidApp/google-services.json

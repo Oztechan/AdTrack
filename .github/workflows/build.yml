@@ -1,0 +1,53 @@
+name: Build
+
+on:
+  schedule:
+    - cron: '0 0 * * 0' # Every Sunday at midnight UTC
+  workflow_dispatch:     # Allows manual trigger
+
+env:
+  GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+  SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+  CI: true
+
+jobs:
+
+  Build:
+    runs-on: macos-15
+    outputs:
+      status: ${{ steps.status.outputs.status }}
+    steps:
+
+      - name: Setup Gradle Repo
+        uses: Oztechan/Global/actions/setup-gradle-repo@8610938e630b3ed86127765237fe3647b9fabd4f
+
+      - name: Adding secret files
+        uses: ./.github/actions/add-secret-files
+        with:
+          SECRET_PASSWORD: ${{ secrets.SECRET_PASSWORD }}
+          GOOGLE_SERVICES_JSON_ASC: ${{ secrets.GOOGLE_SERVICES_JSON_ASC }}
+
+      - name: Set up Xcode
+        run: sudo xcode-select --switch /Applications/Xcode_16.4.app
+
+      # Full graph: detekt + all tests + Android assemble + iOS framework link.
+      - name: Build
+        run: ./gradlew build
+
+      - name: Set Job Status
+        id: status
+        run: echo "status=success" >> $GITHUB_OUTPUT
+
+  Notify:
+    runs-on: ubuntu-24.04
+    needs: [ Build ]
+    if: always()
+    steps:
+
+      - name: Notify slack fail
+        if: false == (needs.Build.outputs.status == 'success')
+        uses: voxmedia/github-action-slack-notify-build@v2
+        with:
+          channel: adtrace-github
+          status: FAILED
+          color: danger

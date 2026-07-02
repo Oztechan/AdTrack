@@ -69,8 +69,10 @@ class AuthServiceImplTest {
     fun exchangeCode_posts_authorization_code_grant() = runTest {
         var capturedUrl = ""
         var capturedBody = ""
-        val response = service { url, body -> capturedUrl = url; capturedBody = body }
-            .exchangeCode(code = "THECODE", codeVerifier = "VER")
+        val response = service { url, body ->
+            capturedUrl = url
+            capturedBody = body
+        }.exchangeCode(code = "THECODE", codeVerifier = "VER")
 
         assertEquals("https://oauth2.googleapis.com/token", capturedUrl)
         assertTrue("grant_type=authorization_code" in capturedBody)

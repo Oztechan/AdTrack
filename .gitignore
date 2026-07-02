@@ -4,6 +4,7 @@ captures/
 .cxx
 local.properties
 secret.properties
+*.asc
 .DS_Store
 *.iml
 .idea/

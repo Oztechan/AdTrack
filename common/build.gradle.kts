@@ -26,7 +26,6 @@ fun secret(key: String, default: String): String =
     secretProps.getProperty(key) ?: project.findProperty(key)?.toString() ?: System.getenv(key) ?: default
 
 val oauthClientId = secret("GOOGLE_OAUTH_CLIENT_ID", "YOUR_OAUTH_CLIENT_ID.apps.googleusercontent.com")
-val oauthRedirectScheme = secret("OAUTH_REDIRECT_SCHEME", "com.oztechan.adtrace")
 // endregion
 
 kotlin {
@@ -113,7 +112,7 @@ buildkonfig {
 
     defaultConfigs {
         buildConfigField(STRING, "GOOGLE_OAUTH_CLIENT_ID", oauthClientId)
-        buildConfigField(STRING, "OAUTH_REDIRECT_SCHEME", oauthRedirectScheme)
+        buildConfigField(STRING, "OAUTH_REDIRECT_SCHEME", ProjectSettings.PROJECT_ID)
     }
 }
 

@@ -12,11 +12,11 @@ plugins {
 }
 
 android {
-    namespace = "${ProjectSettings.ANDROID_APP_ID}.android"
+    namespace = "${ProjectSettings.PROJECT_ID}.android"
     compileSdk = ProjectSettings.COMPILE_SDK_VERSION
 
     defaultConfig {
-        applicationId = ProjectSettings.ANDROID_APP_ID
+        applicationId = ProjectSettings.PROJECT_ID
         minSdk = ProjectSettings.MIN_SDK_VERSION
         targetSdk = ProjectSettings.TARGET_SDK_VERSION
         versionCode = ProjectSettings.getVersionCode(project)
