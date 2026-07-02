@@ -19,7 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.oztechan.adtrace.core.util.formatCurrency
@@ -27,6 +26,7 @@ import com.oztechan.adtrace.domain.model.AppRevenue
 import com.oztechan.adtrace.domain.model.Period
 import com.oztechan.adtrace.domain.model.RevenueSummary
 import com.oztechan.adtrace.ui.theme.AdTraceTheme
+import com.oztechan.adtrace.ui.theme.LocalAdTraceColors
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.math.abs
 
@@ -89,7 +89,8 @@ fun SummaryCard(summary: RevenueSummary, modifier: Modifier = Modifier) {
 @Composable
 private fun DeltaLabel(delta: Double) {
     val up = delta >= 0
-    val color = if (up) Color(0xFF2E7D32) else Color(0xFFC62828)
+    val colors = LocalAdTraceColors.current
+    val color = if (up) colors.positive else colors.negative
     val arrow = if (up) "▲" else "▼"
     val rounded = (abs(delta) * 10).toLong() / 10.0
     Text(
