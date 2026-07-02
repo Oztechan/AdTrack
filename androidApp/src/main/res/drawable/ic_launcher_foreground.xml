@@ -1,0 +1,19 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="1024"
+    android:viewportHeight="1024">
+
+    <!-- Ascending bars (kept within the central adaptive-icon safe zone) -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M334,560 L386,560 A22,22 0 0 1 408,582 L408,698 A22,22 0 0 1 386,720 L334,720 A22,22 0 0 1 312,698 L312,582 A22,22 0 0 1 334,560 Z M486,470 L538,470 A22,22 0 0 1 560,492 L560,698 A22,22 0 0 1 538,720 L486,720 A22,22 0 0 1 464,698 L464,492 A22,22 0 0 1 486,470 Z M638,360 L690,360 A22,22 0 0 1 712,382 L712,698 A22,22 0 0 1 690,720 L638,720 A22,22 0 0 1 616,698 L616,382 A22,22 0 0 1 638,360 Z" />
+
+    <!-- Upward trend arrow -->
+    <path
+        android:strokeColor="#FF00E676"
+        android:strokeWidth="42"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M312,620 L470,520 L600,415 L742,300 M694,300 L742,300 L742,348" />
+</vector>
