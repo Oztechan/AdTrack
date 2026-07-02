@@ -19,6 +19,7 @@ kotlinCryptoHash = "0.6.1"
 activityCompose = "1.13.0"
 androidxBrowser = "1.8.0"
 androidxSecurityCrypto = "1.1.0-alpha06"
+androidxSplashScreen = "1.0.1"
 androidDesugaring = "2.1.5"
 
 [libraries]
@@ -52,6 +53,7 @@ android-activityCompose = { module = "androidx.activity:activity-compose", versi
 android-koinAndroid = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 android-browser = { module = "androidx.browser:browser", version.ref = "androidxBrowser" }
 android-securityCrypto = { module = "androidx.security:security-crypto", version.ref = "androidxSecurityCrypto" }
+android-splashScreen = { module = "androidx.core:core-splashscreen", version.ref = "androidxSplashScreen" }
 android-desugaring = { module = "com.android.tools:desugar_jdk_libs", version.ref = "androidDesugaring" }
 android-firebaseBom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 android-firebaseAnalytics = { module = "com.google.firebase:firebase-analytics" }
