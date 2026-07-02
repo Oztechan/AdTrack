@@ -43,6 +43,7 @@ dependencies {
     implementation(compose.runtime)
     implementation(libs.android.activityCompose)
     implementation(libs.android.koinAndroid)
+    implementation(libs.android.splashScreen)
     // Renders @Preview composables in the Android Studio preview pane.
     debugImplementation(compose.uiTooling)
     implementation(compose.components.uiToolingPreview)
