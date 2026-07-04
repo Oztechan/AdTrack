@@ -116,9 +116,43 @@ jobs:
         id: status
         run: echo "status=success" >> $GITHUB_OUTPUT
 
+  DistributeAndroid:
+    runs-on: ubuntu-24.04
+    needs: [ AndroidBuild ]
+    # Only after a merge to develop (push), never on PRs.
+    if: github.event_name == 'push'
+    outputs:
+      status: ${{ steps.status.outputs.status }}
+    steps:
+
+      - name: Download Android Debug APK
+        uses: actions/download-artifact@v8.0.1
+        with:
+          name: androidApp-debug
+
+      - name: Decrypt Firebase service account
+        env:
+          SECRET_PASSWORD: ${{ secrets.SECRET_PASSWORD }}
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          echo "$FIREBASE_SERVICE_ACCOUNT" > firebase-service-account.json.asc
+          gpg -d --passphrase "$SECRET_PASSWORD" --batch firebase-service-account.json.asc > firebase-service-account.json
+
+      - name: Firebase App Distribution (Android)
+        uses: wzieba/Firebase-Distribution-Github-Action@v1.7.1
+        with:
+          appId: ${{ secrets.FIREBASE_ANDROID_APP_ID }}
+          serviceCredentialsFile: firebase-service-account.json
+          groups: QA
+          file: androidApp-debug.apk
+
+      - name: Set Job Status
+        id: status
+        run: echo "status=success" >> $GITHUB_OUTPUT
+
   Notify:
     runs-on: ubuntu-24.04
-    needs: [ CodeAnalysis, Test, AndroidBuild, iOSBuild ]
+    needs: [ CodeAnalysis, Test, AndroidBuild, iOSBuild, DistributeAndroid ]
     if: always()
     steps:
 
@@ -126,7 +160,8 @@ jobs:
         if: false == (needs.CodeAnalysis.outputs.status == 'success') ||
           false == (needs.Test.outputs.status == 'success') ||
           false == (needs.AndroidBuild.outputs.status == 'success') ||
-          false == (needs.iOSBuild.outputs.status == 'success')
+          false == (needs.iOSBuild.outputs.status == 'success') ||
+          (false == (needs.DistributeAndroid.outputs.status == 'success') && github.event_name == 'push')
         uses: voxmedia/github-action-slack-notify-build@v2
         with:
           channel: adtrace-github
