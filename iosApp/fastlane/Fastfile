@@ -1,0 +1,140 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+
+default_platform(:ios)
+
+APP_IDENTIFIER = "com.oztechan.adtrace"
+
+def ensure_temp_keychain(name, password)
+    delete_keychain(
+      name: name
+    ) if File.exist? File.expand_path("~/Library/Keychains/#{name}-db")
+
+    create_keychain(
+      name: name,
+      password: password,
+      unlock: false,
+      timeout: 0
+    )
+end
+
+def get_method_from_match_type(match_type)
+    if match_type == "adhoc"
+       "ad-hoc"
+    elsif match_type == "appstore"
+       "app-store"
+    else
+       match_type
+    end
+end
+
+platform :ios do
+    desc "iOS Lanes"
+
+        lane :buildDebug do
+            add_test_devices
+            install_certificate_and_profile(match_type: "adhoc")
+            build_project(
+                match_type: "adhoc",
+                profile: "match AdHoc #{APP_IDENTIFIER}",
+                configuration: "Debug"
+            )
+        end
+
+        lane :buildRelease do
+            add_test_devices
+            install_certificate_and_profile(match_type: "adhoc")
+            build_project(
+                match_type: "adhoc",
+                profile: "match AdHoc #{APP_IDENTIFIER}",
+                configuration: "Release"
+            )
+        end
+
+        lane :distributeDebug do
+            firebase_app_distribution(
+                app: ENV["FIREBASE_IOS_APP_ID"],
+                groups: "QA",
+                release_notes: changelog_from_git_commits(commits_count: 1),
+                service_credentials_file: ENV["FIREBASE_SERVICE_ACCOUNT_FILE"],
+                ipa_path: "../iosApp/AdTrace.ipa"
+            )
+        end
+
+        lane :distributeRelease do
+            firebase_app_distribution(
+                app: ENV["FIREBASE_IOS_APP_ID"],
+                groups: "QA",
+                release_notes: changelog_from_git_commits(commits_count: 1),
+                service_credentials_file: ENV["FIREBASE_SERVICE_ACCOUNT_FILE"],
+                ipa_path: "../iosApp/AdTrace.ipa"
+            )
+        end
+
+        # Sub lanes
+        lane :install_certificate_and_profile do |options|
+            api_key = app_store_connect_api_key(
+                key_id: ENV["APP_STORE_CONNECT_KEY_ID"],
+                issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
+                key_content: ENV["APP_STORE_CONNECT_KEY_CONTENT"],
+                in_house: false,
+            )
+
+            keychain_name = "mustafa.ozhan"
+            keychain_password = ENV["SECRET_PASSWORD"]
+            ensure_temp_keychain(keychain_name, keychain_password)
+
+            match(
+                app_identifier: [APP_IDENTIFIER],
+                type: options[:match_type],
+                readonly: is_ci,
+                force_for_new_devices: true,
+                git_basic_authorization: Base64.strict_encode64(ENV["GIT_AUTHORIZATION"]),
+                keychain_name: keychain_name,
+                keychain_password: keychain_password,
+                api_key: api_key
+            )
+        end
+
+        lane :add_test_devices do
+            api_key = app_store_connect_api_key(
+                key_id: ENV["APP_STORE_CONNECT_KEY_ID"],
+                issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
+                key_content: ENV["APP_STORE_CONNECT_KEY_CONTENT"],
+                in_house: false,
+            )
+            register_devices(
+              devices: {
+                "Mustafa’s iPhone 16e" => "00008140-001A034E0EE9801C",
+              },
+              api_key: api_key
+            )
+        end
+
+        lane :build_project do |options|
+            match_type = options[:match_type]
+            method = get_method_from_match_type(match_type)
+
+            update_code_signing_settings(use_automatic_signing: false)
+            update_project_provisioning(
+                profile: ENV["sigh_#{APP_IDENTIFIER}_#{match_type}_profile-path"]
+            )
+            gym(
+                project: "iosApp.xcodeproj",
+                scheme: "iosApp",
+                configuration: options[:configuration],
+                output_name: "AdTrace",
+                xcargs: "-allowProvisioningUpdates CODE_SIGN_STYLE=Manual",
+                codesigning_identity: "Apple Distribution: Mustafa Ozhan (Q5WB95G58X)",
+                export_method: method,
+                export_options: {
+                    signingStyle: "manual"
+                },
+            )
+        end
+end
