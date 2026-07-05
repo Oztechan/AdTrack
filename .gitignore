@@ -17,6 +17,14 @@ ios/Pods/
 ios/build/
 DerivedData/
 
+# Fastlane
+iosApp/fastlane/.env
+iosApp/fastlane/report.xml
+iosApp/fastlane/test_output/
+iosApp/vendor/
+iosApp/*.ipa
+iosApp/*.app.dSYM.zip
+
 .claude
 
 firebase-service-account.json

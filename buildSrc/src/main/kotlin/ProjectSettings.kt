@@ -6,7 +6,7 @@ import org.gradle.api.Project
 
 object ProjectSettings {
 
-    private const val MAYOR_VERSION = 1
+    private const val MAYOR_VERSION = 0
     private const val MINOR_VERSION = 0
 
     const val PROJECT_ID = "com.oztechan.adtrace"
