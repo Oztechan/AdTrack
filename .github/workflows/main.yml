@@ -134,9 +134,7 @@ jobs:
 
       - name: Build ${{ env.BUILD_TYPE }}
         working-directory: iosApp
-        run: |
-          bundle install
-          bundle exec fastlane build${{ env.BUILD_TYPE }}
+        run: fastlane build${{ env.BUILD_TYPE }}
 
       - name: Upload iOS Artifact
         uses: actions/upload-artifact@v7.0.1
@@ -212,14 +210,14 @@ jobs:
           echo "$FIREBASE_SERVICE_ACCOUNT" > firebase-service-account.json.asc
           gpg -d --passphrase "$SECRET_PASSWORD" --batch firebase-service-account.json.asc > firebase-service-account.json
 
+      # was necessary to use chown to fix permission issues in linux machines (same as CCC)
       - name: Distribute ${{ env.BUILD_TYPE }}
         working-directory: iosApp
         env:
           FIREBASE_SERVICE_ACCOUNT_FILE: ${{ github.workspace }}/firebase-service-account.json
         run: |
-          sudo chown -R $(whoami) /var/lib/gems/ || true
-          bundle install
-          bundle exec fastlane distribute${{ env.BUILD_TYPE }}
+          sudo chown -R $(whoami) /var/lib/gems/
+          fastlane distribute${{ env.BUILD_TYPE }}
 
       - name: Set Job Status
         id: status
