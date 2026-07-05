@@ -1,6 +1,10 @@
 /*
  * Copyright (c) 2026 Mustafa Ozhan. All rights reserved.
  */
+import config.BuildType
+import config.key.Key
+import config.key.secret
+
 plugins {
     libs.plugins.apply {
         alias(androidApplication)
@@ -26,9 +30,24 @@ android {
         manifestPlaceholders["oauthRedirectScheme"] = "com.oztechan.adtrace"
     }
 
+    signingConfigs {
+        create(BuildType.release) {
+            storeFile = file(secret(Key.ANDROID_KEY_STORE_PATH))
+            storePassword = secret(Key.ANDROID_STORE_PASSWORD)
+            keyAlias = secret(Key.ANDROID_KEY_ALIAS)
+            keyPassword = secret(Key.ANDROID_KEY_PASSWORD)
+        }
+    }
+
     buildTypes {
-        getByName("release") {
+        getByName(BuildType.release) {
+            signingConfig = signingConfigs.getByName(BuildType.release)
             isMinifyEnabled = false
+        }
+
+        getByName(BuildType.debug) {
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
         }
     }
 
