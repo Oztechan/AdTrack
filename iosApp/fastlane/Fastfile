@@ -58,7 +58,7 @@ platform :ios do
 
         lane :distributeDebug do
             firebase_app_distribution(
-                app: ENV["FIREBASE_IOS_APP_ID"],
+                app: ENV["IOS_DEBUG_FIREBASE_APP_ID"],
                 groups: "QA",
                 release_notes: changelog_from_git_commits(commits_count: 1),
                 service_credentials_file: ENV["FIREBASE_SERVICE_ACCOUNT_FILE"],
@@ -68,7 +68,7 @@ platform :ios do
 
         lane :distributeRelease do
             firebase_app_distribution(
-                app: ENV["FIREBASE_IOS_APP_ID"],
+                app: ENV["IOS_RELEASE_FIREBASE_APP_ID"],
                 groups: "QA",
                 release_notes: changelog_from_git_commits(commits_count: 1),
                 service_credentials_file: ENV["FIREBASE_SERVICE_ACCOUNT_FILE"],
