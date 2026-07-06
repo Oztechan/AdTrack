@@ -20,7 +20,8 @@ env:
   APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
   APP_STORE_CONNECT_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_KEY_CONTENT }}
   APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
-  FIREBASE_IOS_APP_ID: ${{ secrets.FIREBASE_IOS_APP_ID }}
+  IOS_DEBUG_FIREBASE_APP_ID: ${{ secrets.IOS_DEBUG_FIREBASE_APP_ID }}
+  IOS_RELEASE_FIREBASE_APP_ID: ${{ secrets.IOS_RELEASE_FIREBASE_APP_ID }}
   GIT_AUTHORIZATION: ${{ secrets.GIT_AUTHORIZATION }}
   SECRET_PASSWORD: ${{ secrets.SECRET_PASSWORD }}
   MATCH_PASSWORD: ${{ secrets.SECRET_PASSWORD }}
@@ -175,7 +176,7 @@ jobs:
       - name: Firebase App Distribution (Android)
         uses: wzieba/Firebase-Distribution-Github-Action@v1.7.1
         with:
-          appId: ${{ secrets.FIREBASE_ANDROID_APP_ID }}
+          appId: ${{ secrets.ANDROID_DEBUG_FIREBASE_APP_ID }}
           serviceCredentialsFile: firebase-service-account.json
           groups: QA
           file: androidApp-debug.apk
