@@ -29,3 +29,7 @@ iosApp/*.app.dSYM.zip
 
 firebase-service-account.json
 firebase-service-account.json.asc
+
+# Release signing / store credentials (decrypted in CI, never committed)
+*.keystore
+service_account.json
