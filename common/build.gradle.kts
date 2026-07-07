@@ -25,7 +25,12 @@ val secretProps = Properties().apply {
 fun secret(key: String, default: String): String =
     secretProps.getProperty(key) ?: project.findProperty(key)?.toString() ?: System.getenv(key) ?: default
 
-val oauthClientId = secret("GOOGLE_OAUTH_CLIENT_ID", "YOUR_OAUTH_CLIENT_ID.apps.googleusercontent.com")
+// Native OAuth clients are per-platform (separate Google Cloud client ids for Android & iOS).
+val oauthClientIdAndroid = secret(
+    "GOOGLE_OAUTH_CLIENT_ID_ANDROID",
+    "YOUR_ANDROID_OAUTH_CLIENT_ID.apps.googleusercontent.com"
+)
+val oauthClientIdIos = secret("GOOGLE_OAUTH_CLIENT_ID_IOS", "YOUR_IOS_OAUTH_CLIENT_ID.apps.googleusercontent.com")
 // endregion
 
 kotlin {
@@ -111,8 +116,25 @@ buildkonfig {
     packageName = "${ProjectSettings.PROJECT_ID}.config"
 
     defaultConfigs {
-        buildConfigField(STRING, "GOOGLE_OAUTH_CLIENT_ID", oauthClientId)
+        // Fallback (Android client id); overridden per target below so shared code can keep
+        // referencing BuildKonfig.GOOGLE_OAUTH_CLIENT_ID and get the platform-correct value.
+        buildConfigField(STRING, "GOOGLE_OAUTH_CLIENT_ID", oauthClientIdAndroid)
         buildConfigField(STRING, "OAUTH_REDIRECT_SCHEME", ProjectSettings.PROJECT_ID)
+    }
+
+    targetConfigs {
+        create("android") {
+            buildConfigField(STRING, "GOOGLE_OAUTH_CLIENT_ID", oauthClientIdAndroid)
+        }
+        create("iosX64") {
+            buildConfigField(STRING, "GOOGLE_OAUTH_CLIENT_ID", oauthClientIdIos)
+        }
+        create("iosArm64") {
+            buildConfigField(STRING, "GOOGLE_OAUTH_CLIENT_ID", oauthClientIdIos)
+        }
+        create("iosSimulatorArm64") {
+            buildConfigField(STRING, "GOOGLE_OAUTH_CLIENT_ID", oauthClientIdIos)
+        }
     }
 }
 
