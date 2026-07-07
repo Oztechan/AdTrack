@@ -9,7 +9,7 @@ object ProjectSettings {
     private const val MAYOR_VERSION = 0
     private const val MINOR_VERSION = 0
 
-    const val PROJECT_ID = "com.oztechan.adtrace"
+    const val PROJECT_ID = "com.oztechan.adtrack"
 
     const val COMPILE_SDK_VERSION = 36
     const val MIN_SDK_VERSION = 24

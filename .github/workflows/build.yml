@@ -48,6 +48,6 @@ jobs:
         if: false == (needs.Build.outputs.status == 'success')
         uses: voxmedia/github-action-slack-notify-build@v2
         with:
-          channel: adtrace-github
+          channel: adtrack-github
           status: FAILED
           color: danger

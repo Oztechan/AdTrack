@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.AdTrace" parent="@android:style/Theme.DeviceDefault.Light.NoActionBar">
+    <style name="Theme.AdTrack" parent="@android:style/Theme.DeviceDefault.Light.NoActionBar">
         <item name="android:windowBackground">@color/window_background</item>
     </style>
 
-    <!-- Shown at launch via the AndroidX SplashScreen API, then swapped to Theme.AdTrace. -->
-    <style name="Theme.AdTrace.Splash" parent="Theme.SplashScreen">
+    <!-- Shown at launch via the AndroidX SplashScreen API, then swapped to Theme.AdTrack. -->
+    <style name="Theme.AdTrack.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/splash_background</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/splash_icon</item>
-        <item name="postSplashScreenTheme">@style/Theme.AdTrace</item>
+        <item name="postSplashScreenTheme">@style/Theme.AdTrack</item>
     </style>
 </resources>

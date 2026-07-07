@@ -1,4 +1,4 @@
-app_identifier("com.oztechan.adtrace") # The bundle identifier of the app
+app_identifier("com.oztechan.adtrack") # The bundle identifier of the app
 apple_id("development.oztechan@gmail.com") # Apple email address
 
 itc_team_id("124231627") # App Store Connect Team ID

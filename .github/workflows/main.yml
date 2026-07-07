@@ -1,4 +1,4 @@
-name: AdTrace CI
+name: AdTrack CI
 
 on:
   push:
@@ -141,7 +141,7 @@ jobs:
         uses: actions/upload-artifact@v7.0.1
         with:
           name: iosApp-ipa
-          path: iosApp/AdTrace.ipa
+          path: iosApp/AdTrack.ipa
 
       - name: Cancel other jobs if this fails
         if: failure()
@@ -239,6 +239,6 @@ jobs:
           (false == (needs.DistributeIOS.outputs.status == 'success') && github.event_name != 'pull_request')
         uses: voxmedia/github-action-slack-notify-build@v2
         with:
-          channel: adtrace-github
+          channel: adtrack-github
           status: FAILED
           color: danger

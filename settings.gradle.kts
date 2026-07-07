@@ -24,4 +24,4 @@ include(
 )
 // iOS app lives in `iosApp/` as an Xcode project that links the framework produced by :common.
 
-rootProject.name = "AdTrace"
+rootProject.name = "AdTrack"
