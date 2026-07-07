@@ -6,7 +6,8 @@ on:
   workflow_dispatch:     # Allows manual trigger
 
 env:
-  GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+  GOOGLE_OAUTH_CLIENT_ID_ANDROID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID_ANDROID }}
+  GOOGLE_OAUTH_CLIENT_ID_IOS: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID_IOS }}
   SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
   CI: true
 
