@@ -31,6 +31,7 @@ env:
   CI: true
   # Debug on push/PR, Release on the nightly schedule
   BUILD_TYPE: ${{ github.event_name == 'schedule' && 'Release' || 'Debug' }}
+  BUILD_TYPE_LOWERCASE: ${{ github.event_name == 'schedule' && 'release' || 'debug' }}
 
 jobs:
 
@@ -88,16 +89,17 @@ jobs:
         with:
           SECRET_PASSWORD: ${{ secrets.SECRET_PASSWORD }}
           GOOGLE_SERVICES_JSON_ASC: ${{ secrets.GOOGLE_SERVICES_JSON_ASC }}
+          ANDROID_RELEASE_KEYSTORE_ASC: ${{ secrets.ANDROID_RELEASE_KEYSTORE_ASC }}
 
-      - name: Assemble Debug
-        run: ./gradlew :androidApp:assembleDebug
+      - name: Assemble ${{ env.BUILD_TYPE }}
+        run: ./gradlew :androidApp:assemble${{ env.BUILD_TYPE }}
 
-      - name: Upload Android Debug APK
+      - name: Upload Android APK
         uses: actions/upload-artifact@v7.0.1
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' || github.event_name == 'schedule'
         with:
-          name: androidApp-debug
-          path: androidApp/build/outputs/apk/debug/androidApp-debug.apk
+          name: androidApp-apk
+          path: androidApp/build/outputs/apk/${{ env.BUILD_TYPE_LOWERCASE }}/androidApp-${{ env.BUILD_TYPE_LOWERCASE }}.apk
 
       - name: Cancel other jobs if this fails
         if: failure()
@@ -155,16 +157,16 @@ jobs:
   DistributeAndroid:
     runs-on: ubuntu-24.04
     needs: [ AndroidBuild ]
-    # Only after a merge to develop (push), never on PRs.
-    if: github.event_name == 'push'
+    # Debug after a merge to develop (push), Release on the nightly schedule. Never on PRs.
+    if: github.event_name != 'pull_request'
     outputs:
       status: ${{ steps.status.outputs.status }}
     steps:
 
-      - name: Download Android Debug APK
+      - name: Download Android APK
         uses: actions/download-artifact@v8.0.1
         with:
-          name: androidApp-debug
+          name: androidApp-apk
 
       - name: Decrypt Firebase service account
         env:
@@ -174,13 +176,13 @@ jobs:
           echo "$FIREBASE_SERVICE_ACCOUNT" > firebase-service-account.json.asc
           gpg -d --passphrase "$SECRET_PASSWORD" --batch firebase-service-account.json.asc > firebase-service-account.json
 
-      - name: Firebase App Distribution (Android)
+      - name: Firebase App Distribution (Android ${{ env.BUILD_TYPE }})
         uses: wzieba/Firebase-Distribution-Github-Action@v1.7.1
         with:
-          appId: ${{ secrets.ANDROID_DEBUG_FIREBASE_APP_ID }}
+          appId: ${{ github.event_name == 'schedule' && secrets.ANDROID_RELEASE_FIREBASE_APP_ID || secrets.ANDROID_DEBUG_FIREBASE_APP_ID }}
           serviceCredentialsFile: firebase-service-account.json
           groups: QA
-          file: androidApp-debug.apk
+          file: androidApp-${{ env.BUILD_TYPE_LOWERCASE }}.apk
 
       - name: Set Job Status
         id: status
@@ -236,7 +238,7 @@ jobs:
           false == (needs.Test.outputs.status == 'success') ||
           false == (needs.AndroidBuild.outputs.status == 'success') ||
           false == (needs.iOSBuild.outputs.status == 'success') ||
-          (false == (needs.DistributeAndroid.outputs.status == 'success') && github.event_name == 'push') ||
+          (false == (needs.DistributeAndroid.outputs.status == 'success') && github.event_name != 'pull_request') ||
           (false == (needs.DistributeIOS.outputs.status == 'success') && github.event_name != 'pull_request')
         uses: voxmedia/github-action-slack-notify-build@v2
         with:
