@@ -11,7 +11,7 @@
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>AdTrace</string>
+    <string>AdTrack</string>
     <key>CFBundlePackageType</key>
     <string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
     <key>CFBundleShortVersionString</key>
@@ -44,10 +44,10 @@
     <array>
         <dict>
             <key>CFBundleURLName</key>
-            <string>com.oztechan.adtrace.oauth</string>
+            <string>com.oztechan.adtrack.oauth</string>
             <key>CFBundleURLSchemes</key>
             <array>
-                <string>com.oztechan.adtrace</string>
+                <string>com.oztechan.adtrack</string>
             </array>
         </dict>
     </array>

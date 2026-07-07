@@ -27,7 +27,7 @@ android {
         versionName = ProjectSettings.getVersionName(project)
 
         // Must match OAUTH_REDIRECT_SCHEME so the manifest redirect intent-filter resolves.
-        manifestPlaceholders["oauthRedirectScheme"] = "com.oztechan.adtrace"
+        manifestPlaceholders["oauthRedirectScheme"] = "com.oztechan.adtrack"
     }
 
     signingConfigs {

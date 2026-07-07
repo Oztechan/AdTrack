@@ -1,10 +1,10 @@
-git_url("https://github.com/Oztechan/adtrace-ios-credentials")
+git_url("https://github.com/Oztechan/adtrack-ios-credentials")
 
 storage_mode("git")
 
 type("adhoc") # The default type, can be: appstore, adhoc, enterprise or development
 
-app_identifier(["com.oztechan.adtrace", "com.oztechan.adtrace.debug"])
+app_identifier(["com.oztechan.adtrack", "com.oztechan.adtrack.debug"])
 
 # For all available options run `fastlane match --help`
 # The docs are available on https://docs.fastlane.tools/actions/match

@@ -1,5 +1,5 @@
 name: 'Add Secret Files'
-description: 'Decrypt and place the secret files needed to build AdTrace'
+description: 'Decrypt and place the secret files needed to build AdTrack'
 inputs:
   SECRET_PASSWORD:
     description: 'Passphrase used to GPG-decrypt the secret files'
