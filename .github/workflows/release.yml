@@ -1,0 +1,148 @@
+name: Deployment
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+  SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+  APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+  APP_STORE_CONNECT_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_KEY_CONTENT }}
+  APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+  GIT_AUTHORIZATION: ${{ secrets.GIT_AUTHORIZATION }}
+  SECRET_PASSWORD: ${{ secrets.SECRET_PASSWORD }}
+  MATCH_PASSWORD: ${{ secrets.SECRET_PASSWORD }}
+  ANDROID_KEY_STORE_PATH: ${{ secrets.ANDROID_KEY_STORE_PATH }}
+  ANDROID_STORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
+  ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+  ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+  FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT: 5
+  FASTLANE_XCODEBUILD_SETTINGS_RETRIES: 5
+  CI: true
+
+jobs:
+
+  GenerateGradleArtifacts:
+    runs-on: ubuntu-24.04
+    outputs:
+      status: ${{ steps.status.outputs.status }}
+    steps:
+
+      - name: Setup Gradle Repo
+        uses: Oztechan/Global/actions/setup-gradle-repo@8610938e630b3ed86127765237fe3647b9fabd4f
+
+      - name: Adding secret files
+        uses: ./.github/actions/add-secret-files
+        with:
+          SECRET_PASSWORD: ${{ secrets.SECRET_PASSWORD }}
+          GOOGLE_SERVICES_JSON_ASC: ${{ secrets.GOOGLE_SERVICES_JSON_ASC }}
+          ANDROID_RELEASE_KEYSTORE_ASC: ${{ secrets.ANDROID_RELEASE_KEYSTORE_ASC }}
+
+      - name: Generate App Bundle
+        run: ./gradlew :androidApp:bundleRelease
+
+      - name: Upload App Bundle
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: androidApp-aab
+          path: androidApp/build/outputs/bundle/release/androidApp-release.aab
+
+      - name: Set Job Status
+        id: status
+        run: echo "status=success" >> $GITHUB_OUTPUT
+
+  UploadToGooglePlay:
+    runs-on: ubuntu-24.04
+    needs: [ GenerateGradleArtifacts ]
+    outputs:
+      status: ${{ steps.status.outputs.status }}
+    steps:
+
+      - name: Clone Repo # needed for the local add-secret-files composite action
+        uses: actions/checkout@v6.0.2
+
+      - name: Download App Bundle
+        uses: actions/download-artifact@v8.0.1
+        with:
+          name: androidApp-aab
+
+      - name: Adding secret files
+        uses: ./.github/actions/add-secret-files
+        with:
+          SECRET_PASSWORD: ${{ secrets.SECRET_PASSWORD }}
+          GOOGLE_SERVICES_JSON_ASC: ${{ secrets.GOOGLE_SERVICES_JSON_ASC }}
+          GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+
+      - name: Upload to Google Play (internal)
+        uses: r0adkll/upload-google-play@v1.1.5
+        with:
+          serviceAccountJson: service_account.json
+          packageName: com.oztechan.adtrack
+          releaseFiles: androidApp-release.aab
+          track: internal
+          status: completed
+
+      - name: Set Job Status
+        id: status
+        run: echo "status=success" >> $GITHUB_OUTPUT
+
+  UploadToAppStore:
+    runs-on: macos-15
+    outputs:
+      status: ${{ steps.status.outputs.status }}
+    steps:
+
+      - name: Setup Gradle Repo
+        uses: Oztechan/Global/actions/setup-gradle-repo@8610938e630b3ed86127765237fe3647b9fabd4f
+
+      - name: Adding secret files
+        uses: ./.github/actions/add-secret-files
+        with:
+          SECRET_PASSWORD: ${{ secrets.SECRET_PASSWORD }}
+          GOOGLE_SERVICES_JSON_ASC: ${{ secrets.GOOGLE_SERVICES_JSON_ASC }}
+
+      - name: Set up Xcode
+        run: sudo xcode-select --switch /Applications/Xcode_16.4.app
+
+      - name: Disable Kotlin incremental native for CI
+        run: |
+          mkdir -p ~/.gradle
+          touch ~/.gradle/gradle.properties
+          sed -i '' '/kotlin.incremental.native/d' ~/.gradle/gradle.properties
+          echo "kotlin.incremental.native=false" >> ~/.gradle/gradle.properties
+
+      - name: Store Build (TestFlight)
+        working-directory: iosApp
+        run: fastlane store_build
+
+      - name: Set Job Status
+        id: status
+        run: echo "status=success" >> $GITHUB_OUTPUT
+
+  Notify:
+    runs-on: ubuntu-24.04
+    needs: [ GenerateGradleArtifacts, UploadToGooglePlay, UploadToAppStore ]
+    if: always()
+    steps:
+
+      - name: Notify slack success
+        if: needs.GenerateGradleArtifacts.outputs.status == 'success' &&
+          needs.UploadToGooglePlay.outputs.status == 'success' &&
+          needs.UploadToAppStore.outputs.status == 'success'
+        uses: voxmedia/github-action-slack-notify-build@v2
+        with:
+          channel: adtrack-github
+          status: SUCCESS
+          color: good
+
+      - name: Notify slack fail
+        if: false == (needs.GenerateGradleArtifacts.outputs.status == 'success') ||
+          false == (needs.UploadToGooglePlay.outputs.status == 'success') ||
+          false == (needs.UploadToAppStore.outputs.status == 'success')
+        uses: voxmedia/github-action-slack-notify-build@v2
+        with:
+          channel: adtrack-github
+          status: FAILED
+          color: danger

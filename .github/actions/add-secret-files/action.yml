@@ -11,6 +11,10 @@ inputs:
     description: 'GPG-encrypted (armored) release upload keystore. Optional — only needed for release-signed builds.'
     required: false
     default: ''
+  GOOGLE_PLAY_SERVICE_ACCOUNT_JSON:
+    description: 'GPG-encrypted (armored) Google Play service-account JSON. Optional — only needed for Play publishing.'
+    required: false
+    default: ''
 runs:
   using: 'composite'
   steps:
@@ -20,6 +24,7 @@ runs:
         SECRET_PASSWORD: ${{ inputs.SECRET_PASSWORD }}
         GOOGLE_SERVICES_JSON_ASC: ${{ inputs.GOOGLE_SERVICES_JSON_ASC }}
         ANDROID_RELEASE_KEYSTORE_ASC: ${{ inputs.ANDROID_RELEASE_KEYSTORE_ASC }}
+        GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ inputs.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
       run: |
         # Firebase config required by the com.google.gms.google-services plugin in :androidApp.
         echo "$GOOGLE_SERVICES_JSON_ASC" > google-services.json.asc
@@ -30,4 +35,10 @@ runs:
         if [ -n "$ANDROID_RELEASE_KEYSTORE_ASC" ]; then
           echo "$ANDROID_RELEASE_KEYSTORE_ASC" > release.keystore.asc
           gpg -d --passphrase "$SECRET_PASSWORD" --batch release.keystore.asc > androidApp/release.keystore
+        fi
+
+        # Google Play service account — decrypt only when provided (used by release.yml → Google Play).
+        if [ -n "$GOOGLE_PLAY_SERVICE_ACCOUNT_JSON" ]; then
+          echo "$GOOGLE_PLAY_SERVICE_ACCOUNT_JSON" > service_account.json.asc
+          gpg -d --passphrase "$SECRET_PASSWORD" --batch service_account.json.asc > service_account.json
         fi

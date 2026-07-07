@@ -64,6 +64,17 @@ platform :ios do
             )
         end
 
+        # App Store signed build → TestFlight (used by release.yml on push to master).
+        lane :store_build do
+            install_certificate_and_profile(match_type: "appstore")
+            build_project(
+                match_type: "appstore",
+                profile: "match AppStore #{APP_IDENTIFIER}",
+                configuration: "Release"
+            )
+            pilot(skip_waiting_for_build_processing: true)
+        end
+
         lane :distributeDebug do
             firebase_app_distribution(
                 app: ENV["IOS_DEBUG_FIREBASE_APP_ID"],
