@@ -7,7 +7,7 @@ import java.io.File
 
 object ProjectSettings {
 
-    private const val MAYOR_VERSION = 1
+    private const val MAYOR_VERSION = 0
     private const val MINOR_VERSION = 0
 
     // Fresh project — no historical offset. Version code == git commit count.
