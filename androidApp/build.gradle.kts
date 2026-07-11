@@ -58,6 +58,10 @@ android {
 }
 
 dependencies {
+    libs.submob.apply {
+        implementation(logmob)
+    }
+
     implementation(project(Modules.COMMON))
     implementation(compose.runtime)
     implementation(libs.android.activityCompose)
