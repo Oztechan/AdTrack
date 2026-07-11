@@ -16,7 +16,12 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         // SubMob shared libraries publish -SNAPSHOT builds here; releases resolve via mavenCentral().
-        maven { url = uri("https://central.sonatype.com/repository/maven-snapshots/") }
+        // Scoped to SubMob snapshots so Gradle never queries it for anything else.
+        maven {
+            url = uri("https://central.sonatype.com/repository/maven-snapshots/")
+            mavenContent { snapshotsOnly() }
+            content { includeGroup("com.github.submob") }
+        }
     }
 }
 
@@ -30,7 +35,7 @@ listOf(
 ).forEach { dirName ->
     val artifact = dirName.lowercase()
     val dir = file("../SubMob/$dirName")
-    if (dir.exists()) {
+    if (dir.isDirectory) {
         includeBuild(dir) {
             dependencySubstitution {
                 substitute(module("com.github.submob:$artifact")).using(project(":$artifact"))
