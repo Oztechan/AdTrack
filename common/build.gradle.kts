@@ -49,6 +49,10 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            libs.submob.apply {
+                implementation(logmob)
+            }
+
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)

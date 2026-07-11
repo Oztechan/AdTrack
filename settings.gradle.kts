@@ -15,8 +15,35 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        // SubMob shared libraries publish -SNAPSHOT builds here; releases resolve via mavenCentral().
+        // Scoped to SubMob snapshots so Gradle never queries it for anything else.
+        maven {
+            url = uri("https://central.sonatype.com/repository/maven-snapshots/")
+            mavenContent { snapshotsOnly() }
+            content { includeGroup("com.github.submob") }
+        }
     }
 }
+
+// region SubMob shared libraries
+// Co-develop from the sibling Oztechan/SubMob checkouts when present (edits show up instantly via a
+// Gradle composite build); otherwise — CI, or a clone without the siblings — resolve the published
+// versions declared in gradle/libs.versions.toml. Substitution is explicit because vanniktech sets
+// the module group late, which the automatic composite substitution can miss.
+listOf(
+    "LogMob",
+).forEach { dirName ->
+    val artifact = dirName.lowercase()
+    val dir = file("../SubMob/$dirName")
+    if (dir.isDirectory) {
+        includeBuild(dir) {
+            dependencySubstitution {
+                substitute(module("com.github.submob:$artifact")).using(project(":$artifact"))
+            }
+        }
+    }
+}
+// endregion
 
 include(
     ":common",
