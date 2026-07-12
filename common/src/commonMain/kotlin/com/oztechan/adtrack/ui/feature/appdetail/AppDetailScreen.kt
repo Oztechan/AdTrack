@@ -38,6 +38,7 @@ import com.oztechan.adtrack.domain.model.RevenueSummary
 import com.oztechan.adtrack.ui.components.RevenueChart
 import com.oztechan.adtrack.ui.components.SummaryCard
 import com.oztechan.adtrack.ui.components.label
+import com.oztechan.adtrack.ui.components.seriesTitle
 import com.oztechan.adtrack.ui.theme.AdTrackTheme
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.datetime.LocalDate
@@ -117,13 +118,14 @@ private fun AppDetailContent(state: AppDetailState) {
                 RevenueChart(
                     points = state.series,
                     currencyCode = state.currencyCode,
-                    modifier = Modifier.padding(top = 8.dp)
+                    modifier = Modifier.padding(top = 8.dp),
+                    title = state.period.seriesTitle()
                 )
             }
         }
         item {
             Text(
-                text = "Daily earnings",
+                text = state.period.seriesTitle(),
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.padding(top = 16.dp)
             )

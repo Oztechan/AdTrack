@@ -43,6 +43,7 @@ import com.oztechan.adtrack.ui.components.AppRevenueRow
 import com.oztechan.adtrack.ui.components.PeriodSelector
 import com.oztechan.adtrack.ui.components.RevenueChart
 import com.oztechan.adtrack.ui.components.SummaryCard
+import com.oztechan.adtrack.ui.components.seriesTitle
 import com.oztechan.adtrack.ui.theme.AdTrackTheme
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.datetime.LocalDate
@@ -136,7 +137,8 @@ private fun DashboardContent(
                 RevenueChart(
                     points = state.series,
                     currencyCode = currency,
-                    modifier = Modifier.padding(top = 8.dp)
+                    modifier = Modifier.padding(top = 8.dp),
+                    title = state.selectedPeriod.seriesTitle()
                 )
             }
         }
