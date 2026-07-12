@@ -16,6 +16,8 @@ xcuserdata/
 ios/Pods/
 ios/build/
 DerivedData/
+# Firebase iOS config (decrypted in CI per build variant, never committed)
+iosApp/iosApp/GoogleService-Info.plist
 
 # Fastlane
 iosApp/fastlane/.env

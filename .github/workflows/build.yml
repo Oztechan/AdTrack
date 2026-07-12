@@ -31,9 +31,11 @@ jobs:
       - name: Set up Xcode
         run: sudo xcode-select --switch /Applications/Xcode_16.4.app
 
-      # Full graph: detekt + all tests + Android assemble + iOS framework link.
+      # Full graph: detekt + JVM/Android tests + Android assemble + iOS framework link.
+      # The iOS native test tasks are excluded: their test binary links Crashlytics' cinterop
+      # (`-framework FirebaseCore` etc.), which a plain KMP test link can't resolve.
       - name: Build
-        run: ./gradlew build
+        run: ./gradlew build -x iosSimulatorArm64Test -x iosX64Test
 
       - name: Set Job Status
         id: status

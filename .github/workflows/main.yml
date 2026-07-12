@@ -64,8 +64,11 @@ jobs:
       - name: Setup Gradle Repo
         uses: Oztechan/Global/actions/setup-gradle-repo@8610938e630b3ed86127765237fe3647b9fabd4f
 
-      - name: Test (Android + iOS)
-        run: ./gradlew testDebugUnitTest iosSimulatorArm64Test
+      # JVM/Android only. The iOS native test binary links Crashlytics' cinterop, which forces
+      # `-framework FirebaseCore` etc. — unavailable to a plain KMP test link. Same commonTest logic
+      # runs here on the JVM; the iOS app links the Firebase SPM SDK at Xcode build time.
+      - name: Test (Android)
+        run: ./gradlew testDebugUnitTest
 
       - name: Cancel other jobs if this fails
         if: failure()
@@ -125,6 +128,8 @@ jobs:
         with:
           SECRET_PASSWORD: ${{ secrets.SECRET_PASSWORD }}
           GOOGLE_SERVICES_JSON_ASC: ${{ secrets.GOOGLE_SERVICES_JSON_ASC }}
+          # Release plist on the nightly schedule, Debug plist on push/PR — matches BUILD_TYPE.
+          GOOGLE_SERVICE_INFO_PLIST_ASC: ${{ github.event_name == 'schedule' && secrets.GOOGLE_SERVICE_INFO_PLIST_ASC_RELEASE || secrets.GOOGLE_SERVICE_INFO_PLIST_ASC_DEBUG }}
 
       - name: Set up Xcode
         run: sudo xcode-select --switch /Applications/Xcode_16.4.app
