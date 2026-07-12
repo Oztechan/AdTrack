@@ -136,11 +136,17 @@ class FakeRevenueRepository(
     var error: Throwable? = null
 ) : RevenueRepository {
     var invalidateCalled = false
+    var yesterdaySummaryCalled = false
     var lastAppSeriesId: String? = null
 
     override suspend fun getAccount(): AdMobAccount = error?.let { throw it } ?: account
     override suspend fun getSummary(period: Period): RevenueSummary =
         error?.let { throw it } ?: summary.copy(period = period)
+
+    override suspend fun getYesterdaySummary(): RevenueSummary {
+        yesterdaySummaryCalled = true
+        return error?.let { throw it } ?: summary.copy(previousEarnings = null, deltaPercent = null)
+    }
 
     override suspend fun getAppBreakdown(period: Period): List<AppRevenue> =
         error?.let { throw it } ?: apps

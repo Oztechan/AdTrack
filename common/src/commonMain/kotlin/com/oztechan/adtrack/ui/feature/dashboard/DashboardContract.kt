@@ -18,6 +18,7 @@ data class DashboardState(
     val isLoading: Boolean = false,
     val isRefreshing: Boolean = false,
     val summary: RevenueSummary? = null,
+    val yesterdaySummary: RevenueSummary? = null,
     val apps: List<AppRevenue> = emptyList(),
     val series: List<RevenuePoint> = emptyList(),
     val errorMessage: String? = null

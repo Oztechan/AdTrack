@@ -60,6 +60,33 @@ class RevenueRepositoryImplTest {
     }
 
     @Test
+    fun yesterday_summary_reports_over_yesterdays_range_without_delta() = runTest {
+        val yesterday = calculator.previousRange(Period.TODAY, tz)
+        val api = FakeAdMobApi { _, spec ->
+            if (spec.dateRange == yesterday) listOf(earningsRow("2000000")) else emptyList()
+        }
+
+        val summary = repo(api).getYesterdaySummary()
+
+        assertEquals(2.0, summary.earnings)
+        assertEquals(null, summary.previousEarnings)
+        assertEquals(null, summary.deltaPercent)
+    }
+
+    @Test
+    fun reads_sharing_the_same_report_reuse_one_api_call() = runTest {
+        val api = FakeAdMobApi { _, _ -> listOf(earningsRow("1000000")) }
+        val repository = repo(api)
+
+        repository.getSummary(Period.TODAY) // fetches today's + yesterday's reports
+        assertEquals(2, api.reportCallCount)
+
+        repository.getRevenueSeries(Period.TODAY) // same report as summary's current range
+        repository.getYesterdaySummary() // same report as summary's previous range
+        assertEquals(2, api.reportCallCount, "Series and yesterday reads should reuse cached reports")
+    }
+
+    @Test
     fun summary_is_cached_until_invalidated() = runTest {
         val api = FakeAdMobApi { _, _ -> listOf(earningsRow("1000000")) }
         val repository = repo(api)

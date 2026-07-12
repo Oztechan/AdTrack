@@ -13,6 +13,10 @@ import com.oztechan.adtrack.domain.model.RevenueSummary
 interface RevenueRepository {
     suspend fun getAccount(): AdMobAccount
     suspend fun getSummary(period: Period): RevenueSummary
+
+    /** Yesterday's totals, shown next to today's summary where there is no chart to give context. */
+    suspend fun getYesterdaySummary(): RevenueSummary
+
     suspend fun getAppBreakdown(period: Period): List<AppRevenue>
     suspend fun getRevenueSeries(period: Period): List<RevenuePoint>
 
