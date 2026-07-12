@@ -1,0 +1,47 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "labels": [
+    "dependencies"
+  ],
+  "rebaseWhen": "conflicted",
+  "gitAuthor": "Renovate <renovate@oztechan.com>",
+  "commitBody": "Co-authored-by: Mustafa Ozhan <mr.mustafa.ozhan@gmail.com>",
+  "commitMessageAction": "[Oztechan/AdTrack#41] Update",
+  "prConcurrentLimit": 20,
+  "git-submodules": {
+    "enabled": true,
+    "groupName": "Git Submodules"
+  },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "commitMessageAction": "[Oztechan/AdTrack#41] Lock file maintenance"
+  },
+  "regexManagers": [
+    {
+      "fileMatch": [
+        "^iosApp/iosApp\\.xcodeproj/project\\.pbxproj$"
+      ],
+      "matchStrings": [
+        "repositoryURL = \"https://github.com/(?<depName>[^/]+/[^\"/]+?)(?:\\.git)?\";\\s*requirement = \\{\\s*kind = exactVersion;\\s*version = (?<currentValue>[^;]+);"
+      ],
+      "datasourceTemplate": "github-tags"
+    }
+  ],
+  "packageRules": [
+    {
+      "groupName": "kotlin",
+      "matchPackageNames": [
+        "/^org.jetbrains.kotlin.$/"
+      ]
+    },
+    {
+      "groupName": "koin",
+      "matchPackageNames": [
+        "/^io.insert-koin/"
+      ]
+    }
+  ]
+}
