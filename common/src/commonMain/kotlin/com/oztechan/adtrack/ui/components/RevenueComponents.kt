@@ -34,7 +34,7 @@ fun Period.label(): String = when (this) {
     Period.TODAY -> "Today"
     Period.LAST_30_DAYS -> "Last 30 Days"
     Period.LAST_90_DAYS -> "Last 90 Days"
-    Period.LAST_365_DAYS -> "Last Year"
+    Period.LAST_365_DAYS -> "Last 365 Days"
     Period.LIFETIME -> "Lifetime"
 }
 
