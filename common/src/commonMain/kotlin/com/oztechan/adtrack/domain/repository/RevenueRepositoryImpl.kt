@@ -52,7 +52,7 @@ class RevenueRepositoryImpl(
         val rows = report(
             account = account,
             range = periodCalculator.currentRange(period, account.reportingTimeZone),
-            dimensions = listOf(AdMobApi.Dimension.APP)
+            dimensions = listOf(AdMobApi.Dimension.APP, AdMobApi.Dimension.PLATFORM)
         )
         ReportMapper.toAppRevenues(rows)
     }

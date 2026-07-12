@@ -92,9 +92,9 @@ class RevenueRepositoryImplTest {
     }
 
     @Test
-    fun app_breakdown_requests_app_dimension() = runTest {
+    fun app_breakdown_requests_app_and_platform_dimensions() = runTest {
         val api = FakeAdMobApi { _, _ -> emptyList() }
         repo(api).getAppBreakdown(Period.LAST_90_DAYS)
-        assertTrue(api.specs.last().dimensions.contains("APP"))
+        assertTrue(api.specs.last().dimensions.containsAll(listOf("APP", "PLATFORM")))
     }
 }

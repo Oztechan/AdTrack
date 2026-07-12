@@ -24,12 +24,19 @@ data class RevenueSummary(
     val deltaPercent: Double?
 )
 
+enum class AppPlatform {
+    ANDROID,
+    IOS,
+    UNKNOWN
+}
+
 data class AppRevenue(
     val appId: String,
     val appName: String,
     val earnings: Double,
     val impressions: Long,
-    val clicks: Long
+    val clicks: Long,
+    val platform: AppPlatform = AppPlatform.UNKNOWN
 )
 
 data class RevenuePoint(

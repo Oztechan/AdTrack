@@ -34,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.oztechan.adtrack.domain.model.AppPlatform
 import com.oztechan.adtrack.domain.model.AppRevenue
 import com.oztechan.adtrack.domain.model.Period
 import com.oztechan.adtrack.domain.model.RevenuePoint
@@ -146,7 +147,7 @@ private fun DashboardContent(
         if (state.apps.isEmpty()) {
             item { Text("No app revenue for this period.", style = MaterialTheme.typography.bodyMedium) }
         }
-        items(state.apps, key = { it.appId.ifBlank { it.appName } }) { app ->
+        items(state.apps, key = { it.appId.ifBlank { "${it.appName}_${it.platform}" } }) { app ->
             AppRevenueRow(app = app, currencyCode = currency, onClick = { onAppClick(app) })
             HorizontalDivider()
         }
@@ -188,8 +189,8 @@ private fun sampleSummary() = RevenueSummary(
 
 @Suppress("MagicNumber") // preview sample data
 private fun sampleApps() = listOf(
-    AppRevenue("app1", "Currency Converter", 84.10, 9000, 180),
-    AppRevenue("app2", "TraceFit", 44.32, 6420, 132)
+    AppRevenue("app1", "Currency Converter", 84.10, 9000, 180, AppPlatform.ANDROID),
+    AppRevenue("app2", "Currency Converter", 44.32, 6420, 132, AppPlatform.IOS)
 )
 
 @Suppress("MagicNumber") // preview sample data

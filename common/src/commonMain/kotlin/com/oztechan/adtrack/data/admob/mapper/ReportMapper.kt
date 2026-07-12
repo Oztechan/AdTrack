@@ -6,6 +6,7 @@ package com.oztechan.adtrack.data.admob.mapper
 
 import com.oztechan.adtrack.data.admob.api.AdMobApi
 import com.oztechan.adtrack.data.admob.model.ReportRow
+import com.oztechan.adtrack.domain.model.AppPlatform
 import com.oztechan.adtrack.domain.model.AppRevenue
 import com.oztechan.adtrack.domain.model.Period
 import com.oztechan.adtrack.domain.model.RevenuePoint
@@ -49,7 +50,8 @@ object ReportMapper {
                 appName = app?.displayLabel?.takeIf { it.isNotBlank() } ?: app?.value.orEmpty(),
                 earnings = row.earnings(),
                 impressions = row.integerMetric(AdMobApi.Metric.IMPRESSIONS),
-                clicks = row.integerMetric(AdMobApi.Metric.CLICKS)
+                clicks = row.integerMetric(AdMobApi.Metric.CLICKS),
+                platform = row.platform()
             )
         }
         .sortedByDescending { it.earnings }
@@ -72,6 +74,11 @@ object ReportMapper {
 
     private fun ReportRow.integerMetric(metric: String): Long =
         metricValues[metric]?.integerValue?.toLongOrNull() ?: 0L
+
+    private fun ReportRow.platform(): AppPlatform =
+        dimensionValues[AdMobApi.Dimension.PLATFORM]?.value
+            ?.let { raw -> AppPlatform.entries.firstOrNull { it.name == raw.uppercase() } }
+            ?: AppPlatform.UNKNOWN
 
     // AdMob DATE dimension is encoded as "YYYYMMDD".
     private fun parseDate(raw: String): LocalDate? {

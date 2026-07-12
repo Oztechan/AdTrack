@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.oztechan.adtrack.core.util.formatCurrency
+import com.oztechan.adtrack.domain.model.AppPlatform
 import com.oztechan.adtrack.domain.model.AppRevenue
 import com.oztechan.adtrack.domain.model.Period
 import com.oztechan.adtrack.domain.model.RevenueSummary
@@ -36,6 +37,12 @@ fun Period.label(): String = when (this) {
     Period.LAST_90_DAYS -> "Last 90 Days"
     Period.LAST_365_DAYS -> "Last Year"
     Period.LIFETIME -> "Lifetime"
+}
+
+fun AppPlatform.label(): String? = when (this) {
+    AppPlatform.ANDROID -> "Android"
+    AppPlatform.IOS -> "iOS"
+    AppPlatform.UNKNOWN -> null
 }
 
 @Composable
@@ -130,7 +137,11 @@ fun AppRevenueRow(
                 style = MaterialTheme.typography.titleMedium
             )
             Text(
-                text = "${app.impressions} impressions · ${app.clicks} clicks",
+                text = listOfNotNull(
+                    app.platform.label(),
+                    "${app.impressions} impressions",
+                    "${app.clicks} clicks"
+                ).joinToString(" · "),
                 style = MaterialTheme.typography.bodySmall
             )
         }
@@ -154,7 +165,7 @@ private fun SummaryCardPreview() {
 @Composable
 private fun AppRevenueRowPreview() {
     AdTrackTheme {
-        AppRevenueRow(AppRevenue("a", "Currency Converter", 84.10, 9000, 180), "USD", {})
+        AppRevenueRow(AppRevenue("a", "Currency Converter", 84.10, 9000, 180, AppPlatform.ANDROID), "USD", {})
     }
 }
 
