@@ -44,6 +44,7 @@ private enum class ChartType { BAR, LINE }
  * right-side value labels (so values are approximate without labeling every bar). Renders nothing
  * for fewer than two data points.
  */
+@Suppress("LongMethod", "CyclomaticComplexMethod")
 @Composable
 fun RevenueChart(
     points: List<RevenuePoint>,
