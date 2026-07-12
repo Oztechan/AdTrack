@@ -15,6 +15,10 @@ inputs:
     description: 'GPG-encrypted (armored) Google Play service-account JSON. Optional — only needed for Play publishing.'
     required: false
     default: ''
+  GOOGLE_SERVICE_INFO_PLIST_ASC:
+    description: 'GPG-encrypted (armored) GoogleService-Info.plist for the iOS app (variant-specific). Optional — only needed for iOS app builds.'
+    required: false
+    default: ''
 runs:
   using: 'composite'
   steps:
@@ -25,6 +29,7 @@ runs:
         GOOGLE_SERVICES_JSON_ASC: ${{ inputs.GOOGLE_SERVICES_JSON_ASC }}
         ANDROID_RELEASE_KEYSTORE_ASC: ${{ inputs.ANDROID_RELEASE_KEYSTORE_ASC }}
         GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ inputs.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+        GOOGLE_SERVICE_INFO_PLIST_ASC: ${{ inputs.GOOGLE_SERVICE_INFO_PLIST_ASC }}
       run: |
         # Firebase config required by the com.google.gms.google-services plugin in :androidApp.
         echo "$GOOGLE_SERVICES_JSON_ASC" > google-services.json.asc
@@ -41,4 +46,12 @@ runs:
         if [ -n "$GOOGLE_PLAY_SERVICE_ACCOUNT_JSON" ]; then
           echo "$GOOGLE_PLAY_SERVICE_ACCOUNT_JSON" > service_account.json.asc
           gpg -d --passphrase "$SECRET_PASSWORD" --batch service_account.json.asc > service_account.json
+        fi
+
+        # Firebase config for the iOS app — decrypt only when provided (iOS app builds).
+        # The caller passes the Debug or Release plist depending on the build variant; it is
+        # bundled by the target's Resources build phase and read by FirebaseApp.configure().
+        if [ -n "$GOOGLE_SERVICE_INFO_PLIST_ASC" ]; then
+          echo "$GOOGLE_SERVICE_INFO_PLIST_ASC" > GoogleService-Info.plist.asc
+          gpg -d --passphrase "$SECRET_PASSWORD" --batch GoogleService-Info.plist.asc > iosApp/iosApp/GoogleService-Info.plist
         fi

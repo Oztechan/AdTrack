@@ -12,6 +12,7 @@ plugins {
         alias(jetbrainsCompose)
         alias(kotlinPluginCompose)
         alias(googleServices)
+        alias(firebaseCrashlyticsPlugin)
     }
 }
 

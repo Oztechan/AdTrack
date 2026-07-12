@@ -16,6 +16,11 @@ xcuserdata/
 ios/Pods/
 ios/build/
 DerivedData/
+# Firebase iOS config: a fake GoogleService-Info.plist placeholder IS committed so fresh clones
+# build; CI (and, if wanted, local) overwrite it with the real per-variant config. The real
+# variant plists are kept local only — they are the source for the GOOGLE_SERVICE_INFO_PLIST_ASC_*
+# GitHub secrets (the .asc files are ignored by the *.asc rule above).
+iosApp/iosApp/GoogleService-Info-*.plist
 
 # Fastlane
 iosApp/fastlane/.env
