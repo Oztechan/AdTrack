@@ -2,6 +2,9 @@
  * Copyright (c) 2026 Mustafa Ozhan. All rights reserved.
  */
 
+// Screen file groups its content composable with its state-specific sections and @Preview functions.
+@file:Suppress("TooManyFunctions")
+
 package com.oztechan.adtrack.ui.feature.dashboard
 
 import androidx.compose.foundation.layout.Arrangement
@@ -73,6 +76,7 @@ fun DashboardScreen(
     )
 }
 
+@Suppress("LongParameterList") // one callback per user action, hoisted to the stateless content composable
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DashboardScreenContent(
@@ -182,11 +186,13 @@ private fun sampleSummary() = RevenueSummary(
     deltaPercent = 27.0
 )
 
+@Suppress("MagicNumber") // preview sample data
 private fun sampleApps() = listOf(
     AppRevenue("app1", "Currency Converter", 84.10, 9000, 180),
     AppRevenue("app2", "TraceFit", 44.32, 6420, 132)
 )
 
+@Suppress("MagicNumber") // preview sample data
 private fun sampleSeries() = (1..7).map { day ->
     RevenuePoint(LocalDate(2026, 1, day), earnings = 8.0 + day * 2.5)
 }

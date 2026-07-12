@@ -19,6 +19,10 @@ object ReportMapper {
     private const val PERCENT = 100.0
     private const val DATE_LENGTH = 8
 
+    // "YYYYMMDD" field boundaries.
+    private const val YEAR_END = 4
+    private const val MONTH_END = 6
+
     fun toSummary(
         rows: List<ReportRow>,
         period: Period,
@@ -72,9 +76,9 @@ object ReportMapper {
     // AdMob DATE dimension is encoded as "YYYYMMDD".
     private fun parseDate(raw: String): LocalDate? {
         if (raw.length != DATE_LENGTH) return null
-        val year = raw.substring(0, 4).toIntOrNull()
-        val month = raw.substring(4, 6).toIntOrNull()
-        val day = raw.substring(6, 8).toIntOrNull()
+        val year = raw.substring(0, YEAR_END).toIntOrNull()
+        val month = raw.substring(YEAR_END, MONTH_END).toIntOrNull()
+        val day = raw.substring(MONTH_END, DATE_LENGTH).toIntOrNull()
         return if (year != null && month != null && day != null) {
             runCatching { LocalDate(year, month, day) }.getOrNull()
         } else {
