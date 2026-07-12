@@ -27,6 +27,8 @@ jobs:
         with:
           SECRET_PASSWORD: ${{ secrets.SECRET_PASSWORD }}
           GOOGLE_SERVICES_JSON_ASC: ${{ secrets.GOOGLE_SERVICES_JSON_ASC }}
+          # `./gradlew build` assembles the release variant, which is release-signed.
+          ANDROID_RELEASE_KEYSTORE_ASC: ${{ secrets.ANDROID_RELEASE_KEYSTORE_ASC }}
 
       - name: Set up Xcode
         run: sudo xcode-select --switch /Applications/Xcode_16.4.app
