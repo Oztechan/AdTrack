@@ -21,7 +21,7 @@ kotlinCryptoHash = "0.6.1"
 activityCompose = "1.13.0"
 androidxBrowser = "1.8.0"
 androidxSecurityCrypto = "1.1.0-alpha06"
-androidxSplashScreen = "1.0.1"
+androidxSplashScreen = "1.2.0"
 androidDesugaring = "2.1.5"
 
 [libraries]
