@@ -16,6 +16,10 @@ xcuserdata/
 ios/Pods/
 ios/build/
 DerivedData/
+# SPM resolution cache: re-resolved locally from the .pbxproj pins (which Renovate manages).
+# Not tracked so a stale committed copy can't cause "Missing package product" failures.
+iosApp/iosApp.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
+swiftpm
 # Firebase iOS config: a fake GoogleService-Info.plist placeholder IS committed so fresh clones
 # build; CI (and, if wanted, local) overwrite it with the real per-variant config. The real
 # variant plists are kept local only — they are the source for the GOOGLE_SERVICE_INFO_PLIST_ASC_*
