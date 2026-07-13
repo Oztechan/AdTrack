@@ -46,3 +46,5 @@ service_account.json
 # Roborazzi diff artifacts written next to the golden screenshots on verify failure
 art/store/screenshots/**/*_compare.png
 art/store/screenshots/**/*_actual.png
+common/src/androidUnitTest/snapshots/*_compare.png
+common/src/androidUnitTest/snapshots/*_actual.png
