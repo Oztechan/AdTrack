@@ -17,6 +17,7 @@ plugins {
         alias(mokkery).apply(false)
         alias(googleServices).apply(false)
         alias(firebaseCrashlyticsPlugin).apply(false)
+        alias(kover)
         alias(detekt)
     }
 }
@@ -25,6 +26,14 @@ group = ProjectSettings.PROJECT_ID
 version = ProjectSettings.getVersionName(project)
 
 allprojects {
+    apply(plugin = rootProject.libs.plugins.kover.get().pluginId).also {
+        rootProject.dependencies.add("kover", project(path))
+        kover.reports.filters.excludes.annotatedBy(
+            "org.jetbrains.compose.ui.tooling.preview.Preview",
+            "androidx.compose.runtime.Composable"
+        )
+    }
+
     apply(plugin = rootProject.libs.plugins.detekt.get().pluginId).also {
         detekt {
             buildUponDefaultConfig = true

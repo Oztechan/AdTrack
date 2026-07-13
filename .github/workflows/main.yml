@@ -78,6 +78,33 @@ jobs:
         id: status
         run: echo "status=success" >> $GITHUB_OUTPUT
 
+  Coverage:
+    runs-on: ubuntu-24.04
+    outputs:
+      status: ${{ steps.status.outputs.status }}
+    steps:
+
+      - name: Setup Gradle Repo
+        uses: Oztechan/Global/actions/setup-gradle-repo@8610938e630b3ed86127765237fe3647b9fabd4f
+
+      # Kover aggregates JVM/Android unit-test coverage at the root into build/reports/kover/report.xml.
+      - name: Generate Coverage
+        run: ./gradlew koverXmlReport
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v7.0.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: build/reports/kover/report.xml
+
+      - name: Cancel other jobs if this fails
+        if: failure()
+        uses: andymckay/cancel-action@0.5
+
+      - name: Set Job Status
+        id: status
+        run: echo "status=success" >> $GITHUB_OUTPUT
+
   AndroidBuild:
     runs-on: ubuntu-24.04
     outputs:
@@ -234,13 +261,14 @@ jobs:
 
   Notify:
     runs-on: ubuntu-24.04
-    needs: [ CodeAnalysis, Test, AndroidBuild, iOSBuild, DistributeAndroid, DistributeIOS ]
+    needs: [ CodeAnalysis, Test, Coverage, AndroidBuild, iOSBuild, DistributeAndroid, DistributeIOS ]
     if: always()
     steps:
 
       - name: Notify slack fail
         if: false == (needs.CodeAnalysis.outputs.status == 'success') ||
           false == (needs.Test.outputs.status == 'success') ||
+          false == (needs.Coverage.outputs.status == 'success') ||
           false == (needs.AndroidBuild.outputs.status == 'success') ||
           false == (needs.iOSBuild.outputs.status == 'success') ||
           (false == (needs.DistributeAndroid.outputs.status == 'success') && github.event_name != 'pull_request') ||
