@@ -18,6 +18,7 @@ import com.oztechan.adtrack.domain.model.RevenueSummary
 import com.oztechan.adtrack.domain.repository.AuthRepository
 import com.oztechan.adtrack.domain.repository.RevenueRepository
 import io.ktor.http.Url
+import kotlinx.coroutines.delay
 
 fun fakeAccount(
     publisherId: String = "pub-123",
@@ -138,10 +139,13 @@ class FakeRevenueRepository(
     var invalidateCalled = false
     var yesterdaySummaryCalled = false
     var lastAppSeriesId: String? = null
+    var summaryDelayMillis: (Period) -> Long = { 0 }
 
     override suspend fun getAccount(): AdMobAccount = error?.let { throw it } ?: account
-    override suspend fun getSummary(period: Period): RevenueSummary =
-        error?.let { throw it } ?: summary.copy(period = period)
+    override suspend fun getSummary(period: Period): RevenueSummary {
+        delay(summaryDelayMillis(period))
+        return error?.let { throw it } ?: summary.copy(period = period)
+    }
 
     override suspend fun getYesterdaySummary(): RevenueSummary {
         yesterdaySummaryCalled = true

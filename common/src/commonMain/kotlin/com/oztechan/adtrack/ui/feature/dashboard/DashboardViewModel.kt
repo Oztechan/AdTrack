@@ -11,6 +11,8 @@ import com.oztechan.adtrack.domain.model.Period
 import com.oztechan.adtrack.domain.model.RevenuePoint
 import com.oztechan.adtrack.domain.model.RevenueSummary
 import com.oztechan.adtrack.domain.repository.RevenueRepository
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -22,6 +24,8 @@ class DashboardViewModel(
     initialData = DashboardData()
 ),
     DashboardEvent {
+
+    private var loadJob: Job? = null
 
     init {
         load(state.value.selectedPeriod, refresh = false)
@@ -46,8 +50,11 @@ class DashboardViewModel(
 
     override fun onSettingsClick() = sendEffect { DashboardEffect.NavigateToSettings }
 
+    // Cancels the in-flight load: without this, switching periods quickly lets the slower older
+    // request finish last and overwrite the state of the newer selection.
     private fun load(period: Period, refresh: Boolean) {
-        viewModelScope.launch {
+        loadJob?.cancel()
+        loadJob = viewModelScope.launch {
             setState {
                 copy(
                     isLoading = !refresh,
@@ -78,6 +85,9 @@ class DashboardViewModel(
                     )
                 }
             }.onFailure { error ->
+                // Rethrow so a cancelled load (superseded by a newer selection) never
+                // paints an error over the state the new load is about to produce.
+                if (error is CancellationException) throw error
                 setState {
                     copy(
                         isLoading = false,
