@@ -62,6 +62,10 @@ val networkModule = module {
 }
 
 internal fun HttpClientConfig<*>.setupHttpClientConfig(json: Json) {
+    // Throw on non-2xx so real API errors (e.g. AdMob API disabled -> 403) surface as network
+    // exceptions instead of deserializing an error body into an empty, misleading success model.
+    expectSuccess = true
+
     install(ContentNegotiation) {
         json(json = json, contentType = ContentType.Any)
     }
