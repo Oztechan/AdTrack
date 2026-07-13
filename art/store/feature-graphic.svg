@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="500" viewBox="0 0 1024 500">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1024" y2="500" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1740C0"/>
+      <stop offset="1" stop-color="#4A82FF"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1024" height="500" fill="url(#bg)"/>
+
+  <!-- Faint oversized chart line across the whole banner for depth -->
+  <path d="M-20 450 L180 395 L340 420 L520 330 L700 350 L900 230 L1060 170"
+        fill="none" stroke="#FFFFFF" stroke-opacity="0.12" stroke-width="10"
+        stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Icon motif: white bars + green trend arrow -->
+  <g transform="translate(690,105)">
+    <g fill="#FFFFFF">
+      <rect x="0" y="170" width="58" height="120" rx="14"/>
+      <rect x="92" y="106" width="58" height="184" rx="14"/>
+      <rect x="184" y="28" width="58" height="262" rx="14"/>
+    </g>
+    <path d="M0 212 L96 152 L174 90 L258 24 M230 24 L258 24 L258 52"
+          fill="none" stroke="#00E676" stroke-width="25"
+          stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Wordmark + tagline -->
+  <g fill="#FFFFFF" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+    <text x="84" y="262" font-size="104" font-weight="800" letter-spacing="-2">AdTrack</text>
+    <text x="88" y="330" font-size="37" font-weight="500" fill-opacity="0.92">Your AdMob revenue at a glance</text>
+  </g>
+</svg>

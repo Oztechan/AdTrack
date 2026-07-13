@@ -24,6 +24,10 @@ androidxBrowser = "1.10.0"
 androidxSecurityCrypto = "1.1.0-alpha06"
 androidxSplashScreen = "1.0.1"
 androidDesugaring = "2.1.5"
+roborazzi = "1.68.0"
+robolectric = "4.16.1"
+junit = "4.13.2"
+composeUiTestJunit4 = "1.9.5"
 
 [libraries]
 # COMMON
@@ -60,6 +64,10 @@ android-splashScreen = { module = "androidx.core:core-splashscreen", version.ref
 android-desugaring = { module = "com.android.tools:desugar_jdk_libs", version.ref = "androidDesugaring" }
 android-firebaseBom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 android-firebaseAnalytics = { module = "com.google.firebase:firebase-analytics" }
+android-roborazziCompose = { module = "io.github.takahirom.roborazzi:roborazzi-compose", version.ref = "roborazzi" }
+android-robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+android-junit = { module = "junit:junit", version.ref = "junit" }
+android-composeUiTestJunit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "composeUiTestJunit4" }
 
 # IOS
 ios-ktor = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
@@ -81,3 +89,4 @@ buildKonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildKonfig"
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 mokkery = { id = "dev.mokkery", version.ref = "mokkery" }
+roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }

@@ -13,6 +13,7 @@ plugins {
         alias(serialization)
         alias(buildKonfig)
         alias(mokkery)
+        alias(roborazzi)
     }
 }
 
@@ -96,6 +97,14 @@ kotlin {
                 implementation(securityCrypto)
             }
         }
+        androidUnitTest.dependencies {
+            libs.android.apply {
+                implementation(junit)
+                implementation(robolectric)
+                implementation(roborazziCompose)
+                implementation(composeUiTestJunit4)
+            }
+        }
         iosMain.dependencies {
             implementation(libs.ios.ktor)
         }
@@ -113,6 +122,12 @@ android {
     compileOptions {
         sourceCompatibility = ProjectSettings.JAVA_VERSION
         targetCompatibility = ProjectSettings.JAVA_VERSION
+    }
+
+    // Robolectric renders the shared screen composables for store-screenshot capture.
+    testOptions.unitTests.apply {
+        isIncludeAndroidResources = true
+        all { it.systemProperty("robolectric.pixelCopyRenderMode", "hardware") }
     }
 }
 
