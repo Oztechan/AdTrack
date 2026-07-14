@@ -43,6 +43,7 @@ import com.oztechan.adtrack.ui.components.AppRevenueRow
 import com.oztechan.adtrack.ui.components.PeriodSelector
 import com.oztechan.adtrack.ui.components.RevenueChart
 import com.oztechan.adtrack.ui.components.SummaryCard
+import com.oztechan.adtrack.ui.components.seriesTitle
 import com.oztechan.adtrack.ui.theme.AdTrackTheme
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.datetime.LocalDate
@@ -128,12 +129,16 @@ private fun DashboardContent(
         state.summary?.let { summary ->
             item { SummaryCard(summary, modifier = Modifier.padding(top = 16.dp)) }
         }
+        state.yesterdaySummary?.let { yesterday ->
+            item { SummaryCard(yesterday, title = "Yesterday") }
+        }
         if (state.series.size >= 2) {
             item {
                 RevenueChart(
                     points = state.series,
                     currencyCode = currency,
-                    modifier = Modifier.padding(top = 8.dp)
+                    modifier = Modifier.padding(top = 8.dp),
+                    title = state.selectedPeriod.seriesTitle()
                 )
             }
         }
@@ -208,6 +213,34 @@ private fun DashboardLoadedPreview() {
                 summary = sampleSummary(),
                 apps = sampleApps(),
                 series = sampleSeries()
+            ),
+            onPeriodSelected = {},
+            onRefresh = {},
+            onRetry = {},
+            onAppClick = {},
+            onSettingsClick = {}
+        )
+    }
+}
+
+@Suppress("MagicNumber") // preview sample data
+@Preview
+@Composable
+private fun DashboardTodayPreview() {
+    AdTrackTheme {
+        DashboardScreenContent(
+            state = DashboardState(
+                selectedPeriod = Period.TODAY,
+                summary = sampleSummary().copy(period = Period.TODAY),
+                yesterdaySummary = sampleSummary().copy(
+                    period = Period.TODAY,
+                    earnings = 101.10,
+                    impressions = 12_040,
+                    clicks = 254,
+                    previousEarnings = null,
+                    deltaPercent = null
+                ),
+                apps = sampleApps()
             ),
             onPeriodSelected = {},
             onRefresh = {},

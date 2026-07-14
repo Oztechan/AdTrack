@@ -26,7 +26,35 @@ class RevenueRepositoryImplTest {
         metricValues = mapOf("ESTIMATED_EARNINGS" to MetricValue(microsValue = micros))
     )
 
+    private fun datedRow(date: String, micros: String) = ReportRow(
+        dimensionValues = mapOf("DATE" to DimensionValue(date)),
+        metricValues = mapOf("ESTIMATED_EARNINGS" to MetricValue(microsValue = micros))
+    )
+
     private fun repo(api: FakeAdMobApi) = RevenueRepositoryImpl(api, calculator)
+
+    @Test
+    fun yearly_series_is_aggregated_weekly_and_lifetime_monthly() = runTest {
+        val api = FakeAdMobApi { _, _ ->
+            listOf(
+                datedRow("20260105", "1000000"), // Monday
+                datedRow("20260107", "2000000"), // same week
+                datedRow("20260112", "4000000") // next Monday
+            )
+        }
+
+        val weekly = repo(api).getRevenueSeries(Period.LAST_365_DAYS)
+        assertEquals(2, weekly.size)
+        assertEquals(3.0, weekly[0].earnings)
+        assertEquals(4.0, weekly[1].earnings)
+
+        val monthly = repo(api).getRevenueSeries(Period.LIFETIME)
+        assertEquals(1, monthly.size)
+        assertEquals(7.0, monthly[0].earnings)
+
+        val daily = repo(api).getRevenueSeries(Period.LAST_30_DAYS)
+        assertEquals(3, daily.size)
+    }
 
     @Test
     fun getAccount_returns_first_account() = runTest {
@@ -57,6 +85,33 @@ class RevenueRepositoryImplTest {
         assertEquals(3.0, summary.earnings)
         assertEquals(2.0, summary.previousEarnings)
         assertEquals(50.0, summary.deltaPercent) // (3-2)/2 * 100
+    }
+
+    @Test
+    fun yesterday_summary_reports_over_yesterdays_range_without_delta() = runTest {
+        val yesterday = calculator.previousRange(Period.TODAY, tz)
+        val api = FakeAdMobApi { _, spec ->
+            if (spec.dateRange == yesterday) listOf(earningsRow("2000000")) else emptyList()
+        }
+
+        val summary = repo(api).getYesterdaySummary()
+
+        assertEquals(2.0, summary.earnings)
+        assertEquals(null, summary.previousEarnings)
+        assertEquals(null, summary.deltaPercent)
+    }
+
+    @Test
+    fun reads_sharing_the_same_report_reuse_one_api_call() = runTest {
+        val api = FakeAdMobApi { _, _ -> listOf(earningsRow("1000000")) }
+        val repository = repo(api)
+
+        repository.getSummary(Period.TODAY) // fetches today's + yesterday's reports
+        assertEquals(2, api.reportCallCount)
+
+        repository.getRevenueSeries(Period.TODAY) // same report as summary's current range
+        repository.getYesterdaySummary() // same report as summary's previous range
+        assertEquals(2, api.reportCallCount, "Series and yesterday reads should reuse cached reports")
     }
 
     @Test

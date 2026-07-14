@@ -21,6 +21,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -43,6 +44,28 @@ class DashboardViewModelTest {
         assertFalse(state.isLoading)
         assertEquals(12.5, state.summary?.earnings)
         assertTrue(state.apps.isNotEmpty())
+    }
+
+    @Test
+    fun today_period_also_loads_yesterday_summary() = runTest(dispatcher) {
+        val repository = FakeRevenueRepository()
+        val viewModel = DashboardViewModel(repository)
+        advanceUntilIdle()
+
+        // Initial period is TODAY.
+        assertTrue(repository.yesterdaySummaryCalled)
+        assertEquals(12.5, viewModel.state.value.yesterdaySummary?.earnings)
+    }
+
+    @Test
+    fun other_periods_clear_yesterday_summary() = runTest(dispatcher) {
+        val viewModel = DashboardViewModel(FakeRevenueRepository())
+        advanceUntilIdle()
+
+        viewModel.event.onPeriodSelected(Period.LAST_30_DAYS)
+        advanceUntilIdle()
+
+        assertNull(viewModel.state.value.yesterdaySummary)
     }
 
     @Test

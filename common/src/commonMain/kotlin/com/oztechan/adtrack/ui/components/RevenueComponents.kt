@@ -31,14 +31,6 @@ import com.oztechan.adtrack.ui.theme.LocalAdTrackColors
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.math.abs
 
-fun Period.label(): String = when (this) {
-    Period.TODAY -> "Today"
-    Period.LAST_30_DAYS -> "Last 30 Days"
-    Period.LAST_90_DAYS -> "Last 90 Days"
-    Period.LAST_365_DAYS -> "Last 365 Days"
-    Period.LIFETIME -> "Lifetime"
-}
-
 fun AppPlatform.label(): String? = when (this) {
     AppPlatform.ANDROID -> "Android"
     AppPlatform.IOS -> "iOS"
@@ -61,18 +53,22 @@ fun PeriodSelector(
             FilterChip(
                 selected = period == selected,
                 onClick = { onSelected(period) },
-                label = { Text(period.label()) }
+                label = { Text(period.selectorLabel()) }
             )
         }
     }
 }
 
 @Composable
-fun SummaryCard(summary: RevenueSummary, modifier: Modifier = Modifier) {
+fun SummaryCard(
+    summary: RevenueSummary,
+    modifier: Modifier = Modifier,
+    title: String = summary.period.label()
+) {
     Card(modifier = modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(20.dp)) {
             Text(
-                text = summary.period.label().uppercase(),
+                text = title.uppercase(),
                 style = MaterialTheme.typography.labelMedium
             )
             Text(
