@@ -14,10 +14,12 @@ import com.oztechan.adtrack.data.admob.model.NetworkReportSpec
 import com.oztechan.adtrack.data.admob.model.ReportRow
 import com.oztechan.adtrack.data.admob.model.StringList
 import com.oztechan.adtrack.domain.PeriodCalculator
+import com.oztechan.adtrack.domain.SeriesAggregator
 import com.oztechan.adtrack.domain.model.AppRevenue
 import com.oztechan.adtrack.domain.model.Period
 import com.oztechan.adtrack.domain.model.RevenuePoint
 import com.oztechan.adtrack.domain.model.RevenueSummary
+import com.oztechan.adtrack.domain.seriesGranularity
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlin.time.Clock
@@ -75,7 +77,7 @@ class RevenueRepositoryImpl(
     override suspend fun getRevenueSeries(period: Period): List<RevenuePoint> = cached("series_$period") {
         val account = getAccount()
         val rows = report(account, periodCalculator.currentRange(period, account.reportingTimeZone))
-        ReportMapper.toSeries(rows)
+        SeriesAggregator.aggregate(ReportMapper.toSeries(rows), period.seriesGranularity)
     }
 
     override suspend fun getAppRevenueSeries(
@@ -88,7 +90,7 @@ class RevenueRepositoryImpl(
             range = periodCalculator.currentRange(period, account.reportingTimeZone),
             appIdFilter = appId.takeIf { it.isNotBlank() }
         )
-        ReportMapper.toSeries(rows)
+        SeriesAggregator.aggregate(ReportMapper.toSeries(rows), period.seriesGranularity)
     }
 
     override fun invalidate() {

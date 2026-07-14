@@ -26,7 +26,35 @@ class RevenueRepositoryImplTest {
         metricValues = mapOf("ESTIMATED_EARNINGS" to MetricValue(microsValue = micros))
     )
 
+    private fun datedRow(date: String, micros: String) = ReportRow(
+        dimensionValues = mapOf("DATE" to DimensionValue(date)),
+        metricValues = mapOf("ESTIMATED_EARNINGS" to MetricValue(microsValue = micros))
+    )
+
     private fun repo(api: FakeAdMobApi) = RevenueRepositoryImpl(api, calculator)
+
+    @Test
+    fun yearly_series_is_aggregated_weekly_and_lifetime_monthly() = runTest {
+        val api = FakeAdMobApi { _, _ ->
+            listOf(
+                datedRow("20260105", "1000000"), // Monday
+                datedRow("20260107", "2000000"), // same week
+                datedRow("20260112", "4000000") // next Monday
+            )
+        }
+
+        val weekly = repo(api).getRevenueSeries(Period.LAST_365_DAYS)
+        assertEquals(2, weekly.size)
+        assertEquals(3.0, weekly[0].earnings)
+        assertEquals(4.0, weekly[1].earnings)
+
+        val monthly = repo(api).getRevenueSeries(Period.LIFETIME)
+        assertEquals(1, monthly.size)
+        assertEquals(7.0, monthly[0].earnings)
+
+        val daily = repo(api).getRevenueSeries(Period.LAST_30_DAYS)
+        assertEquals(3, daily.size)
+    }
 
     @Test
     fun getAccount_returns_first_account() = runTest {

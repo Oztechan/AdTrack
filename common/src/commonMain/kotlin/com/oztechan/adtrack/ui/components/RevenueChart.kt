@@ -39,10 +39,11 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 private enum class ChartType { BAR, LINE }
 
 /**
- * Day-by-day revenue chart drawn with Compose Canvas (no chart dependency — identical on Android
- * and iOS). Supports a bar/line toggle, tap-to-inspect a single day, faint Y gridlines and
- * right-side value labels (so values are approximate without labeling every bar). Renders nothing
- * for fewer than two data points.
+ * Revenue chart drawn with Compose Canvas (no chart dependency — identical on Android and iOS).
+ * Each point is one bucket of the series (a day, week, or month depending on the period).
+ * Supports a bar/line toggle, tap-to-inspect a single point, faint Y gridlines and right-side
+ * value labels (so values are approximate without labeling every bar). Renders nothing for fewer
+ * than two data points.
  */
 @Suppress("LongMethod", "CyclomaticComplexMethod")
 @Composable
@@ -89,7 +90,7 @@ fun RevenueChart(
             Text(
                 text = selected
                     ?.let { "${it.date}  ·  ${formatCurrency(it.earnings, currencyCode)}" }
-                    ?: "Max ${formatCurrency(maxEarnings, currencyCode)}  ·  tap to inspect a day",
+                    ?: "Max ${formatCurrency(maxEarnings, currencyCode)}  ·  tap to inspect a point",
                 style = MaterialTheme.typography.labelLarge,
                 modifier = Modifier.padding(top = 4.dp)
             )
