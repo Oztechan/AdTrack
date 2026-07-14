@@ -18,6 +18,8 @@ import com.oztechan.adtrack.domain.model.AppRevenue
 import com.oztechan.adtrack.domain.model.Period
 import com.oztechan.adtrack.domain.model.RevenuePoint
 import com.oztechan.adtrack.domain.model.RevenueSummary
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlin.time.Clock
 
 private const val CACHE_TTL_SECONDS = 300L
@@ -28,6 +30,7 @@ class RevenueRepositoryImpl(
 ) : RevenueRepository {
 
     private val cache = mutableMapOf<String, CacheEntry>()
+    private val locks = mutableMapOf<String, Mutex>()
     private var cachedAccount: AdMobAccount? = null
 
     override suspend fun getAccount(): AdMobAccount =
@@ -44,6 +47,18 @@ class RevenueRepositoryImpl(
             period = period,
             currencyCode = account.currencyCode,
             previousEarnings = previousEarnings
+        )
+    }
+
+    override suspend fun getYesterdaySummary(): RevenueSummary = cached("summary_yesterday") {
+        val account = getAccount()
+        // TODAY's previous range is exactly yesterday.
+        val range = requireNotNull(periodCalculator.previousRange(Period.TODAY, account.reportingTimeZone))
+        ReportMapper.toSummary(
+            rows = report(account, range),
+            period = Period.TODAY,
+            currencyCode = account.currencyCode,
+            previousEarnings = null
         )
     }
 
@@ -81,34 +96,41 @@ class RevenueRepositoryImpl(
         cachedAccount = null
     }
 
+    // Cached at the request level so reads sharing the same report (e.g. TODAY's summary, its
+    // series, and yesterday's card) cost a single AdMob API call.
     private suspend fun report(
         account: AdMobAccount,
         range: DateRange,
         dimensions: List<String> = listOf(AdMobApi.Dimension.DATE),
         appIdFilter: String? = null
-    ): List<ReportRow> = adMobApi.generateNetworkReport(
-        publisherId = account.publisherId,
-        spec = NetworkReportSpec(
-            dateRange = range,
-            dimensions = dimensions,
-            metrics = listOf(
-                AdMobApi.Metric.ESTIMATED_EARNINGS,
-                AdMobApi.Metric.IMPRESSIONS,
-                AdMobApi.Metric.CLICKS
-            ),
-            localizationSettings = LocalizationSettings(currencyCode = account.currencyCode),
-            dimensionFilters = appIdFilter?.let {
-                listOf(DimensionFilter(AdMobApi.Dimension.APP, StringList(listOf(it))))
-            }
+    ): List<ReportRow> = cached("report_${range}_${dimensions}_$appIdFilter") {
+        adMobApi.generateNetworkReport(
+            publisherId = account.publisherId,
+            spec = NetworkReportSpec(
+                dateRange = range,
+                dimensions = dimensions,
+                metrics = listOf(
+                    AdMobApi.Metric.ESTIMATED_EARNINGS,
+                    AdMobApi.Metric.IMPRESSIONS,
+                    AdMobApi.Metric.CLICKS
+                ),
+                localizationSettings = LocalizationSettings(currencyCode = account.currencyCode),
+                dimensionFilters = appIdFilter?.let {
+                    listOf(DimensionFilter(AdMobApi.Dimension.APP, StringList(listOf(it))))
+                }
+            )
         )
-    )
-
-    @Suppress("UNCHECKED_CAST")
-    private suspend fun <T> cached(key: String, block: suspend () -> T): T {
-        val now = Clock.System.now().epochSeconds
-        cache[key]?.let { if (now < it.expiry) return it.value as T }
-        return block().also { cache[key] = CacheEntry(it as Any, now + CACHE_TTL_SECONDS) }
     }
+
+    // Per-key lock so concurrent readers of the same key (dashboard loads in parallel) wait for
+    // the first fetch instead of firing duplicate API calls.
+    @Suppress("UNCHECKED_CAST")
+    private suspend fun <T> cached(key: String, block: suspend () -> T): T =
+        locks.getOrPut(key) { Mutex() }.withLock {
+            val now = Clock.System.now().epochSeconds
+            val hit = cache[key]?.takeIf { now < it.expiry }
+            hit?.value as T? ?: block().also { cache[key] = CacheEntry(it as Any, now + CACHE_TTL_SECONDS) }
+        }
 
     private data class CacheEntry(val value: Any, val expiry: Long)
 }

@@ -128,6 +128,9 @@ private fun DashboardContent(
         state.summary?.let { summary ->
             item { SummaryCard(summary, modifier = Modifier.padding(top = 16.dp)) }
         }
+        state.yesterdaySummary?.let { yesterday ->
+            item { SummaryCard(yesterday, title = "Yesterday") }
+        }
         if (state.series.size >= 2) {
             item {
                 RevenueChart(
@@ -208,6 +211,34 @@ private fun DashboardLoadedPreview() {
                 summary = sampleSummary(),
                 apps = sampleApps(),
                 series = sampleSeries()
+            ),
+            onPeriodSelected = {},
+            onRefresh = {},
+            onRetry = {},
+            onAppClick = {},
+            onSettingsClick = {}
+        )
+    }
+}
+
+@Suppress("MagicNumber") // preview sample data
+@Preview
+@Composable
+private fun DashboardTodayPreview() {
+    AdTrackTheme {
+        DashboardScreenContent(
+            state = DashboardState(
+                selectedPeriod = Period.TODAY,
+                summary = sampleSummary().copy(period = Period.TODAY),
+                yesterdaySummary = sampleSummary().copy(
+                    period = Period.TODAY,
+                    earnings = 101.10,
+                    impressions = 12_040,
+                    clicks = 254,
+                    previousEarnings = null,
+                    deltaPercent = null
+                ),
+                apps = sampleApps()
             ),
             onPeriodSelected = {},
             onRefresh = {},

@@ -2,6 +2,9 @@
  * Copyright (c) 2026 Mustafa Ozhan. All rights reserved.
  */
 
+// Groups the period/platform label helpers with the revenue display composables and their @Previews.
+@file:Suppress("TooManyFunctions")
+
 package com.oztechan.adtrack.ui.components
 
 import androidx.compose.foundation.clickable
@@ -45,6 +48,11 @@ fun AppPlatform.label(): String? = when (this) {
     AppPlatform.UNKNOWN -> null
 }
 
+// The TODAY view also shows yesterday's card, so its selector chip names both days. Card titles
+// and other texts keep the plain [label] since they refer to a single day's data.
+private fun Period.selectorLabel(): String =
+    if (this == Period.TODAY) "Today/Yesterday" else label()
+
 @Composable
 fun PeriodSelector(
     selected: Period,
@@ -61,18 +69,22 @@ fun PeriodSelector(
             FilterChip(
                 selected = period == selected,
                 onClick = { onSelected(period) },
-                label = { Text(period.label()) }
+                label = { Text(period.selectorLabel()) }
             )
         }
     }
 }
 
 @Composable
-fun SummaryCard(summary: RevenueSummary, modifier: Modifier = Modifier) {
+fun SummaryCard(
+    summary: RevenueSummary,
+    modifier: Modifier = Modifier,
+    title: String = summary.period.label()
+) {
     Card(modifier = modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(20.dp)) {
             Text(
-                text = summary.period.label().uppercase(),
+                text = title.uppercase(),
                 style = MaterialTheme.typography.labelMedium
             )
             Text(

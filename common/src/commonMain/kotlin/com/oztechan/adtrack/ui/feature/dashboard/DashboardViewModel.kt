@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.oztechan.adtrack.core.viewmodel.SEEDViewModel
 import com.oztechan.adtrack.domain.model.AppRevenue
 import com.oztechan.adtrack.domain.model.Period
+import com.oztechan.adtrack.domain.model.RevenuePoint
+import com.oztechan.adtrack.domain.model.RevenueSummary
 import com.oztechan.adtrack.domain.repository.RevenueRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -56,18 +58,23 @@ class DashboardViewModel(
             runCatching {
                 coroutineScope {
                     val summary = async { revenueRepository.getSummary(period) }
+                    // TODAY has no chart (single data point), so yesterday's card fills the gap.
+                    val yesterday = async {
+                        if (period == Period.TODAY) revenueRepository.getYesterdaySummary() else null
+                    }
                     val apps = async { revenueRepository.getAppBreakdown(period) }
                     val series = async { revenueRepository.getRevenueSeries(period) }
-                    Triple(summary.await(), apps.await(), series.await())
+                    Loaded(summary.await(), yesterday.await(), apps.await(), series.await())
                 }
-            }.onSuccess { (summary, apps, series) ->
+            }.onSuccess { loaded ->
                 setState {
                     copy(
                         isLoading = false,
                         isRefreshing = false,
-                        summary = summary,
-                        apps = apps,
-                        series = series
+                        summary = loaded.summary,
+                        yesterdaySummary = loaded.yesterdaySummary,
+                        apps = loaded.apps,
+                        series = loaded.series
                     )
                 }
             }.onFailure { error ->
@@ -81,4 +88,11 @@ class DashboardViewModel(
             }
         }
     }
+
+    private data class Loaded(
+        val summary: RevenueSummary,
+        val yesterdaySummary: RevenueSummary?,
+        val apps: List<AppRevenue>,
+        val series: List<RevenuePoint>
+    )
 }
