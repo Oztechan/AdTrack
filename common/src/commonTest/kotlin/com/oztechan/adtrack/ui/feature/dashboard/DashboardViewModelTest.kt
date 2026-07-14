@@ -89,6 +89,22 @@ class DashboardViewModelTest {
     }
 
     @Test
+    fun switching_back_before_a_slow_load_completes_keeps_the_newer_selection() = runTest(dispatcher) {
+        val repository = FakeRevenueRepository()
+        repository.summaryDelayMillis = { period -> if (period == Period.LAST_365_DAYS) 1_000 else 0 }
+        val viewModel = DashboardViewModel(repository)
+        advanceUntilIdle()
+
+        viewModel.event.onPeriodSelected(Period.LAST_365_DAYS)
+        viewModel.event.onPeriodSelected(Period.LAST_90_DAYS)
+        advanceUntilIdle()
+
+        // The slow 365-day response must not overwrite the newer 90-day selection.
+        assertEquals(Period.LAST_90_DAYS, viewModel.state.value.selectedPeriod)
+        assertEquals(Period.LAST_90_DAYS, viewModel.state.value.summary?.period)
+    }
+
+    @Test
     fun refresh_invalidates_the_repository_cache() = runTest(dispatcher) {
         val repository = FakeRevenueRepository()
         val viewModel = DashboardViewModel(repository)
