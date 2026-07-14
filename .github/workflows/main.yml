@@ -230,7 +230,7 @@ jobs:
     steps:
 
       - name: Clone Repo # needed for changelog_from_git_commits + fastlane config
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v7.0.0
 
       - name: Download iOS Artifact
         uses: actions/download-artifact@v8.0.1
