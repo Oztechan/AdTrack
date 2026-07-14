@@ -7,6 +7,7 @@ package com.oztechan.adtrack.data.admob.mapper
 import com.oztechan.adtrack.data.admob.model.DimensionValue
 import com.oztechan.adtrack.data.admob.model.MetricValue
 import com.oztechan.adtrack.data.admob.model.ReportRow
+import com.oztechan.adtrack.domain.model.AppPlatform
 import com.oztechan.adtrack.domain.model.Period
 import kotlinx.datetime.LocalDate
 import kotlin.test.Test
@@ -104,6 +105,34 @@ class ReportMapperTest {
         val series = ReportMapper.toSeries(rows)
         assertEquals(1, series.size)
         assertEquals(LocalDate(2026, 1, 12), series.first().date)
+    }
+
+    @Test
+    fun app_breakdown_maps_platform_dimension() {
+        val rows = listOf(
+            row(
+                earningsMicros = "3000000",
+                dimensions = mapOf(
+                    "APP" to DimensionValue("app1", "My App"),
+                    "PLATFORM" to DimensionValue("ANDROID")
+                )
+            ),
+            row(
+                earningsMicros = "2000000",
+                dimensions = mapOf(
+                    "APP" to DimensionValue("app2", "My App"),
+                    "PLATFORM" to DimensionValue("iOS")
+                )
+            ),
+            row(
+                earningsMicros = "1000000",
+                dimensions = mapOf("APP" to DimensionValue("app3", "Other App"))
+            )
+        )
+        val apps = ReportMapper.toAppRevenues(rows)
+        assertEquals(AppPlatform.ANDROID, apps[0].platform)
+        assertEquals(AppPlatform.IOS, apps[1].platform)
+        assertEquals(AppPlatform.UNKNOWN, apps[2].platform)
     }
 
     @Test
