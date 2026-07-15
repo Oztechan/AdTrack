@@ -27,7 +27,7 @@ androidDesugaring = "2.1.5"
 roborazzi = "1.68.0"
 robolectric = "4.16.1"
 junit = "4.13.2"
-composeUiTestJunit4 = "1.9.5"
+composeUiTestJunit4 = "1.11.4"
 
 [libraries]
 # COMMON
