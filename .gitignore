@@ -42,3 +42,7 @@ firebase-service-account.json.asc
 # Release signing / store credentials (decrypted in CI, never committed)
 *.keystore
 service_account.json
+
+# Roborazzi diff artifacts written next to the golden screenshots on verify failure
+art/store/screenshots/**/*_compare.png
+art/store/screenshots/**/*_actual.png

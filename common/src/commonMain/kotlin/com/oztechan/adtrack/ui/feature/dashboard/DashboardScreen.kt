@@ -81,7 +81,7 @@ fun DashboardScreen(
 @Suppress("LongParameterList") // one callback per user action, hoisted to the stateless content composable
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun DashboardScreenContent(
+internal fun DashboardScreenContent(
     state: DashboardState,
     onPeriodSelected: (Period) -> Unit,
     onRefresh: () -> Unit,

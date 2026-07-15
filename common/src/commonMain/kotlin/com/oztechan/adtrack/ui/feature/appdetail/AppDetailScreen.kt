@@ -69,7 +69,7 @@ fun AppDetailScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun AppDetailScreenContent(
+internal fun AppDetailScreenContent(
     state: AppDetailState,
     onBackClick: () -> Unit
 ) {
