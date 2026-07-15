@@ -67,8 +67,20 @@ jobs:
       # JVM/Android only. The iOS native test binary links Crashlytics' cinterop, which forces
       # `-framework FirebaseCore` etc. — unavailable to a plain KMP test link. Same commonTest logic
       # runs here on the JVM; the iOS app links the Firebase SPM SDK at Xcode build time.
+      # verifyRoborazziDebug enables golden-image comparison for the same test run: it fails when
+      # UI pixels drift from the committed snapshots (run `recordRoborazziDebug` to accept a change).
       - name: Test (Android)
-        run: ./gradlew testDebugUnitTest
+        run: ./gradlew testDebugUnitTest :common:verifyRoborazziDebug
+
+      - name: Upload screenshot diffs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshot-diffs
+          path: |
+            common/src/androidUnitTest/snapshots/*_compare.png
+            art/store/screenshots/**/*_compare.png
+          if-no-files-found: ignore
 
       - name: Cancel other jobs if this fails
         if: failure()
