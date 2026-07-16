@@ -77,10 +77,17 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: screenshot-diffs
+          # Roborazzi writes _compare/_actual images either next to the golden or into the module's
+          # default output dir depending on capture mode — cover both, and warn (not ignore) so a
+          # path mismatch is visible in the job log instead of silently uploading nothing.
           path: |
+            common/build/outputs/roborazzi/
+            common/build/reports/roborazzi/
             common/src/androidUnitTest/snapshots/*_compare.png
+            common/src/androidUnitTest/snapshots/*_actual.png
             art/store/screenshots/**/*_compare.png
-          if-no-files-found: ignore
+            art/store/screenshots/**/*_actual.png
+          if-no-files-found: warn
 
       - name: Cancel other jobs if this fails
         if: failure()
