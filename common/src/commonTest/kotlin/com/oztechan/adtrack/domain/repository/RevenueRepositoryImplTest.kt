@@ -152,4 +152,25 @@ class RevenueRepositoryImplTest {
         repo(api).getAppBreakdown(Period.LAST_90_DAYS)
         assertTrue(api.specs.last().dimensions.containsAll(listOf("APP", "PLATFORM")))
     }
+
+    @Test
+    fun format_breakdown_requests_format_dimension_filtered_by_app() = runTest {
+        val api = FakeAdMobApi { _, _ ->
+            listOf(
+                ReportRow(
+                    dimensionValues = mapOf("FORMAT" to DimensionValue("banner", "Banner")),
+                    metricValues = mapOf("ESTIMATED_EARNINGS" to MetricValue(microsValue = "5000000"))
+                )
+            )
+        }
+
+        val formats = repo(api).getFormatBreakdown(Period.LAST_30_DAYS, appId = "app-9")
+
+        val spec = api.specs.last()
+        assertEquals(listOf("FORMAT"), spec.dimensions)
+        val filter = spec.dimensionFilters?.firstOrNull()
+        assertEquals("APP", filter?.dimension)
+        assertEquals(listOf("app-9"), filter?.matchesAny?.values)
+        assertEquals(5.0, formats.single().earnings)
+    }
 }

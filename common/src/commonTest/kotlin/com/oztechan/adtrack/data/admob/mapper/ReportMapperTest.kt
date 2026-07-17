@@ -7,6 +7,7 @@ package com.oztechan.adtrack.data.admob.mapper
 import com.oztechan.adtrack.data.admob.model.DimensionValue
 import com.oztechan.adtrack.data.admob.model.MetricValue
 import com.oztechan.adtrack.data.admob.model.ReportRow
+import com.oztechan.adtrack.domain.model.AdFormat
 import com.oztechan.adtrack.domain.model.AppPlatform
 import com.oztechan.adtrack.domain.model.Period
 import kotlinx.datetime.LocalDate
@@ -141,5 +142,43 @@ class ReportMapperTest {
             row(earningsMicros = "1000000", dimensions = mapOf("APP" to DimensionValue("app-x", "")))
         )
         assertEquals("app-x", ReportMapper.toAppRevenues(rows).first().appName)
+    }
+
+    @Test
+    fun format_breakdown_parses_format_and_sorts_by_earnings_desc() {
+        val rows = listOf(
+            row(
+                earningsMicros = "2000000",
+                impressions = "1000",
+                clicks = "20",
+                dimensions = mapOf("FORMAT" to DimensionValue("banner", "Banner"))
+            ),
+            row(
+                earningsMicros = "9000000",
+                impressions = "3000",
+                clicks = "60",
+                dimensions = mapOf("FORMAT" to DimensionValue("rewarded", "Rewarded"))
+            )
+        )
+        val formats = ReportMapper.toFormatRevenues(rows)
+        assertEquals(AdFormat.REWARDED, formats.first().format)
+        assertEquals("Rewarded", formats.first().label)
+        assertEquals(9.0, formats.first().earnings)
+        assertEquals(3000L, formats.first().impressions)
+        assertEquals(60L, formats.first().clicks)
+    }
+
+    @Test
+    fun format_breakdown_normalizes_compound_and_unknown_values() {
+        val rows = listOf(
+            row(earningsMicros = "1000000", dimensions = mapOf("FORMAT" to DimensionValue("rewarded interstitial"))),
+            row(earningsMicros = "1000000", dimensions = mapOf("FORMAT" to DimensionValue("mystery")))
+        )
+        val formats = ReportMapper.toFormatRevenues(rows)
+        val byFormat = formats.associateBy { it.format }
+        assertTrue(AdFormat.REWARDED_INTERSTITIAL in byFormat)
+        assertEquals("Rewarded interstitial", byFormat.getValue(AdFormat.REWARDED_INTERSTITIAL).label)
+        assertTrue(AdFormat.UNKNOWN in byFormat)
+        assertEquals("Other", byFormat.getValue(AdFormat.UNKNOWN).label)
     }
 }

@@ -6,7 +6,9 @@ package com.oztechan.adtrack.screenshot
 
 import androidx.compose.runtime.Composable
 import com.github.takahirom.roborazzi.captureRoboImage
+import com.oztechan.adtrack.domain.model.AdFormat
 import com.oztechan.adtrack.domain.model.AppRevenue
+import com.oztechan.adtrack.domain.model.FormatRevenue
 import com.oztechan.adtrack.domain.model.Period
 import com.oztechan.adtrack.domain.model.RevenuePoint
 import com.oztechan.adtrack.domain.model.RevenueSummary
@@ -232,11 +234,18 @@ class StoreScreenshots {
                 isLoading = false,
                 app = AppRevenue("app1", "Currency Converter", 341.52, 261_040, 6_120),
                 series = sampleSeries(),
+                formats = sampleFormats(),
                 currencyCode = "USD"
             ),
             onBackClick = {}
         )
     }
+
+    private fun sampleFormats() = listOf(
+        FormatRevenue(AdFormat.REWARDED, "Rewarded", 182.31, 96_420, 3_140),
+        FormatRevenue(AdFormat.INTERSTITIAL, "Interstitial", 104.68, 88_210, 2_010),
+        FormatRevenue(AdFormat.BANNER, "Banner", 54.53, 76_410, 970)
+    )
 
     private fun sampleSummary(period: Period, earnings: Double, impressions: Long, clicks: Long) =
         RevenueSummary(
