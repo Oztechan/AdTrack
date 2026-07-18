@@ -4,7 +4,9 @@
 
 package com.oztechan.adtrack.ui.feature.appdetail
 
+import com.oztechan.adtrack.domain.model.AdFormat
 import com.oztechan.adtrack.domain.model.AppRevenue
+import com.oztechan.adtrack.domain.model.FormatRevenue
 import com.oztechan.adtrack.domain.model.Period
 import com.oztechan.adtrack.domain.model.RevenuePoint
 import com.oztechan.adtrack.fakes.FakeRevenueRepository
@@ -39,11 +41,15 @@ class AppDetailViewModelTest {
         series = listOf(
             RevenuePoint(LocalDate(2026, 1, 1), 1.0),
             RevenuePoint(LocalDate(2026, 1, 2), 2.0)
+        ),
+        formats = listOf(
+            FormatRevenue(AdFormat.REWARDED, "Rewarded", 6.0, 50, 3),
+            FormatRevenue(AdFormat.BANNER, "Banner", 3.0, 30, 1)
         )
     )
 
     @Test
-    fun load_resolves_the_app_and_its_series() = runTest(dispatcher) {
+    fun load_resolves_the_app_its_series_and_format_breakdown() = runTest(dispatcher) {
         val repository = repository()
         val viewModel = AppDetailViewModel(
             repository,
@@ -56,6 +62,9 @@ class AppDetailViewModelTest {
         assertEquals("app1", viewModel.state.value.app?.appId)
         assertEquals(2, viewModel.state.value.series.size)
         assertEquals("app1", repository.lastAppSeriesId)
+        assertEquals(2, viewModel.state.value.formats.size)
+        assertEquals(AdFormat.REWARDED, viewModel.state.value.formats.first().format)
+        assertEquals("app1", repository.lastFormatBreakdownId)
     }
 
     @Test

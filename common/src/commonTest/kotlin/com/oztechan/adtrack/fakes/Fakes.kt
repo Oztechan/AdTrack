@@ -12,6 +12,7 @@ import com.oztechan.adtrack.data.auth.AuthService
 import com.oztechan.adtrack.data.auth.browser.AuthBrowserLauncher
 import com.oztechan.adtrack.data.auth.model.TokenResponse
 import com.oztechan.adtrack.domain.model.AppRevenue
+import com.oztechan.adtrack.domain.model.FormatRevenue
 import com.oztechan.adtrack.domain.model.Period
 import com.oztechan.adtrack.domain.model.RevenuePoint
 import com.oztechan.adtrack.domain.model.RevenueSummary
@@ -134,11 +135,13 @@ class FakeRevenueRepository(
     var summary: RevenueSummary = fakeSummary(),
     var apps: List<AppRevenue> = listOf(AppRevenue("app1", "App One", 9.0, 80, 4)),
     var series: List<RevenuePoint> = emptyList(),
+    var formats: List<FormatRevenue> = emptyList(),
     var error: Throwable? = null
 ) : RevenueRepository {
     var invalidateCalled = false
     var yesterdaySummaryCalled = false
     var lastAppSeriesId: String? = null
+    var lastFormatBreakdownId: String? = null
     var summaryDelayMillis: (Period) -> Long = { 0 }
 
     override suspend fun getAccount(): AdMobAccount = error?.let { throw it } ?: account
@@ -161,6 +164,11 @@ class FakeRevenueRepository(
     override suspend fun getAppRevenueSeries(period: Period, appId: String): List<RevenuePoint> {
         lastAppSeriesId = appId
         return error?.let { throw it } ?: series
+    }
+
+    override suspend fun getFormatBreakdown(period: Period, appId: String): List<FormatRevenue> {
+        lastFormatBreakdownId = appId
+        return error?.let { throw it } ?: formats
     }
 
     override fun invalidate() {

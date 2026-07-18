@@ -16,6 +16,7 @@ import com.oztechan.adtrack.data.admob.model.StringList
 import com.oztechan.adtrack.domain.PeriodCalculator
 import com.oztechan.adtrack.domain.SeriesAggregator
 import com.oztechan.adtrack.domain.model.AppRevenue
+import com.oztechan.adtrack.domain.model.FormatRevenue
 import com.oztechan.adtrack.domain.model.Period
 import com.oztechan.adtrack.domain.model.RevenuePoint
 import com.oztechan.adtrack.domain.model.RevenueSummary
@@ -91,6 +92,20 @@ class RevenueRepositoryImpl(
             appIdFilter = appId.takeIf { it.isNotBlank() }
         )
         SeriesAggregator.aggregate(ReportMapper.toSeries(rows), period.seriesGranularity)
+    }
+
+    override suspend fun getFormatBreakdown(
+        period: Period,
+        appId: String
+    ): List<FormatRevenue> = cached("formats_${period}_$appId") {
+        val account = getAccount()
+        val rows = report(
+            account = account,
+            range = periodCalculator.currentRange(period, account.reportingTimeZone),
+            dimensions = listOf(AdMobApi.Dimension.FORMAT),
+            appIdFilter = appId.takeIf { it.isNotBlank() }
+        )
+        ReportMapper.toFormatRevenues(rows)
     }
 
     override fun invalidate() {

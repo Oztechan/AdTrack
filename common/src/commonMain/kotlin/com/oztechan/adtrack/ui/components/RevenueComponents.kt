@@ -2,6 +2,9 @@
  * Copyright (c) 2026 Mustafa Ozhan. All rights reserved.
  */
 
+// Shared revenue UI: cards, rows and selectors, each grouped with its @Preview.
+@file:Suppress("TooManyFunctions")
+
 package com.oztechan.adtrack.ui.components
 
 import androidx.compose.foundation.clickable
@@ -22,8 +25,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.oztechan.adtrack.core.util.formatCurrency
+import com.oztechan.adtrack.domain.model.AdFormat
 import com.oztechan.adtrack.domain.model.AppPlatform
 import com.oztechan.adtrack.domain.model.AppRevenue
+import com.oztechan.adtrack.domain.model.FormatRevenue
 import com.oztechan.adtrack.domain.model.Period
 import com.oztechan.adtrack.domain.model.RevenueSummary
 import com.oztechan.adtrack.ui.theme.AdTrackTheme
@@ -149,6 +154,37 @@ fun AppRevenueRow(
     }
 }
 
+@Composable
+fun FormatRevenueRow(
+    format: FormatRevenue,
+    currencyCode: String,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(modifier = Modifier.padding(end = 12.dp)) {
+            Text(
+                text = format.label,
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                text = "${format.impressions} impressions · ${format.clicks} clicks",
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
+        Text(
+            text = formatCurrency(format.earnings, currencyCode),
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.SemiBold
+        )
+    }
+}
+
 @Preview
 @Composable
 private fun SummaryCardPreview() {
@@ -162,6 +198,14 @@ private fun SummaryCardPreview() {
 private fun AppRevenueRowPreview() {
     AdTrackTheme {
         AppRevenueRow(AppRevenue("a", "Currency Converter", 84.10, 9000, 180, AppPlatform.ANDROID), "USD", {})
+    }
+}
+
+@Preview
+@Composable
+private fun FormatRevenueRowPreview() {
+    AdTrackTheme {
+        FormatRevenueRow(FormatRevenue(AdFormat.REWARDED, "Rewarded", 52.40, 3200, 96), "USD")
     }
 }
 

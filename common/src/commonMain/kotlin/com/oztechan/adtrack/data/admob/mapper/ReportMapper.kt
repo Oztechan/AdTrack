@@ -6,14 +6,17 @@ package com.oztechan.adtrack.data.admob.mapper
 
 import com.oztechan.adtrack.data.admob.api.AdMobApi
 import com.oztechan.adtrack.data.admob.model.ReportRow
+import com.oztechan.adtrack.domain.model.AdFormat
 import com.oztechan.adtrack.domain.model.AppPlatform
 import com.oztechan.adtrack.domain.model.AppRevenue
+import com.oztechan.adtrack.domain.model.FormatRevenue
 import com.oztechan.adtrack.domain.model.Period
 import com.oztechan.adtrack.domain.model.RevenuePoint
 import com.oztechan.adtrack.domain.model.RevenueSummary
 import kotlinx.datetime.LocalDate
 
 /** Maps raw AdMob report rows into domain models (micros -> currency, int64 strings -> Long). */
+@Suppress("TooManyFunctions")
 object ReportMapper {
 
     private const val MICROS_PER_UNIT = 1_000_000.0
@@ -56,6 +59,20 @@ object ReportMapper {
         }
         .sortedByDescending { it.earnings }
 
+    fun toFormatRevenues(rows: List<ReportRow>): List<FormatRevenue> = rows
+        .map { row ->
+            val dimension = row.dimensionValues[AdMobApi.Dimension.FORMAT]
+            val format = parseFormat(dimension?.value)
+            FormatRevenue(
+                format = format,
+                label = dimension?.displayLabel?.takeIf { it.isNotBlank() } ?: format.defaultLabel(),
+                earnings = row.earnings(),
+                impressions = row.integerMetric(AdMobApi.Metric.IMPRESSIONS),
+                clicks = row.integerMetric(AdMobApi.Metric.CLICKS)
+            )
+        }
+        .sortedByDescending { it.earnings }
+
     fun toSeries(rows: List<ReportRow>): List<RevenuePoint> = rows
         .mapNotNull { row ->
             row.dimensionValues[AdMobApi.Dimension.DATE]?.value
@@ -79,6 +96,22 @@ object ReportMapper {
         dimensionValues[AdMobApi.Dimension.PLATFORM]?.value
             ?.let { raw -> AppPlatform.entries.firstOrNull { it.name == raw.uppercase() } }
             ?: AppPlatform.UNKNOWN
+
+    // AdMob FORMAT values arrive as "banner", "rewarded_interstitial", etc.; normalize to the enum.
+    private fun parseFormat(raw: String?): AdFormat {
+        val normalized = raw?.uppercase()?.replace(' ', '_')?.replace('-', '_') ?: return AdFormat.UNKNOWN
+        return AdFormat.entries.firstOrNull { it.name == normalized } ?: AdFormat.UNKNOWN
+    }
+
+    private fun AdFormat.defaultLabel(): String = when (this) {
+        AdFormat.BANNER -> "Banner"
+        AdFormat.INTERSTITIAL -> "Interstitial"
+        AdFormat.REWARDED -> "Rewarded"
+        AdFormat.REWARDED_INTERSTITIAL -> "Rewarded interstitial"
+        AdFormat.NATIVE -> "Native"
+        AdFormat.APP_OPEN -> "App open"
+        AdFormat.UNKNOWN -> "Other"
+    }
 
     // AdMob DATE dimension is encoded as "YYYYMMDD".
     private fun parseDate(raw: String): LocalDate? {

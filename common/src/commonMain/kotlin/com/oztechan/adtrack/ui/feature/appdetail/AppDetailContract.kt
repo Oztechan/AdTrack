@@ -9,6 +9,7 @@ import com.oztechan.adtrack.core.viewmodel.BaseEffect
 import com.oztechan.adtrack.core.viewmodel.BaseEvent
 import com.oztechan.adtrack.core.viewmodel.BaseState
 import com.oztechan.adtrack.domain.model.AppRevenue
+import com.oztechan.adtrack.domain.model.FormatRevenue
 import com.oztechan.adtrack.domain.model.Period
 import com.oztechan.adtrack.domain.model.RevenuePoint
 
@@ -18,6 +19,7 @@ data class AppDetailState(
     val isLoading: Boolean = true,
     val app: AppRevenue? = null,
     val series: List<RevenuePoint> = emptyList(),
+    val formats: List<FormatRevenue> = emptyList(),
     val currencyCode: String = "USD",
     val errorMessage: String? = null
 ) : BaseState

@@ -11,11 +11,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import com.github.takahirom.roborazzi.captureRoboImage
+import com.oztechan.adtrack.domain.model.AdFormat
 import com.oztechan.adtrack.domain.model.AppRevenue
+import com.oztechan.adtrack.domain.model.FormatRevenue
 import com.oztechan.adtrack.domain.model.Period
 import com.oztechan.adtrack.domain.model.RevenuePoint
 import com.oztechan.adtrack.domain.model.RevenueSummary
 import com.oztechan.adtrack.ui.components.AppRevenueRow
+import com.oztechan.adtrack.ui.components.FormatRevenueRow
 import com.oztechan.adtrack.ui.components.PeriodSelector
 import com.oztechan.adtrack.ui.components.RevenueChart
 import com.oztechan.adtrack.ui.components.SummaryCard
@@ -59,6 +62,11 @@ class SnapshotTests {
     @Test
     fun appRevenueRow() = snapshot("app_revenue_row") {
         AppRevenueRow(AppRevenue("app1", "Currency Converter", 84.10, 9_000, 180), "USD", onClick = {})
+    }
+
+    @Test
+    fun formatRevenueRow() = snapshot("format_revenue_row") {
+        FormatRevenueRow(FormatRevenue(AdFormat.REWARDED, "Rewarded", 52.40, 3_200, 96), "USD")
     }
 
     @Test

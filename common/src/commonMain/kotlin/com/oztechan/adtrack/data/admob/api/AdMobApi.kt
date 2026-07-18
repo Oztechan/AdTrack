@@ -20,6 +20,7 @@ interface AdMobApi {
         const val APP = "APP"
         const val COUNTRY = "COUNTRY"
         const val PLATFORM = "PLATFORM"
+        const val FORMAT = "FORMAT"
     }
 
     object Metric {

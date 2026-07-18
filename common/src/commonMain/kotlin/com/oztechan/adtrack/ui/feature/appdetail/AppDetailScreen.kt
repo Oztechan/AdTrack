@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -31,10 +32,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.oztechan.adtrack.core.util.formatCurrency
+import com.oztechan.adtrack.domain.model.AdFormat
 import com.oztechan.adtrack.domain.model.AppRevenue
+import com.oztechan.adtrack.domain.model.FormatRevenue
 import com.oztechan.adtrack.domain.model.Period
 import com.oztechan.adtrack.domain.model.RevenuePoint
 import com.oztechan.adtrack.domain.model.RevenueSummary
+import com.oztechan.adtrack.ui.components.FormatRevenueRow
 import com.oztechan.adtrack.ui.components.RevenueChart
 import com.oztechan.adtrack.ui.components.SummaryCard
 import com.oztechan.adtrack.ui.components.label
@@ -123,23 +127,44 @@ private fun AppDetailContent(state: AppDetailState) {
                 )
             }
         }
-        item {
-            Text(
-                text = state.period.seriesTitle(),
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(top = 16.dp)
-            )
+
+        formatBreakdownSection(state.formats, state.currencyCode)
+        dailyEarningsSection(state)
+    }
+}
+
+private fun LazyListScope.formatBreakdownSection(formats: List<FormatRevenue>, currencyCode: String) {
+    if (formats.isEmpty()) return
+    item {
+        Text(
+            text = "By format",
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(top = 16.dp, bottom = 4.dp)
+        )
+    }
+    items(formats, key = { it.format.name + it.label }) { format ->
+        FormatRevenueRow(format = format, currencyCode = currencyCode)
+        HorizontalDivider()
+    }
+}
+
+private fun LazyListScope.dailyEarningsSection(state: AppDetailState) {
+    item {
+        Text(
+            text = state.period.seriesTitle(),
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(top = 16.dp)
+        )
+    }
+    items(state.series, key = { it.date.toString() }) { point ->
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(point.date.toString(), style = MaterialTheme.typography.bodyMedium)
+            Text(formatCurrency(point.earnings, state.currencyCode), style = MaterialTheme.typography.bodyMedium)
         }
-        items(state.series, key = { it.date.toString() }) { point ->
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(point.date.toString(), style = MaterialTheme.typography.bodyMedium)
-                Text(formatCurrency(point.earnings, state.currencyCode), style = MaterialTheme.typography.bodyMedium)
-            }
-            HorizontalDivider()
-        }
+        HorizontalDivider()
     }
 }
 
@@ -165,6 +190,11 @@ private fun AppDetailLoadedPreview() {
                 isLoading = false,
                 app = AppRevenue("app1", "Currency Converter", 84.10, 9000, 180),
                 series = (1..7).map { RevenuePoint(LocalDate(2026, 1, it), 8.0 + it * 2.0) },
+                formats = listOf(
+                    FormatRevenue(AdFormat.REWARDED, "Rewarded", 52.40, 3200, 96),
+                    FormatRevenue(AdFormat.INTERSTITIAL, "Interstitial", 21.30, 4100, 62),
+                    FormatRevenue(AdFormat.BANNER, "Banner", 10.40, 1700, 22)
+                ),
                 currencyCode = "USD"
             ),
             onBackClick = {}

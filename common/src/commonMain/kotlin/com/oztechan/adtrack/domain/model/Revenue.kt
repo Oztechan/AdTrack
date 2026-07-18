@@ -43,3 +43,22 @@ data class RevenuePoint(
     val date: LocalDate,
     val earnings: Double
 )
+
+enum class AdFormat {
+    BANNER,
+    INTERSTITIAL,
+    REWARDED,
+    REWARDED_INTERSTITIAL,
+    NATIVE,
+    APP_OPEN,
+    UNKNOWN
+}
+
+/** Revenue for a single ad format within an app (banner vs. interstitial vs. rewarded, etc.). */
+data class FormatRevenue(
+    val format: AdFormat,
+    val label: String,
+    val earnings: Double,
+    val impressions: Long,
+    val clicks: Long
+)
