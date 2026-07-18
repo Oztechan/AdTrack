@@ -19,10 +19,11 @@
     "enabled": true,
     "commitMessageAction": "[Oztechan/AdTrack#41] Lock file maintenance"
   },
-  "regexManagers": [
+  "customManagers": [
     {
-      "fileMatch": [
-        "^iosApp/iosApp\\.xcodeproj/project\\.pbxproj$"
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^iosApp/iosApp\\.xcodeproj/project\\.pbxproj$/"
       ],
       "matchStrings": [
         "repositoryURL = \"https://github.com/(?<depName>[^/]+/[^\"/]+?)(?:\\.git)?\";\\s*requirement = \\{\\s*kind = exactVersion;\\s*version = (?<currentValue>[^;]+);"
