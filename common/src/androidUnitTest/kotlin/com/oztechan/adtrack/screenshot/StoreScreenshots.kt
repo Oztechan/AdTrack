@@ -288,10 +288,14 @@ class StoreScreenshots {
         )
     }
 
+    // Each scene is captured in both themes: the light listing keeps its original name, the dark
+    // variant gets a `_dark` suffix, so store listings can offer light + dark screenshots.
     private fun capture(device: String, name: String, content: @Composable () -> Unit) {
         // Tests run with the module directory as cwd; the screenshots live in the repo root's art/.
-        captureRoboImage(filePath = "../art/store/screenshots/$device/$name.png") {
-            AdTrackTheme { content() }
+        listOf(false to name, true to "${name}_dark").forEach { (dark, fileName) ->
+            captureRoboImage(filePath = "../art/store/screenshots/$device/$fileName.png") {
+                AdTrackTheme(darkTheme = dark) { content() }
+            }
         }
     }
 }
