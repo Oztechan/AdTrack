@@ -56,7 +56,7 @@ jobs:
         run: echo "status=success" >> $GITHUB_OUTPUT
 
   Test:
-    runs-on: macos-15
+    runs-on: macos-26
     outputs:
       status: ${{ steps.status.outputs.status }}
     steps:
@@ -161,7 +161,7 @@ jobs:
   # Signed .ipa build via Fastlane (match ad-hoc). Runs on every event so iOS build/signing
   # breakage is caught in the PR, not after merge. Debug on push/PR, Release on the nightly schedule.
   iOSBuild:
-    runs-on: macos-15
+    runs-on: macos-26
     outputs:
       status: ${{ steps.status.outputs.status }}
     steps:
