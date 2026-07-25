@@ -23,6 +23,7 @@ activityCompose = "1.13.0"
 androidxBrowser = "1.10.0"
 androidxSecurityCrypto = "1.1.0-alpha06"
 androidxSplashScreen = "1.2.0"
+playServicesAds = "23.6.0"
 androidDesugaring = "2.1.5"
 roborazzi = "1.70.0"
 robolectric = "4.16.1"
@@ -61,6 +62,7 @@ android-koinAndroid = { module = "io.insert-koin:koin-android", version.ref = "k
 android-browser = { module = "androidx.browser:browser", version.ref = "androidxBrowser" }
 android-securityCrypto = { module = "androidx.security:security-crypto", version.ref = "androidxSecurityCrypto" }
 android-splashScreen = { module = "androidx.core:core-splashscreen", version.ref = "androidxSplashScreen" }
+android-playServicesAds = { module = "com.google.android.gms:play-services-ads", version.ref = "playServicesAds" }
 android-desugaring = { module = "com.android.tools:desugar_jdk_libs", version.ref = "androidDesugaring" }
 android-firebaseBom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 android-firebaseAnalytics = { module = "com.google.firebase:firebase-analytics" }

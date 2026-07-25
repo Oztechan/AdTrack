@@ -12,6 +12,9 @@
     <string>6.0</string>
     <key>CFBundleName</key>
     <string>AdTrack</string>
+    <!-- AdMob App ID. Google's public test App ID by default; replace with the real one for release. -->
+    <key>GADApplicationIdentifier</key>
+    <string>ca-app-pub-3940256099942544~1458002511</string>
     <key>CFBundlePackageType</key>
     <string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
     <key>CFBundleShortVersionString</key>
