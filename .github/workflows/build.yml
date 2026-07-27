@@ -31,7 +31,7 @@ jobs:
           ANDROID_RELEASE_KEYSTORE_ASC: ${{ secrets.ANDROID_RELEASE_KEYSTORE_ASC }}
 
       - name: Set up Xcode
-        run: sudo xcode-select --switch /Applications/Xcode_16.4.app
+        run: sudo xcode-select --switch /Applications/Xcode_26.4.ap6
 
       # Full graph: detekt + JVM/Android tests + Android assemble + iOS framework link.
       # The iOS native test tasks are excluded: their test binary links Crashlytics' cinterop

@@ -178,7 +178,7 @@ jobs:
           GOOGLE_SERVICE_INFO_PLIST_ASC: ${{ github.event_name == 'schedule' && secrets.GOOGLE_SERVICE_INFO_PLIST_ASC_RELEASE || secrets.GOOGLE_SERVICE_INFO_PLIST_ASC_DEBUG }}
 
       - name: Set up Xcode
-        run: sudo xcode-select --switch /Applications/Xcode_16.4.app
+        run: sudo xcode-select --switch /Applications/Xcode_26.4.ap6
 
       - name: Disable Kotlin incremental native for CI
         run: |
