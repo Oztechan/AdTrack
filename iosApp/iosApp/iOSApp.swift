@@ -13,7 +13,7 @@ struct iOSApp: App {
         // Start Koin dependency injection once at launch.
         MainViewControllerKt.startKoin()
         // Initialize the Google Mobile Ads SDK. App ID comes from GADApplicationIdentifier in Info.plist.
-        MobileAds.shared.start(completionHandler: nil)
+        GADMobileAds.sharedInstance().start(completionHandler: nil)
     }
 
     var body: some Scene {
