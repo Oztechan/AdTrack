@@ -10,11 +10,11 @@
 		2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* iOSApp.swift */; };
 		7555FF83242A565900829871 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FF82242A565900829871 /* ContentView.swift */; };
 		A1A1A1A100000000000000B2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1A1A1A100000000000000B1 /* Assets.xcassets */; };
+		ADAD0004000000000000AAAA /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = ADAD0002000000000000AAAA /* GoogleMobileAds */; };
 		B1B1B1B100000000000000C2 /* LaunchAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1B1B1B100000000000000C1 /* LaunchAssets.xcassets */; };
 		FBFB0004000000000000AAAA /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = FBFB0002000000000000AAAA /* FirebaseAnalytics */; };
 		FBFB0005000000000000AAAA /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = FBFB0003000000000000AAAA /* FirebaseCrashlytics */; };
 		FBFB000A000000000000AAAA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FBFB0009000000000000AAAA /* GoogleService-Info.plist */; };
-		ADAD0004000000000000AAAA /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = ADAD0002000000000000AAAA /* GoogleMobileAds */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +27,19 @@
 		B1B1B1B100000000000000C1 /* LaunchAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = LaunchAssets.xcassets; sourceTree = "<group>"; };
 		FBFB0009000000000000AAAA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FBFB0006000000000000AAAA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FBFB0004000000000000AAAA /* FirebaseAnalytics in Frameworks */,
+				FBFB0005000000000000AAAA /* FirebaseCrashlytics in Frameworks */,
+				ADAD0004000000000000AAAA /* GoogleMobileAds in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		42799AB246E5F90AF97AA0EF /* Frameworks */ = {
@@ -152,19 +165,6 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXFrameworksBuildPhase section */
-		FBFB0006000000000000AAAA /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				FBFB0004000000000000AAAA /* FirebaseAnalytics in Frameworks */,
-				FBFB0005000000000000AAAA /* FirebaseCrashlytics in Frameworks */,
-				ADAD0004000000000000AAAA /* GoogleMobileAds in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXFrameworksBuildPhase section */
-
 /* Begin PBXShellScriptBuildPhase section */
 		F36B1CEB2AD83DDC00CB74D5 /* Compile Kotlin Framework */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -271,9 +271,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "${TEAM_ID}";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SRCROOT)/../common/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../common/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)";
 				INFOPLIST_FILE = iosApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -298,9 +296,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "${TEAM_ID}";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SRCROOT)/../common/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../common/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)";
 				INFOPLIST_FILE = iosApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -343,14 +339,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		FBFB0001000000000000AAAA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
-			requirement = {
-				kind = exactVersion;
-				version = 12.16.0;
-			};
-		};
 		ADAD0001000000000000AAAA /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads";
@@ -359,9 +347,22 @@
 				minimumVersion = 11.0.0;
 			};
 		};
+		FBFB0001000000000000AAAA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = exactVersion;
+				version = 12.16.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		ADAD0002000000000000AAAA /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ADAD0001000000000000AAAA /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
+		};
 		FBFB0002000000000000AAAA /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = FBFB0001000000000000AAAA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
@@ -371,11 +372,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = FBFB0001000000000000AAAA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseCrashlytics;
-		};
-		ADAD0002000000000000AAAA /* GoogleMobileAds */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = ADAD0001000000000000AAAA /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
-			productName = GoogleMobileAds;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
