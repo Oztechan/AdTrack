@@ -10,7 +10,7 @@
 		2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* iOSApp.swift */; };
 		7555FF83242A565900829871 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FF82242A565900829871 /* ContentView.swift */; };
 		ADAD0021000000000000AAAA /* AdsConsentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADAD0020000000000000AAAA /* AdsConsentManager.swift */; };
-		ADAD0014000000000000AAAA /* UserMessagingPlatform in Frameworks */ = {isa = PBXBuildFile; productRef = ADAD0012000000000000AAAA /* UserMessagingPlatform */; };
+		ADAD0014000000000000AAAA /* GoogleUserMessagingPlatform in Frameworks */ = {isa = PBXBuildFile; productRef = ADAD0012000000000000AAAA /* GoogleUserMessagingPlatform */; };
 		A1A1A1A100000000000000B2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1A1A1A100000000000000B1 /* Assets.xcassets */; };
 		ADAD0004000000000000AAAA /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = ADAD0002000000000000AAAA /* GoogleMobileAds */; };
 		B1B1B1B100000000000000C2 /* LaunchAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1B1B1B100000000000000C1 /* LaunchAssets.xcassets */; };
@@ -39,7 +39,7 @@
 				FBFB0004000000000000AAAA /* FirebaseAnalytics in Frameworks */,
 				FBFB0005000000000000AAAA /* FirebaseCrashlytics in Frameworks */,
 				ADAD0004000000000000AAAA /* GoogleMobileAds in Frameworks */,
-				ADAD0014000000000000AAAA /* UserMessagingPlatform in Frameworks */,
+				ADAD0014000000000000AAAA /* GoogleUserMessagingPlatform in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -115,7 +115,7 @@
 				FBFB0002000000000000AAAA /* FirebaseAnalytics */,
 				FBFB0003000000000000AAAA /* FirebaseCrashlytics */,
 				ADAD0002000000000000AAAA /* GoogleMobileAds */,
-				ADAD0012000000000000AAAA /* UserMessagingPlatform */,
+				ADAD0012000000000000AAAA /* GoogleUserMessagingPlatform */,
 			);
 			productName = iosApp;
 			productReference = 7555FF7B242A565900829871 /* iosApp.app */;
@@ -379,10 +379,10 @@
 			package = ADAD0001000000000000AAAA /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
 			productName = GoogleMobileAds;
 		};
-		ADAD0012000000000000AAAA /* UserMessagingPlatform */ = {
+		ADAD0012000000000000AAAA /* GoogleUserMessagingPlatform */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = ADAD0011000000000000AAAA /* XCRemoteSwiftPackageReference "swift-package-manager-google-user-messaging-platform" */;
-			productName = UserMessagingPlatform;
+			productName = GoogleUserMessagingPlatform;
 		};
 		FBFB0002000000000000AAAA /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
