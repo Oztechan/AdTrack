@@ -9,8 +9,8 @@ import com.github.submob.logmob.enableCrashlyticsCollection
 import com.github.submob.logmob.initLogger
 import com.google.android.gms.ads.MobileAds
 import com.oztechan.adtrack.di.initKoin
-import kotlin.concurrent.thread
 import org.koin.android.ext.koin.androidContext
+import kotlin.concurrent.thread
 
 class AdTrackApplication : Application() {
     override fun onCreate() {
