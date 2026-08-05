@@ -249,7 +249,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  bundler (= 4.0.17)
+  bundler (= 4.0.18)
   fastlane (= 2.237.0)
   fastlane-plugin-firebase_app_distribution (= 1.0.0)
 
@@ -357,4 +357,4 @@ CHECKSUMS
   xcpretty-travis-formatter (1.0.1) sha256=aacc332f17cb7b2cba222994e2adc74223db88724fe76341483ad3098e232f93
 
 BUNDLED WITH
-  4.0.17
+  4.0.18
