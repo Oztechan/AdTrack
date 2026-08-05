@@ -14,5 +14,9 @@ struct ContentView: View {
     var body: some View {
         ComposeView()
             .ignoresSafeArea(.all)
+            .onAppear {
+                // Gather UMP consent, then start the Mobile Ads SDK once ads may be requested.
+                AdsConsentManager.gatherConsentThenStartAds()
+            }
     }
 }

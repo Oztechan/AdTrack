@@ -1,5 +1,4 @@
 import FirebaseCore
-import GoogleMobileAds
 import SwiftUI
 import common
 
@@ -12,8 +11,8 @@ struct iOSApp: App {
         MainViewControllerKt.startCrashlytics()
         // Start Koin dependency injection once at launch.
         MainViewControllerKt.startKoin()
-        // Initialize the Google Mobile Ads SDK. App ID comes from GADApplicationIdentifier in Info.plist.
-        GADMobileAds.sharedInstance().start(completionHandler: nil)
+        // Mobile Ads SDK init happens after UMP consent is gathered (see AdsConsentManager,
+        // triggered from ContentView), so we never request ads before consent is resolved.
     }
 
     var body: some Scene {
