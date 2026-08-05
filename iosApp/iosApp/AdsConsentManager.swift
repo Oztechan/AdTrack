@@ -33,8 +33,10 @@ enum AdsConsentManager {
     }
 
     private static func topViewController() -> UIViewController? {
+        // keyWindow on UIWindowScene is iOS 15+, but the app targets iOS 14.1, so find the key
+        // window via the scene's windows instead.
         let scene = UIApplication.shared.connectedScenes
             .first { $0.activationState == .foregroundActive } as? UIWindowScene
-        return scene?.keyWindow?.rootViewController
+        return scene?.windows.first { $0.isKeyWindow }?.rootViewController
     }
 }
