@@ -29,6 +29,9 @@ android {
 
         // Must match OAUTH_REDIRECT_SCHEME so the manifest redirect intent-filter resolves.
         manifestPlaceholders["oauthRedirectScheme"] = "com.oztechan.adtrack"
+
+        // AdMob App ID injected into the manifest meta-data; test App ID by default (see Key).
+        manifestPlaceholders["admobAppId"] = secret(Key.ADMOB_APP_ID)
     }
 
     signingConfigs {
@@ -68,6 +71,7 @@ dependencies {
     implementation(libs.android.activityCompose)
     implementation(libs.android.koinAndroid)
     implementation(libs.android.splashScreen)
+    implementation(libs.android.playServicesAds)
     // Renders @Preview composables in the Android Studio preview pane.
     debugImplementation(compose.uiTooling)
     implementation(compose.components.uiToolingPreview)
