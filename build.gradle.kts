@@ -32,6 +32,10 @@ allprojects {
             "org.jetbrains.compose.ui.tooling.preview.Preview",
             "androidx.compose.runtime.Composable"
         )
+        // The Android host app is thin platform glue (Activity/Application/SDK wrappers); unit
+        // coverage lives in the shared modules. Consent/ads logic is covered via ConsentCoordinator
+        // in :common, and the UMP wrappers here are untestable delegation.
+        kover.reports.filters.excludes.classes("com.oztechan.adtrack.android.**")
     }
 
     apply(plugin = rootProject.libs.plugins.detekt.get().pluginId).also {
