@@ -1,42 +1,19 @@
 import GoogleMobileAds
-import UIKit
-import UserMessagingPlatform
+import common
 
-/// Gathers UMP (GDPR) consent, then starts the Mobile Ads SDK once ads may be requested
-/// (`UMPConsentInformation.canRequestAds`).
-///
-/// We never force consent or block on it: if the user declines, the SDK still serves
-/// non-personalized / limited ads automatically from the stored consent signal.
+/// iOS composition root: wires the UMP-backed `UmpConsentGateway` to the shared `ConsentCoordinator`,
+/// then starts the Mobile Ads SDK once ads may be requested.
 enum AdsConsentManager {
-    private static var adsStarted = false
+    // Retain the coordinator for the duration of the async consent flow.
+    private static var coordinator: ConsentCoordinator?
 
     /// Call once after the UI is on screen (the consent form is presented over the top view controller).
     static func gatherConsentThenStartAds() {
-        let parameters = UMPRequestParameters()
-
-        UMPConsentInformation.sharedInstance.requestConsentInfoUpdate(with: parameters) { _ in
-            // Consent info is up to date; show the form only if the user is required to see it.
-            UMPConsentForm.loadAndPresentIfRequired(from: topViewController()) { _ in
-                // Ignore the form error: either way, honour whatever consent we ended up with.
-                startAdsIfPermitted()
-            }
-        }
-
-        // Returning users who already consented can start ads without waiting for the update.
-        startAdsIfPermitted()
-    }
-
-    private static func startAdsIfPermitted() {
-        guard UMPConsentInformation.sharedInstance.canRequestAds, !adsStarted else { return }
-        adsStarted = true
-        GADMobileAds.sharedInstance().start(completionHandler: nil)
-    }
-
-    private static func topViewController() -> UIViewController? {
-        // keyWindow on UIWindowScene is iOS 15+, but the app targets iOS 14.1, so find the key
-        // window via the scene's windows instead.
-        let scene = UIApplication.shared.connectedScenes
-            .first { $0.activationState == .foregroundActive } as? UIWindowScene
-        return scene?.windows.first { $0.isKeyWindow }?.rootViewController
+        let coordinator = ConsentCoordinator(
+            gateway: UmpConsentGateway(),
+            onAdsReady: { GADMobileAds.sharedInstance().start(completionHandler: nil) }
+        )
+        self.coordinator = coordinator
+        coordinator.gatherConsentThenInitializeAds()
     }
 }
