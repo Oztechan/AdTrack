@@ -11,7 +11,7 @@ struct iOSApp: App {
         MainViewControllerKt.startCrashlytics()
         // Start Koin dependency injection once at launch.
         MainViewControllerKt.startKoin()
-        // Mobile Ads SDK init happens after UMP consent is gathered (see ConsentManager,
+        // Mobile Ads SDK init happens after UMP consent is gathered (see PlatformConsentManagerImpl,
         // triggered from ContentView), so we never request ads before consent is resolved.
     }
 

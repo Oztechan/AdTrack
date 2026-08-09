@@ -3,24 +3,26 @@ import UIKit
 import UserMessagingPlatform
 import common
 
-/// iOS `PlatformConsentManager` (the Kotlin interface from `common`) backed by the UMP iOS SDK and
-/// the Mobile Ads SDK. Async steps report back through `ConsentCallback`, not closures.
+/// iOS `PlatformConsentManager` (the Kotlin interface from `common`): runs the UMP consent flow,
+/// driving the shared `ConsentManagerImpl` to start the Mobile Ads SDK once ads may be requested.
 class PlatformConsentManagerImpl: PlatformConsentManager {
-    func canRequestAds() -> Bool {
-        UMPConsentInformation.sharedInstance.canRequestAds
-    }
 
-    func requestConsentInfoUpdate(callback: ConsentCallback) {
+    /// Call once after the UI is on screen (the consent form is presented over the top view controller).
+    func gatherConsentThenInitializeAds() {
+        // Local so the shared guard lives only for the flow (kept alive by the UMP callbacks).
+        let consentManager = ConsentManagerImpl(platformConsentManager: self)
         let parameters = UMPRequestParameters()
         UMPConsentInformation.sharedInstance.requestConsentInfoUpdate(with: parameters) { _ in
-            callback.onCompleted()
+            UMPConsentForm.loadAndPresentIfRequired(from: Self.topViewController()) { _ in
+                consentManager.initializeAdsIfPermitted()
+            }
         }
+        // Returning users who already consented can start ads without waiting for the update.
+        consentManager.initializeAdsIfPermitted()
     }
 
-    func loadAndShowFormIfRequired(callback: ConsentCallback) {
-        UMPConsentForm.loadAndPresentIfRequired(from: Self.topViewController()) { _ in
-            callback.onCompleted()
-        }
+    func canRequestAds() -> Bool {
+        UMPConsentInformation.sharedInstance.canRequestAds
     }
 
     func initializeAds() {

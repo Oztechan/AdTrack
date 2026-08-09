@@ -20,7 +20,7 @@ class AdTrackApplication : Application() {
         initKoin {
             androidContext(this@AdTrackApplication)
         }
-        // Mobile Ads SDK init happens after UMP consent is gathered (see ConsentManager,
+        // Mobile Ads SDK init happens after UMP consent is gathered (see PlatformConsentManagerImpl,
         // triggered from MainActivity), so we never request ads before consent is resolved.
     }
 }

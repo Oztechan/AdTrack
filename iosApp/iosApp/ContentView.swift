@@ -12,16 +12,16 @@ struct ComposeView: UIViewControllerRepresentable {
 
 struct ContentView: View {
     // Retained for the view's lifetime so the async consent flow survives (no static singleton).
-    @State private var consentManager: ConsentManager?
+    @State private var platformConsentManager: PlatformConsentManagerImpl?
 
     var body: some View {
         ComposeView()
             .ignoresSafeArea(.all)
             .onAppear {
-                guard consentManager == nil else { return }
+                guard platformConsentManager == nil else { return }
                 // Gather UMP consent, then start the Mobile Ads SDK once ads may be requested.
-                let manager = ConsentManagerImpl(platformConsentManager: PlatformConsentManagerImpl())
-                consentManager = manager
+                let manager = PlatformConsentManagerImpl()
+                platformConsentManager = manager
                 manager.gatherConsentThenInitializeAds()
             }
     }
