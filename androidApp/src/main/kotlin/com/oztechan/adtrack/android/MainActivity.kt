@@ -10,14 +10,16 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.oztechan.adtrack.AdTrackApp
-import com.oztechan.adtrack.android.ads.AdsConsentManager
+import com.oztechan.adtrack.ads.consent.ConsentManager
+import com.oztechan.adtrack.ads.consent.ConsentManagerImpl
+import com.oztechan.adtrack.android.ads.PlatformConsentManagerImpl
 import com.oztechan.adtrack.data.auth.browser.AuthRedirectBus
 import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
 
     private val redirectBus: AuthRedirectBus by inject()
-    private val adsConsentManager by lazy { AdsConsentManager(this) }
+    private val consentManager: ConsentManager by lazy { ConsentManagerImpl(PlatformConsentManagerImpl(this)) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Must be called before super.onCreate; hands the splash off to the app's content.
@@ -25,7 +27,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         // Gather UMP consent, then initialize the Mobile Ads SDK once ads may be requested.
-        adsConsentManager.gatherConsentThenInitializeAds()
+        consentManager.gatherConsentThenInitializeAds()
         setContent {
             AdTrackApp()
         }
