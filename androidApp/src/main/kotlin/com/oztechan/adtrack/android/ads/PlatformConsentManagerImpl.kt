@@ -46,7 +46,9 @@ class PlatformConsentManagerImpl(private val activity: Activity) : PlatformConse
     override fun canRequestAds(): Boolean = consentInformation.canRequestAds()
 
     override fun initializeAds() {
+        // Hoist the app context so the background thread captures it, not the Activity.
+        val context = activity.applicationContext
         // Google recommends initializing the Mobile Ads SDK off the main thread, as it does I/O.
-        thread { MobileAds.initialize(activity.applicationContext) }
+        thread { MobileAds.initialize(context) }
     }
 }
