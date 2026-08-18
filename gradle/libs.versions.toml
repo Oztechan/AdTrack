@@ -24,6 +24,7 @@ androidxBrowser = "1.10.0"
 androidxSecurityCrypto = "1.1.0-alpha06"
 androidxSplashScreen = "1.2.0"
 playServicesAds = "25.4.0"
+userMessagingPlatform = "3.2.0"
 androidDesugaring = "2.1.5"
 roborazzi = "1.72.0"
 robolectric = "4.16.1"
@@ -63,6 +64,7 @@ android-browser = { module = "androidx.browser:browser", version.ref = "androidx
 android-securityCrypto = { module = "androidx.security:security-crypto", version.ref = "androidxSecurityCrypto" }
 android-splashScreen = { module = "androidx.core:core-splashscreen", version.ref = "androidxSplashScreen" }
 android-playServicesAds = { module = "com.google.android.gms:play-services-ads", version.ref = "playServicesAds" }
+android-userMessagingPlatform = { module = "com.google.android.ump:user-messaging-platform", version.ref = "userMessagingPlatform" }
 android-desugaring = { module = "com.android.tools:desugar_jdk_libs", version.ref = "androidDesugaring" }
 android-firebaseBom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 android-firebaseAnalytics = { module = "com.google.firebase:firebase-analytics" }

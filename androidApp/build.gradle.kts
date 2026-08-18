@@ -72,6 +72,7 @@ dependencies {
     implementation(libs.android.koinAndroid)
     implementation(libs.android.splashScreen)
     implementation(libs.android.playServicesAds)
+    implementation(libs.android.userMessagingPlatform)
     // Renders @Preview composables in the Android Studio preview pane.
     debugImplementation(compose.uiTooling)
     implementation(compose.components.uiToolingPreview)
