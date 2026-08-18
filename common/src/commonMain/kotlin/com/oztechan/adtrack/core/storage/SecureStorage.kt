@@ -27,6 +27,18 @@ class SecureStorage(private val settings: Settings) {
         settings.putString(key, value)
     }
 
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
+    fun getLong(key: String): Long? = try {
+        settings.getLongOrNull(key)
+    } catch (e: Exception) {
+        Logger.e(e) { "SecureStorage read failed for $key" }
+        null
+    }
+
+    fun putLong(key: String, value: Long) {
+        settings.putLong(key, value)
+    }
+
     fun remove(key: String) {
         settings.remove(key)
     }
