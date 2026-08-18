@@ -34,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.oztechan.adtrack.ads.banner.BannerAd
 import com.oztechan.adtrack.domain.model.AppPlatform
 import com.oztechan.adtrack.domain.model.AppRevenue
 import com.oztechan.adtrack.domain.model.Period
@@ -74,7 +75,8 @@ fun DashboardScreen(
         onRefresh = viewModel.event::onRefresh,
         onRetry = viewModel.event::onRetry,
         onAppClick = viewModel.event::onAppClick,
-        onSettingsClick = viewModel.event::onSettingsClick
+        onSettingsClick = viewModel.event::onSettingsClick,
+        bottomBar = { BannerAd() }
     )
 }
 
@@ -87,7 +89,8 @@ internal fun DashboardScreenContent(
     onRefresh: () -> Unit,
     onRetry: () -> Unit,
     onAppClick: (AppRevenue) -> Unit,
-    onSettingsClick: () -> Unit
+    onSettingsClick: () -> Unit,
+    bottomBar: @Composable () -> Unit = {}
 ) {
     Scaffold(
         topBar = {
@@ -102,7 +105,8 @@ internal fun DashboardScreenContent(
                     }
                 }
             )
-        }
+        },
+        bottomBar = bottomBar
     ) { padding ->
         Column(modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp)) {
             PeriodSelector(selected = state.selectedPeriod, onSelected = onPeriodSelected)

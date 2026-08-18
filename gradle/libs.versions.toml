@@ -72,6 +72,7 @@ android-roborazziCompose = { module = "io.github.takahirom.roborazzi:roborazzi-c
 android-robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 android-junit = { module = "junit:junit", version.ref = "junit" }
 android-composeUiTestJunit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "composeUiTestJunit4" }
+android-composeUiTestManifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "composeUiTestJunit4" }
 
 # IOS
 ios-ktor = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
