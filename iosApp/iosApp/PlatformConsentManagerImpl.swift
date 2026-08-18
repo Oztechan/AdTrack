@@ -1,3 +1,4 @@
+import AppTrackingTransparency
 import GoogleMobileAds
 import UIKit
 import UserMessagingPlatform
@@ -26,7 +27,14 @@ class PlatformConsentManagerImpl: PlatformConsentManager {
     }
 
     func initializeAds() {
-        GADMobileAds.sharedInstance().start(completionHandler: nil)
+        // Request App Tracking Transparency after UMP consent (per Google guidance), then start ads.
+        // The prompt only appears the first time; afterwards the completion fires with the stored
+        // status. Requires NSUserTrackingUsageDescription in Info.plist.
+        ATTrackingManager.requestTrackingAuthorization { _ in
+            DispatchQueue.main.async {
+                GADMobileAds.sharedInstance().start(completionHandler: nil)
+            }
+        }
     }
 
     private static func topViewController() -> UIViewController? {
