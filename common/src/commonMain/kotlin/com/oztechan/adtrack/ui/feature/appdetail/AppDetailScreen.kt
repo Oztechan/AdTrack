@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.oztechan.adtrack.ads.banner.BannerAd
 import com.oztechan.adtrack.core.util.formatCurrency
 import com.oztechan.adtrack.domain.model.AdFormat
 import com.oztechan.adtrack.domain.model.AppRevenue
@@ -68,14 +69,19 @@ fun AppDetailScreen(
         }
     }
 
-    AppDetailScreenContent(state = state, onBackClick = viewModel.event::onBackClick)
+    AppDetailScreenContent(
+        state = state,
+        onBackClick = viewModel.event::onBackClick,
+        bottomBar = { BannerAd() }
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun AppDetailScreenContent(
     state: AppDetailState,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    bottomBar: @Composable () -> Unit = {}
 ) {
     Scaffold(
         topBar = {
@@ -87,7 +93,8 @@ internal fun AppDetailScreenContent(
                     }
                 }
             )
-        }
+        },
+        bottomBar = bottomBar
     ) { padding ->
         Column(modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp)) {
             if (state.isLoading) CenteredProgress() else AppDetailContent(state)

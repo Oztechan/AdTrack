@@ -7,6 +7,7 @@ package com.oztechan.adtrack.android
 import android.app.Application
 import com.github.submob.logmob.enableCrashlyticsCollection
 import com.github.submob.logmob.initLogger
+import com.oztechan.adtrack.android.ads.di.androidAdsModule
 import com.oztechan.adtrack.di.initKoin
 import org.koin.android.ext.koin.androidContext
 
@@ -19,6 +20,7 @@ class AdTrackApplication : Application() {
 
         initKoin {
             androidContext(this@AdTrackApplication)
+            modules(androidAdsModule)
         }
         // Mobile Ads SDK init happens after UMP consent is gathered (see PlatformConsentManagerImpl,
         // triggered from MainActivity), so we never request ads before consent is resolved.

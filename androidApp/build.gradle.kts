@@ -59,6 +59,9 @@ android {
         sourceCompatibility = ProjectSettings.JAVA_VERSION
         targetCompatibility = ProjectSettings.JAVA_VERSION
     }
+
+    // Robolectric needs the merged resources/manifest to resolve a Context and screen metrics.
+    testOptions.unitTests.isIncludeAndroidResources = true
 }
 
 dependencies {
@@ -78,4 +81,8 @@ dependencies {
     implementation(compose.components.uiToolingPreview)
     implementation(platform(libs.android.firebaseBom))
     implementation(libs.android.firebaseAnalytics)
+
+    testImplementation(libs.common.test)
+    testImplementation(libs.android.junit)
+    testImplementation(libs.android.robolectric)
 }

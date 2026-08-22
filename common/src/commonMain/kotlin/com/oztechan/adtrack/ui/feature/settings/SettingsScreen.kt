@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.oztechan.adtrack.ads.banner.BannerAd
 import com.oztechan.adtrack.ui.theme.AdTrackTheme
 import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -52,7 +53,8 @@ fun SettingsScreen(
     SettingsScreenContent(
         state = state,
         onSignOutClick = viewModel.event::onSignOutClick,
-        onBackClick = viewModel.event::onBackClick
+        onBackClick = viewModel.event::onBackClick,
+        bottomBar = { BannerAd() }
     )
 }
 
@@ -61,7 +63,8 @@ fun SettingsScreen(
 private fun SettingsScreenContent(
     state: SettingsState,
     onSignOutClick: () -> Unit,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    bottomBar: @Composable () -> Unit = {}
 ) {
     Scaffold(
         topBar = {
@@ -73,7 +76,8 @@ private fun SettingsScreenContent(
                     }
                 }
             )
-        }
+        },
+        bottomBar = bottomBar
     ) { padding ->
         Column(modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp)) {
             if (state.isLoading) {
