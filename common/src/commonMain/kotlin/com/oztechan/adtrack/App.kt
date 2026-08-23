@@ -46,6 +46,9 @@ fun AdTrackApp() {
                 )
             }
             composable<DashboardRoute> {
+                // Preload from the home screen so an interstitial is ready by the time the user
+                // returns from a detail/settings transition (subject to the manager's policy).
+                LaunchedEffect(Unit) { interstitialManager.preload() }
                 DashboardScreen(
                     onNavigateToAppDetail = { appId, appName, period ->
                         navController.navigate(AppDetailRoute(appId, appName, period.name))
@@ -55,8 +58,6 @@ fun AdTrackApp() {
             }
             composable<AppDetailRoute> { entry ->
                 val route = entry.toRoute<AppDetailRoute>()
-                // Preload so a gentle interstitial can show on the back transition (subject to policy).
-                LaunchedEffect(Unit) { interstitialManager.preload() }
                 AppDetailScreen(
                     appId = route.appId,
                     appName = route.appName,
@@ -74,7 +75,10 @@ fun AdTrackApp() {
                             popUpTo(0) { inclusive = true }
                         }
                     },
-                    onNavigateBack = { navController.popBackStack() }
+                    onNavigateBack = {
+                        interstitialManager.onTransition()
+                        navController.popBackStack()
+                    }
                 )
             }
         }

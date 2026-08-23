@@ -41,6 +41,7 @@ class InterstitialManager(
         clock.now().epochSeconds - sessionStartEpochSeconds >= COOLDOWN_SECONDS
 
     private companion object {
-        const val COOLDOWN_SECONDS = 60L
+        // Short soft cooldown so it never fires on an instant bounce, without over-blocking.
+        const val COOLDOWN_SECONDS = 15L
     }
 }
