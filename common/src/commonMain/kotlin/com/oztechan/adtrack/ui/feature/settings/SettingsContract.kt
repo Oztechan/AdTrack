@@ -4,6 +4,7 @@
 
 package com.oztechan.adtrack.ui.feature.settings
 
+import com.oztechan.adtrack.ads.rewarded.RewardedAdState
 import com.oztechan.adtrack.core.viewmodel.BaseData
 import com.oztechan.adtrack.core.viewmodel.BaseEffect
 import com.oztechan.adtrack.core.viewmodel.BaseEvent
@@ -14,7 +15,9 @@ data class SettingsState(
     val publisherId: String = "",
     val currencyCode: String = "",
     val reportingTimeZone: String = "",
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
+    val isPremium: Boolean = false,
+    val rewardedAdState: RewardedAdState = RewardedAdState.IDLE
 ) : BaseState
 
 sealed interface SettingsEffect : BaseEffect {
@@ -26,6 +29,7 @@ interface SettingsEvent : BaseEvent {
     fun onSignOutClick()
     fun onBackClick()
     fun onRetry()
+    fun onWatchRewardedAd()
 }
 
 class SettingsData : BaseData

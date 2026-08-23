@@ -37,6 +37,9 @@ val oauthClientIdIos = secret("GOOGLE_OAUTH_CLIENT_ID_IOS", "YOUR_IOS_OAUTH_CLIE
 // ads without secrets, with the real units injected for release (mirrors the AdMob App ID).
 val bannerAdUnitIdAndroid = secret("ADMOB_BANNER_UNIT_ID_ANDROID", "ca-app-pub-3940256099942544/6300978111")
 val bannerAdUnitIdIos = secret("ADMOB_BANNER_UNIT_ID_IOS", "ca-app-pub-3940256099942544/2934735716")
+
+val rewardedAdUnitIdAndroid = secret("ADMOB_REWARDED_UNIT_ID_ANDROID", "ca-app-pub-3940256099942544/5224354917")
+val rewardedAdUnitIdIos = secret("ADMOB_REWARDED_UNIT_ID_IOS", "ca-app-pub-3940256099942544/1712485313")
 // endregion
 
 kotlin {
@@ -146,24 +149,29 @@ buildkonfig {
         buildConfigField(STRING, "GOOGLE_OAUTH_CLIENT_ID", oauthClientIdAndroid)
         buildConfigField(STRING, "OAUTH_REDIRECT_SCHEME", ProjectSettings.PROJECT_ID)
         buildConfigField(STRING, "ADMOB_BANNER_UNIT_ID", bannerAdUnitIdAndroid)
+        buildConfigField(STRING, "ADMOB_REWARDED_UNIT_ID", rewardedAdUnitIdAndroid)
     }
 
     targetConfigs {
         create("android") {
             buildConfigField(STRING, "GOOGLE_OAUTH_CLIENT_ID", oauthClientIdAndroid)
             buildConfigField(STRING, "ADMOB_BANNER_UNIT_ID", bannerAdUnitIdAndroid)
+            buildConfigField(STRING, "ADMOB_REWARDED_UNIT_ID", rewardedAdUnitIdAndroid)
         }
         create("iosX64") {
             buildConfigField(STRING, "GOOGLE_OAUTH_CLIENT_ID", oauthClientIdIos)
             buildConfigField(STRING, "ADMOB_BANNER_UNIT_ID", bannerAdUnitIdIos)
+            buildConfigField(STRING, "ADMOB_REWARDED_UNIT_ID", rewardedAdUnitIdIos)
         }
         create("iosArm64") {
             buildConfigField(STRING, "GOOGLE_OAUTH_CLIENT_ID", oauthClientIdIos)
             buildConfigField(STRING, "ADMOB_BANNER_UNIT_ID", bannerAdUnitIdIos)
+            buildConfigField(STRING, "ADMOB_REWARDED_UNIT_ID", rewardedAdUnitIdIos)
         }
         create("iosSimulatorArm64") {
             buildConfigField(STRING, "GOOGLE_OAUTH_CLIENT_ID", oauthClientIdIos)
             buildConfigField(STRING, "ADMOB_BANNER_UNIT_ID", bannerAdUnitIdIos)
+            buildConfigField(STRING, "ADMOB_REWARDED_UNIT_ID", rewardedAdUnitIdIos)
         }
     }
 }
