@@ -4,6 +4,7 @@
 
 package com.oztechan.adtrack.di
 
+import com.oztechan.adtrack.ads.interstitial.di.interstitialModule
 import com.oztechan.adtrack.ads.premium.di.premiumModule
 import com.oztechan.adtrack.ads.rewarded.di.rewardedModule
 import com.oztechan.adtrack.core.network.di.networkModule
@@ -22,6 +23,7 @@ fun initKoin(appDeclaration: KoinAppDeclaration = {}) = startKoin {
         adMobModule,
         premiumModule,
         rewardedModule,
+        interstitialModule,
         viewModelModule
     )
 }

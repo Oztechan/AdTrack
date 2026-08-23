@@ -8,6 +8,8 @@ import androidx.compose.ui.window.ComposeUIViewController
 import com.github.submob.logmob.initCrashlytics
 import com.github.submob.logmob.initLogger
 import com.oztechan.adtrack.ads.banner.IosBannerFactory
+import com.oztechan.adtrack.ads.interstitial.InterstitialAdConfig
+import com.oztechan.adtrack.ads.interstitial.PlatformInterstitialAd
 import com.oztechan.adtrack.ads.rewarded.PlatformRewardedAd
 import com.oztechan.adtrack.ads.rewarded.RewardedAdConfig
 import com.oztechan.adtrack.ads.rewarded.RewardedAdManager
@@ -38,12 +40,17 @@ fun startCrashlytics() {
  * Note: must NOT be named with an `init` prefix — Objective-C/Swift interop treats `init*` names
  * as initializers, which prevents Kotlin from exporting it as a callable static member.
  */
-fun startKoin(bannerFactory: IosBannerFactory, rewardedAd: PlatformRewardedAd) {
+fun startKoin(
+    bannerFactory: IosBannerFactory,
+    rewardedAd: PlatformRewardedAd,
+    interstitialAd: PlatformInterstitialAd
+) {
     initKoin()
     loadKoinModules(
         module {
             single { bannerFactory }
             single { rewardedAd }
+            single { interstitialAd }
         }
     )
 }
@@ -53,3 +60,6 @@ fun rewardedAdManager(): RewardedAdManager = KoinPlatform.getKoin().get()
 
 /** Rewarded ad unit id (Google test id by default) for the Swift rewarded-ad impl. */
 fun rewardedAdUnitId(): String = KoinPlatform.getKoin().get<RewardedAdConfig>().adUnitId
+
+/** Interstitial ad unit id (Google test id by default) for the Swift interstitial impl. */
+fun interstitialAdUnitId(): String = KoinPlatform.getKoin().get<InterstitialAdConfig>().adUnitId
