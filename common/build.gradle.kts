@@ -113,6 +113,10 @@ kotlin {
                 implementation(composeUiTestJunit4)
                 implementation(composeUiTestManifest)
             }
+            libs.common.apply {
+                implementation(coroutinesTest)
+                implementation(multiplatformSettingsTest)
+            }
         }
         iosMain.dependencies {
             implementation(libs.ios.ktor)
