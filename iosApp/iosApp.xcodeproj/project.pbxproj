@@ -12,6 +12,7 @@
 		ADAD0021000000000000AAAA /* PlatformConsentManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADAD0020000000000000AAAA /* PlatformConsentManagerImpl.swift */; };
 		ADAD0023000000000000AAAA /* IosBannerFactoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADAD0022000000000000AAAA /* IosBannerFactoryImpl.swift */; };
 		ADAD0025000000000000AAAA /* IosRewardedAd.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADAD0024000000000000AAAA /* IosRewardedAd.swift */; };
+		ADAD0027000000000000AAAA /* IosInterstitialAd.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADAD0026000000000000AAAA /* IosInterstitialAd.swift */; };
 		ADAD0014000000000000AAAA /* GoogleUserMessagingPlatform in Frameworks */ = {isa = PBXBuildFile; productRef = ADAD0012000000000000AAAA /* GoogleUserMessagingPlatform */; };
 		A1A1A1A100000000000000B2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1A1A1A100000000000000B1 /* Assets.xcassets */; };
 		ADAD0004000000000000AAAA /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = ADAD0002000000000000AAAA /* GoogleMobileAds */; };
@@ -28,6 +29,7 @@
 		ADAD0020000000000000AAAA /* PlatformConsentManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformConsentManagerImpl.swift; sourceTree = "<group>"; };
 		ADAD0022000000000000AAAA /* IosBannerFactoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IosBannerFactoryImpl.swift; sourceTree = "<group>"; };
 		ADAD0024000000000000AAAA /* IosRewardedAd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IosRewardedAd.swift; sourceTree = "<group>"; };
+		ADAD0026000000000000AAAA /* IosInterstitialAd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IosInterstitialAd.swift; sourceTree = "<group>"; };
 		7555FF8C242A565B00829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A1A1A1A100000000000000B1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AB3632DC29227652001CCB65 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
@@ -84,6 +86,7 @@
 				ADAD0020000000000000AAAA /* PlatformConsentManagerImpl.swift */,
 				ADAD0022000000000000AAAA /* IosBannerFactoryImpl.swift */,
 				ADAD0024000000000000AAAA /* IosRewardedAd.swift */,
+				ADAD0026000000000000AAAA /* IosInterstitialAd.swift */,
 				FBFB0009000000000000AAAA /* GoogleService-Info.plist */,
 				A1A1A1A100000000000000B1 /* Assets.xcassets */,
 				B1B1B1B100000000000000C1 /* LaunchAssets.xcassets */,
@@ -229,6 +232,7 @@
 				ADAD0021000000000000AAAA /* PlatformConsentManagerImpl.swift in Sources */,
 				ADAD0023000000000000AAAA /* IosBannerFactoryImpl.swift in Sources */,
 				ADAD0025000000000000AAAA /* IosRewardedAd.swift in Sources */,
+				ADAD0027000000000000AAAA /* IosInterstitialAd.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -40,6 +40,9 @@ val bannerAdUnitIdIos = secret("ADMOB_BANNER_UNIT_ID_IOS", "ca-app-pub-394025609
 
 val rewardedAdUnitIdAndroid = secret("ADMOB_REWARDED_UNIT_ID_ANDROID", "ca-app-pub-3940256099942544/5224354917")
 val rewardedAdUnitIdIos = secret("ADMOB_REWARDED_UNIT_ID_IOS", "ca-app-pub-3940256099942544/1712485313")
+
+val interstitialAdUnitIdAndroid = secret("ADMOB_INTERSTITIAL_UNIT_ID_ANDROID", "ca-app-pub-3940256099942544/1033173712")
+val interstitialAdUnitIdIos = secret("ADMOB_INTERSTITIAL_UNIT_ID_IOS", "ca-app-pub-3940256099942544/4411468910")
 // endregion
 
 kotlin {
@@ -154,6 +157,7 @@ buildkonfig {
         buildConfigField(STRING, "OAUTH_REDIRECT_SCHEME", ProjectSettings.PROJECT_ID)
         buildConfigField(STRING, "ADMOB_BANNER_UNIT_ID", bannerAdUnitIdAndroid)
         buildConfigField(STRING, "ADMOB_REWARDED_UNIT_ID", rewardedAdUnitIdAndroid)
+        buildConfigField(STRING, "ADMOB_INTERSTITIAL_UNIT_ID", interstitialAdUnitIdAndroid)
     }
 
     targetConfigs {
@@ -161,21 +165,25 @@ buildkonfig {
             buildConfigField(STRING, "GOOGLE_OAUTH_CLIENT_ID", oauthClientIdAndroid)
             buildConfigField(STRING, "ADMOB_BANNER_UNIT_ID", bannerAdUnitIdAndroid)
             buildConfigField(STRING, "ADMOB_REWARDED_UNIT_ID", rewardedAdUnitIdAndroid)
+            buildConfigField(STRING, "ADMOB_INTERSTITIAL_UNIT_ID", interstitialAdUnitIdAndroid)
         }
         create("iosX64") {
             buildConfigField(STRING, "GOOGLE_OAUTH_CLIENT_ID", oauthClientIdIos)
             buildConfigField(STRING, "ADMOB_BANNER_UNIT_ID", bannerAdUnitIdIos)
             buildConfigField(STRING, "ADMOB_REWARDED_UNIT_ID", rewardedAdUnitIdIos)
+            buildConfigField(STRING, "ADMOB_INTERSTITIAL_UNIT_ID", interstitialAdUnitIdIos)
         }
         create("iosArm64") {
             buildConfigField(STRING, "GOOGLE_OAUTH_CLIENT_ID", oauthClientIdIos)
             buildConfigField(STRING, "ADMOB_BANNER_UNIT_ID", bannerAdUnitIdIos)
             buildConfigField(STRING, "ADMOB_REWARDED_UNIT_ID", rewardedAdUnitIdIos)
+            buildConfigField(STRING, "ADMOB_INTERSTITIAL_UNIT_ID", interstitialAdUnitIdIos)
         }
         create("iosSimulatorArm64") {
             buildConfigField(STRING, "GOOGLE_OAUTH_CLIENT_ID", oauthClientIdIos)
             buildConfigField(STRING, "ADMOB_BANNER_UNIT_ID", bannerAdUnitIdIos)
             buildConfigField(STRING, "ADMOB_REWARDED_UNIT_ID", rewardedAdUnitIdIos)
+            buildConfigField(STRING, "ADMOB_INTERSTITIAL_UNIT_ID", interstitialAdUnitIdIos)
         }
     }
 }

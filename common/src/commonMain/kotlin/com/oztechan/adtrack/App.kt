@@ -5,11 +5,13 @@
 package com.oztechan.adtrack
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.oztechan.adtrack.ads.interstitial.InterstitialManager
 import com.oztechan.adtrack.domain.model.Period
 import com.oztechan.adtrack.domain.repository.AuthRepository
 import com.oztechan.adtrack.ui.feature.appdetail.AppDetailScreen
@@ -27,6 +29,7 @@ import org.koin.compose.koinInject
 fun AdTrackApp() {
     AdTrackTheme {
         val authRepository = koinInject<AuthRepository>()
+        val interstitialManager = koinInject<InterstitialManager>()
         val navController = rememberNavController()
         val startDestination = remember {
             if (authRepository.isSignedIn()) DashboardRoute else SignInRoute
@@ -52,11 +55,16 @@ fun AdTrackApp() {
             }
             composable<AppDetailRoute> { entry ->
                 val route = entry.toRoute<AppDetailRoute>()
+                // Preload so a gentle interstitial can show on the back transition (subject to policy).
+                LaunchedEffect(Unit) { interstitialManager.preload() }
                 AppDetailScreen(
                     appId = route.appId,
                     appName = route.appName,
                     period = Period.valueOf(route.period),
-                    onNavigateBack = { navController.popBackStack() }
+                    onNavigateBack = {
+                        interstitialManager.onTransition()
+                        navController.popBackStack()
+                    }
                 )
             }
             composable<SettingsRoute> {

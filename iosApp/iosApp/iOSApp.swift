@@ -13,7 +13,8 @@ struct iOSApp: App {
         // ad code can drive them (the Mobile Ads SDK is linked only into this target).
         MainViewControllerKt.startKoin(
             bannerFactory: IosBannerFactoryImpl(),
-            rewardedAd: IosRewardedAd()
+            rewardedAd: IosRewardedAd(),
+            interstitialAd: IosInterstitialAd()
         )
         // Mobile Ads SDK init happens after UMP consent is gathered (see PlatformConsentManagerImpl,
         // triggered from ContentView), so we never request ads before consent is resolved.

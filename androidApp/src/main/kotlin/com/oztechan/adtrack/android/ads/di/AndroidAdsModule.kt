@@ -5,8 +5,10 @@
 package com.oztechan.adtrack.android.ads.di
 
 import com.oztechan.adtrack.ads.banner.AndroidBannerFactory
+import com.oztechan.adtrack.ads.interstitial.PlatformInterstitialAd
 import com.oztechan.adtrack.ads.rewarded.PlatformRewardedAd
 import com.oztechan.adtrack.android.ads.AndroidBannerFactoryImpl
+import com.oztechan.adtrack.android.ads.AndroidInterstitialAd
 import com.oztechan.adtrack.android.ads.AndroidRewardedAd
 import com.oztechan.adtrack.android.ads.CurrentActivityHolder
 import org.koin.android.ext.koin.androidContext
@@ -21,6 +23,13 @@ val androidAdsModule = module {
             context = androidContext(),
             activityHolder = get(),
             rewardedAdManager = get(),
+            config = get()
+        )
+    }
+    single<PlatformInterstitialAd> {
+        AndroidInterstitialAd(
+            context = androidContext(),
+            activityHolder = get(),
             config = get()
         )
     }
