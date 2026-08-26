@@ -12,9 +12,10 @@
     <string>6.0</string>
     <key>CFBundleName</key>
     <string>AdTrack</string>
-    <!-- AdMob App ID. Google's public test App ID by default; replace with the real one for release. -->
+    <!-- AdMob App ID, injected from Config.xcconfig (ADMOB_APP_ID). Google's public test App ID by
+         default; the real one is passed as a build setting at release time. -->
     <key>GADApplicationIdentifier</key>
-    <string>ca-app-pub-3940256099942544~1458002511</string>
+    <string>$(ADMOB_APP_ID)</string>
     <!-- Shown in the App Tracking Transparency prompt; required before requesting tracking authorization. -->
     <key>NSUserTrackingUsageDescription</key>
     <string>Allow tracking to see ads more relevant to you. You can still use AdTrack fully either way.</string>
