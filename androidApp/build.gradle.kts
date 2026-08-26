@@ -30,8 +30,8 @@ android {
         // Must match OAUTH_REDIRECT_SCHEME so the manifest redirect intent-filter resolves.
         manifestPlaceholders["oauthRedirectScheme"] = "com.oztechan.adtrack"
 
-        // AdMob App ID injected into the manifest meta-data; test App ID by default (see Key).
-        manifestPlaceholders["admobAppId"] = secret(Key.ADMOB_APP_ID)
+        // AdMob App ID injected into the manifest meta-data; Android test App ID by default (see Key).
+        manifestPlaceholders["admobAppId"] = secret(Key.ADMOB_APP_ID_ANDROID)
     }
 
     signingConfigs {
