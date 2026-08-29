@@ -1,3 +1,7 @@
 TEAM_ID=
 BUNDLE_ID=com.oztechan.adtrack
 APP_NAME=AdTrack
+// AdMob App ID injected into Info.plist as $(ADMOB_APP_ID). Google's public iOS test App ID by
+// default; the real iOS App ID is passed as a build setting at release time from the
+// ADMOB_APP_ID_IOS secret (see fastlane build_project xcargs).
+ADMOB_APP_ID=ca-app-pub-3940256099942544~1458002511

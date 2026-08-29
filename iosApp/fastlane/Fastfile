@@ -144,12 +144,16 @@ platform :ios do
             update_project_provisioning(
                 profile: ENV["sigh_#{identifier}_#{match_type}_profile-path"]
             )
+            # Override the AdMob App ID (Info.plist reads $(ADMOB_APP_ID)) with the real iOS one when
+            # provided; otherwise Config.xcconfig's test default is used. (The App ID is per-platform.)
+            admob_app_id = ENV["ADMOB_APP_ID_IOS"].to_s
+            admob_xcarg = admob_app_id.empty? ? "" : " ADMOB_APP_ID=#{admob_app_id}"
             gym(
                 project: "iosApp.xcodeproj",
                 scheme: "iosApp",
                 configuration: options[:configuration],
                 output_name: "AdTrack",
-                xcargs: "-allowProvisioningUpdates CODE_SIGN_STYLE=Manual",
+                xcargs: "-allowProvisioningUpdates CODE_SIGN_STYLE=Manual#{admob_xcarg}",
                 codesigning_identity: "Apple Distribution: Mustafa Ozhan (Q5WB95G58X)",
                 export_method: method,
                 export_options: {

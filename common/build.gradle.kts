@@ -23,8 +23,10 @@ val secretProps = Properties().apply {
     if (file.exists()) file.inputStream().use { load(it) }
 }
 
+// A blank source (e.g. an unset GitHub secret expands to an empty env var) falls back to [default].
 fun secret(key: String, default: String): String =
-    secretProps.getProperty(key) ?: project.findProperty(key)?.toString() ?: System.getenv(key) ?: default
+    (secretProps.getProperty(key) ?: project.findProperty(key)?.toString() ?: System.getenv(key))
+        ?.ifBlank { null } ?: default
 
 // Native OAuth clients are per-platform (separate Google Cloud client ids for Android & iOS).
 val oauthClientIdAndroid = secret(
