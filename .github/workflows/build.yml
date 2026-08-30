@@ -9,6 +9,13 @@ env:
   GOOGLE_OAUTH_CLIENT_ID_ANDROID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID_ANDROID }}
   GOOGLE_OAUTH_CLIENT_ID_IOS: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID_IOS }}
   SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+  # Android release signing — required because `./gradlew build` assembles the release variant
+  # (packageRelease). Read by the release signingConfig in androidApp/build.gradle.kts via getSecret();
+  # without them the alias/passwords fall back to "" and packaging fails with a KeytoolException.
+  ANDROID_KEY_STORE_PATH: ${{ secrets.ANDROID_KEY_STORE_PATH }}
+  ANDROID_STORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
+  ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+  ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
   CI: true
 
 jobs:
