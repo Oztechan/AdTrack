@@ -27,7 +27,7 @@ playServicesAds = "25.4.0"
 userMessagingPlatform = "4.0.0"
 androidDesugaring = "2.1.5"
 roborazzi = "1.74.0"
-robolectric = "4.16.1"
+robolectric = "4.17"
 junit = "4.13.2"
 composeUiTestJunit4 = "1.11.4"
 
