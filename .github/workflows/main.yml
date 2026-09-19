@@ -42,7 +42,7 @@ env:
 jobs:
 
   CodeAnalysis:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     outputs:
       status: ${{ steps.status.outputs.status }}
     steps:
@@ -104,7 +104,7 @@ jobs:
         run: echo "status=success" >> $GITHUB_OUTPUT
 
   Coverage:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     outputs:
       status: ${{ steps.status.outputs.status }}
     steps:
@@ -131,7 +131,7 @@ jobs:
         run: echo "status=success" >> $GITHUB_OUTPUT
 
   AndroidBuild:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     outputs:
       status: ${{ steps.status.outputs.status }}
     steps:
@@ -208,7 +208,7 @@ jobs:
         run: echo "status=success" >> $GITHUB_OUTPUT
 
   DistributeAndroid:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs: [ AndroidBuild ]
     # Debug after a merge to develop (push), Release on the nightly schedule. Never on PRs.
     if: github.event_name != 'pull_request'
@@ -242,7 +242,7 @@ jobs:
         run: echo "status=success" >> $GITHUB_OUTPUT
 
   DistributeIOS:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs: [ iOSBuild ]
     # After a merge to develop (Debug) or the nightly schedule (Release), never on PRs.
     if: github.event_name != 'pull_request'
@@ -281,7 +281,7 @@ jobs:
         run: echo "status=success" >> $GITHUB_OUTPUT
 
   Notify:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs: [ CodeAnalysis, Test, Coverage, AndroidBuild, iOSBuild, DistributeAndroid, DistributeIOS ]
     if: always()
     steps:
