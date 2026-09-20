@@ -9,7 +9,7 @@ import android.view.View
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import com.oztechan.adtrack.ads.premium.PremiumManager
 import com.oztechan.adtrack.ads.premium.PremiumManagerImpl
-import com.oztechan.adtrack.core.storage.SecureStorage
+import com.oztechan.adtrack.core.storage.PreferenceStorage
 import com.russhwolf.settings.MapSettings
 import org.junit.After
 import org.junit.Rule
@@ -32,7 +32,7 @@ class BannerAdTest {
     @get:Rule
     val composeRule = createComposeRule()
 
-    private val premiumManager: PremiumManager = PremiumManagerImpl(SecureStorage(MapSettings()))
+    private val premiumManager: PremiumManager = PremiumManagerImpl(PreferenceStorage(MapSettings()))
     private var bannerCreations = 0
 
     private fun startKoinWith() = startKoin {

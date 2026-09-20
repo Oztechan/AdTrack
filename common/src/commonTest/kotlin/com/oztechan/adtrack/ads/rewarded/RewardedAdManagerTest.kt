@@ -5,7 +5,7 @@
 package com.oztechan.adtrack.ads.rewarded
 
 import com.oztechan.adtrack.ads.premium.PremiumManagerImpl
-import com.oztechan.adtrack.core.storage.SecureStorage
+import com.oztechan.adtrack.core.storage.PreferenceStorage
 import com.russhwolf.settings.MapSettings
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -14,7 +14,7 @@ import kotlin.test.assertTrue
 
 class RewardedAdManagerTest {
 
-    private val premiumManager = PremiumManagerImpl(SecureStorage(MapSettings()))
+    private val premiumManager = PremiumManagerImpl(PreferenceStorage(MapSettings()))
     private val manager = RewardedAdManager(premiumManager)
 
     @Test

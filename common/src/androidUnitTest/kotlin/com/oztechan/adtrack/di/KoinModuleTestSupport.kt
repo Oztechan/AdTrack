@@ -4,6 +4,7 @@
 
 package com.oztechan.adtrack.di
 
+import com.oztechan.adtrack.core.storage.PreferenceStorage
 import com.oztechan.adtrack.data.auth.browser.AuthBrowserLauncher
 import com.oztechan.adtrack.data.auth.token.TokenProvider
 import com.oztechan.adtrack.fakes.FakeAuthBrowserLauncher
@@ -14,11 +15,13 @@ import org.koin.dsl.module
 
 /**
  * Stand-in for the platform module in Koin wiring tests: supplies the platform-provided singletons
- * (secure [Settings] store + [AuthBrowserLauncher]) the common modules depend on, without needing a
- * real device/Context. The production `platformModule` (Android) is verified separately.
+ * (secure [Settings] store, [PreferenceStorage], + [AuthBrowserLauncher]) the common modules depend
+ * on, without needing a real device/Context. The production `platformModule` (Android) is verified
+ * separately.
  */
 internal fun testPlatformDeps(): Module = module {
     single<Settings> { MapSettings() }
+    single { PreferenceStorage(MapSettings()) }
     single<AuthBrowserLauncher> { FakeAuthBrowserLauncher() }
 }
 

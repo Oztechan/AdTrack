@@ -6,6 +6,7 @@ package com.oztechan.adtrack.di
 
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import com.oztechan.adtrack.core.storage.PreferenceStorage
 import com.oztechan.adtrack.data.auth.browser.AndroidAuthBrowserLauncher
 import com.oztechan.adtrack.data.auth.browser.AuthBrowserLauncher
 import com.oztechan.adtrack.data.auth.browser.AuthRedirectBus
@@ -18,6 +19,7 @@ import org.koin.dsl.module
 private const val SECURE_PREFS_NAME = "adtrack_secure_prefs"
 
 actual val platformModule: Module = module {
+    // Secure store (EncryptedSharedPreferences) — auth tokens. Wiped on uninstall like all app data.
     single<Settings> {
         val context = androidContext()
         val masterKey = MasterKey.Builder(context)
@@ -32,6 +34,10 @@ actual val platformModule: Module = module {
         )
         SharedPreferencesSettings(prefs)
     }
+
+    // Premium window. Android wipes all app storage on uninstall anyway, so premium already resets on
+    // reinstall here — this just reuses the existing store. (The iOS side is what needed changing.)
+    single { PreferenceStorage(get()) }
 
     single { AuthRedirectBus() }
     single<AuthBrowserLauncher> { AndroidAuthBrowserLauncher(androidContext(), get()) }

@@ -33,7 +33,8 @@ class PlatformModuleAndroidTest {
         }.koin
 
         // The secure Settings store uses EncryptedSharedPreferences, which needs the AndroidKeyStore
-        // (unavailable under Robolectric) — that binding is covered by instrumentation, not here.
+        // (unavailable under Robolectric) — that binding, and PreferenceStorage which reuses it, are
+        // covered by instrumentation, not here.
         assertNotNull(koin.getOrNull<AuthRedirectBus>())
         assertNotNull(koin.getOrNull<AuthBrowserLauncher>())
     }

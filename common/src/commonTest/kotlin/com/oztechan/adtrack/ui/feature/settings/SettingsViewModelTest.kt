@@ -7,7 +7,7 @@ package com.oztechan.adtrack.ui.feature.settings
 import com.oztechan.adtrack.ads.premium.PremiumManagerImpl
 import com.oztechan.adtrack.ads.rewarded.PlatformRewardedAd
 import com.oztechan.adtrack.ads.rewarded.RewardedAdManager
-import com.oztechan.adtrack.core.storage.SecureStorage
+import com.oztechan.adtrack.core.storage.PreferenceStorage
 import com.oztechan.adtrack.domain.repository.AuthRepository
 import com.oztechan.adtrack.domain.repository.RevenueRepository
 import com.oztechan.adtrack.fakes.FakeAuthRepository
@@ -50,7 +50,7 @@ class SettingsViewModelTest {
     fun tearDown() = Dispatchers.resetMain()
 
     // The VM and the RewardedAdManager must share one PremiumManager so a reward flips the VM's state.
-    private val premiumManager = PremiumManagerImpl(SecureStorage(MapSettings()))
+    private val premiumManager = PremiumManagerImpl(PreferenceStorage(MapSettings()))
     private val rewardedAdManager = RewardedAdManager(premiumManager)
     private val platformRewardedAd = FakePlatformRewardedAd(rewardedAdManager)
 
