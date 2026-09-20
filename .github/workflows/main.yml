@@ -62,7 +62,7 @@ jobs:
         run: echo "status=success" >> $GITHUB_OUTPUT
 
   Test:
-    runs-on: macos-15
+    runs-on: macos-26
     outputs:
       status: ${{ steps.status.outputs.status }}
     steps:
@@ -167,7 +167,7 @@ jobs:
   # Signed .ipa build via Fastlane (match ad-hoc). Runs on every event so iOS build/signing
   # breakage is caught in the PR, not after merge. Debug on push/PR, Release on the nightly schedule.
   iOSBuild:
-    runs-on: macos-15
+    runs-on: macos-26
     outputs:
       status: ${{ steps.status.outputs.status }}
     steps:
@@ -184,7 +184,7 @@ jobs:
           GOOGLE_SERVICE_INFO_PLIST_ASC: ${{ github.event_name == 'schedule' && secrets.GOOGLE_SERVICE_INFO_PLIST_ASC_RELEASE || secrets.GOOGLE_SERVICE_INFO_PLIST_ASC_DEBUG }}
 
       - name: Set up Xcode
-        run: sudo xcode-select --switch /Applications/Xcode_16.4.app
+        run: sudo xcode-select --switch /Applications/Xcode_26.4.ap6
 
       - name: Disable Kotlin incremental native for CI
         uses: Oztechan/Global/actions/disable-kotlin-incremental-native@4ddf8deebb68c6630773bdff9d83f8566310b703
