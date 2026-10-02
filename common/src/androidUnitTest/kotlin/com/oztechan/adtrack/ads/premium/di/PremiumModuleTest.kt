@@ -6,12 +6,10 @@ package com.oztechan.adtrack.ads.premium.di
 
 import android.app.Application
 import com.oztechan.adtrack.ads.premium.PremiumManager
-import com.oztechan.adtrack.core.storage.SecureStorage
 import com.oztechan.adtrack.di.testPlatformDeps
 import org.junit.runner.RunWith
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
-import org.koin.dsl.module
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import kotlin.test.AfterTest
@@ -30,8 +28,7 @@ class PremiumModuleTest {
         val koin = startKoin {
             modules(
                 premiumModule,
-                testPlatformDeps(),
-                module { single { SecureStorage(get()) } }
+                testPlatformDeps()
             )
         }.koin
 

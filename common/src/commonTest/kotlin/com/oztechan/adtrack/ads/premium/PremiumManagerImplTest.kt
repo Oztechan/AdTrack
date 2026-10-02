@@ -4,7 +4,7 @@
 
 package com.oztechan.adtrack.ads.premium
 
-import com.oztechan.adtrack.core.storage.SecureStorage
+import com.oztechan.adtrack.core.storage.PreferenceStorage
 import com.russhwolf.settings.MapSettings
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -26,7 +26,7 @@ class PremiumManagerImplTest {
 
     private val settings = MapSettings()
     private val clock = FakeClock(epochSeconds = 1_000_000)
-    private fun manager() = PremiumManagerImpl(SecureStorage(settings), clock)
+    private fun manager() = PremiumManagerImpl(PreferenceStorage(settings), clock)
 
     @Test
     fun not_premium_by_default() {

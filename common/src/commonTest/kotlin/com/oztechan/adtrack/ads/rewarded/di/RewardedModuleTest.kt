@@ -8,7 +8,7 @@ import com.oztechan.adtrack.ads.premium.PremiumManager
 import com.oztechan.adtrack.ads.premium.PremiumManagerImpl
 import com.oztechan.adtrack.ads.rewarded.RewardedAdConfig
 import com.oztechan.adtrack.ads.rewarded.RewardedAdManager
-import com.oztechan.adtrack.core.storage.SecureStorage
+import com.oztechan.adtrack.core.storage.PreferenceStorage
 import com.russhwolf.settings.MapSettings
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
@@ -27,7 +27,7 @@ class RewardedModuleTest {
     fun provides_rewarded_dependencies() {
         val koin = startKoin {
             modules(
-                module { single<PremiumManager> { PremiumManagerImpl(SecureStorage(MapSettings())) } },
+                module { single<PremiumManager> { PremiumManagerImpl(PreferenceStorage(MapSettings())) } },
                 rewardedModule
             )
         }.koin

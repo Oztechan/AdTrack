@@ -4,7 +4,7 @@
 
 package com.oztechan.adtrack.ads.premium
 
-import com.oztechan.adtrack.core.storage.SecureStorage
+import com.oztechan.adtrack.core.storage.PreferenceStorage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,10 +14,11 @@ import kotlin.time.Duration
 /**
  * Premium = an ad-free window whose expiry (epoch seconds) is persisted in [storage]. The user has
  * premium while now is before that expiry. Times are kept as epoch seconds (like the token store),
- * and [clock] is injectable for testing.
+ * and [clock] is injectable for testing. Backed by [PreferenceStorage] (not the Keychain), so the
+ * window is wiped on uninstall and premium resets on reinstall.
  */
 class PremiumManagerImpl(
-    private val storage: SecureStorage,
+    private val storage: PreferenceStorage,
     private val clock: Clock = Clock.System
 ) : PremiumManager {
 
