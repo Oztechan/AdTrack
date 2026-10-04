@@ -100,7 +100,7 @@ jobs:
         run: echo "status=success" >> $GITHUB_OUTPUT
 
   UploadToAppStore:
-    runs-on: macos-15
+    runs-on: macos-26
     outputs:
       status: ${{ steps.status.outputs.status }}
     steps:
@@ -115,7 +115,7 @@ jobs:
           GOOGLE_SERVICES_JSON_ASC: ${{ secrets.GOOGLE_SERVICES_JSON_ASC }}
 
       - name: Set up Xcode
-        run: sudo xcode-select --switch /Applications/Xcode_16.4.app
+        run: sudo xcode-select --switch /Applications/Xcode_26.4.ap6
 
       - name: Disable Kotlin incremental native for CI
         uses: Oztechan/Global/actions/disable-kotlin-incremental-native@4ddf8deebb68c6630773bdff9d83f8566310b703
