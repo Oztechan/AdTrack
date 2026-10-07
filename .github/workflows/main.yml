@@ -217,7 +217,7 @@ jobs:
     steps:
 
       - name: Download Android APK
-        uses: actions/download-artifact@v8.0.1
+        uses: actions/download-artifact@v8.0.2
         with:
           name: androidApp-apk
 
@@ -254,7 +254,7 @@ jobs:
         uses: actions/checkout@v7.0.1
 
       - name: Download iOS Artifact
-        uses: actions/download-artifact@v8.0.1
+        uses: actions/download-artifact@v8.0.2
         with:
           name: iosApp-ipa
           path: iosApp
