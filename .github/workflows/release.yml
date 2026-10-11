@@ -55,7 +55,7 @@ jobs:
         run: ./gradlew :androidApp:bundleRelease
 
       - name: Upload App Bundle
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: androidApp-aab
           path: androidApp/build/outputs/bundle/release/androidApp-release.aab
