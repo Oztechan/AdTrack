@@ -252,7 +252,9 @@ jobs:
     runs-on: ubuntu-26.04
     needs: [ iOSBuild ]
     # After a merge to develop (Debug) or the nightly schedule (Release), never on PRs.
-    if: github.event_name != 'pull_request'
+    # TEMPORARY (#214): also run on this one PR branch, to prove the bundler fix before merging.
+    # Revert to `if: github.event_name != 'pull_request'` before this PR is merged.
+    if: github.event_name != 'pull_request' || github.head_ref == '214/Run-fastlane-via-bundler'
     outputs:
       status: ${{ steps.status.outputs.status }}
     steps:
