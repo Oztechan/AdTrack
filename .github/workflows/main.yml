@@ -189,9 +189,16 @@ jobs:
       - name: Disable Kotlin incremental native for CI
         uses: Oztechan/Global/actions/disable-kotlin-incremental-native@4ddf8deebb68c6630773bdff9d83f8566310b703
 
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1.329.0
+        with:
+          ruby-version: '3.4'
+          bundler-cache: true
+          working-directory: iosApp
+
       - name: Build ${{ env.BUILD_TYPE }}
         working-directory: iosApp
-        run: fastlane build${{ env.BUILD_TYPE }}
+        run: bundle exec fastlane build${{ env.BUILD_TYPE }}
 
       - name: Upload iOS Artifact
         uses: actions/upload-artifact@v7.0.2
@@ -245,7 +252,9 @@ jobs:
     runs-on: ubuntu-26.04
     needs: [ iOSBuild ]
     # After a merge to develop (Debug) or the nightly schedule (Release), never on PRs.
-    if: github.event_name != 'pull_request'
+    # TEMPORARY (#214): also run on this one PR branch, to prove the bundler fix before merging.
+    # Revert to `if: github.event_name != 'pull_request'` before this PR is merged.
+    if: github.event_name != 'pull_request' || github.head_ref == '214/Run-fastlane-via-bundler'
     outputs:
       status: ${{ steps.status.outputs.status }}
     steps:
@@ -267,14 +276,18 @@ jobs:
           echo "$FIREBASE_SERVICE_ACCOUNT" > firebase-service-account.json.asc
           gpg -d --passphrase "$SECRET_PASSWORD" --batch firebase-service-account.json.asc > firebase-service-account.json
 
-      # was necessary to use chown to fix permission issues in linux machines (same as CCC)
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1.329.0
+        with:
+          ruby-version: '3.4'
+          bundler-cache: true
+          working-directory: iosApp
+
       - name: Distribute ${{ env.BUILD_TYPE }}
         working-directory: iosApp
         env:
           FIREBASE_SERVICE_ACCOUNT_FILE: ${{ github.workspace }}/firebase-service-account.json
-        run: |
-          sudo chown -R $(whoami) /var/lib/gems/
-          fastlane distribute${{ env.BUILD_TYPE }}
+        run: bundle exec fastlane distribute${{ env.BUILD_TYPE }}
 
       - name: Set Job Status
         id: status
