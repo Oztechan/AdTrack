@@ -123,7 +123,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1.329.0
         with:
-          ruby-version: '3.4'
+          ruby-version: '4.0'
           bundler-cache: true
           working-directory: iosApp
 
