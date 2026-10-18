@@ -120,9 +120,16 @@ jobs:
       - name: Disable Kotlin incremental native for CI
         uses: Oztechan/Global/actions/disable-kotlin-incremental-native@4ddf8deebb68c6630773bdff9d83f8566310b703
 
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1.329.0
+        with:
+          ruby-version: '3.4'
+          bundler-cache: true
+          working-directory: iosApp
+
       - name: Store Build (TestFlight)
         working-directory: iosApp
-        run: fastlane store_build
+        run: bundle exec fastlane store_build
 
       - name: Set Job Status
         id: status
