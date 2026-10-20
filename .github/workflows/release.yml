@@ -121,7 +121,7 @@ jobs:
         uses: Oztechan/Global/actions/disable-kotlin-incremental-native@4ddf8deebb68c6630773bdff9d83f8566310b703
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1.329.0
+        uses: ruby/setup-ruby@v1.331.0
         with:
           ruby-version: '4.0'
           bundler-cache: true
