@@ -64,6 +64,16 @@ android {
     testOptions.unitTests.isIncludeAndroidResources = true
 }
 
+kotlin {
+    // Pin the Kotlin JVM target to match compileOptions above. Without this it follows whatever
+    // JDK Gradle runs on, which breaks the build on any JDK newer than JAVA_VERSION:
+    // "Inconsistent JVM-target compatibility ... 'compileDebugJavaWithJavac' (21) and
+    // 'compileDebugKotlin' (25)". :common pins the same value for its androidTarget.
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
+    }
+}
+
 dependencies {
     libs.submob.apply {
         implementation(logmob)
