@@ -48,11 +48,7 @@ val interstitialAdUnitIdIos = secret("ADMOB_INTERSTITIAL_UNIT_ID_IOS", "ca-app-p
 // endregion
 
 kotlin {
-    androidTarget {
-        compilerOptions {
-            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
-        }
-    }
+    androidTarget()
 
     listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
         iosTarget.binaries.framework {
