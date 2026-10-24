@@ -2,7 +2,6 @@
  * Copyright (c) 2026 Mustafa Ozhan. All rights reserved.
  */
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
 plugins {
@@ -49,11 +48,7 @@ val interstitialAdUnitIdIos = secret("ADMOB_INTERSTITIAL_UNIT_ID_IOS", "ca-app-p
 // endregion
 
 kotlin {
-    androidTarget {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.fromTarget(ProjectSettings.JAVA_VERSION.majorVersion))
-        }
-    }
+    androidTarget()
 
     listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
         iosTarget.binaries.framework {

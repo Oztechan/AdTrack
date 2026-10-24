@@ -2,6 +2,7 @@
  * Copyright (c) 2026 Mustafa Ozhan. All rights reserved.
  */
 import io.gitlab.arturbosch.detekt.Detekt
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -69,6 +70,10 @@ allprojects {
 
     tasks.withType<KotlinCompile> {
         compilerOptions {
+            // Keep Kotlin on the same target the android compileOptions pin Java to. Unset, it
+            // follows whatever JDK Gradle runs on and the two disagree on any JDK newer than
+            // JAVA_VERSION: "Inconsistent JVM-target compatibility ... (21) and (25)".
+            jvmTarget.set(JvmTarget.fromTarget(ProjectSettings.JAVA_VERSION.majorVersion))
             freeCompilerArgs.add("-Xexpect-actual-classes")
             allWarningsAsErrors = true
         }

@@ -4,7 +4,6 @@
 import config.BuildType
 import config.key.Key
 import config.key.secret
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     libs.plugins.apply {
@@ -63,16 +62,6 @@ android {
 
     // Robolectric needs the merged resources/manifest to resolve a Context and screen metrics.
     testOptions.unitTests.isIncludeAndroidResources = true
-}
-
-kotlin {
-    // Pin the Kotlin JVM target to the same JAVA_VERSION compileOptions uses above. Without this
-    // it follows whatever JDK Gradle runs on, which breaks on any JDK newer than JAVA_VERSION:
-    // "Inconsistent JVM-target compatibility ... 'compileDebugJavaWithJavac' (21) and
-    // 'compileDebugKotlin' (25)".
-    compilerOptions {
-        jvmTarget.set(JvmTarget.fromTarget(ProjectSettings.JAVA_VERSION.majorVersion))
-    }
 }
 
 dependencies {
