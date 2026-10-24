@@ -8,6 +8,7 @@ import com.oztechan.adtrack.ads.premium.PremiumManagerImpl
 import com.oztechan.adtrack.ads.rewarded.PlatformRewardedAd
 import com.oztechan.adtrack.ads.rewarded.RewardedAdManager
 import com.oztechan.adtrack.core.storage.PreferenceStorage
+import com.oztechan.adtrack.demo.DemoManagerImpl
 import com.oztechan.adtrack.domain.repository.AuthRepository
 import com.oztechan.adtrack.domain.repository.RevenueRepository
 import com.oztechan.adtrack.fakes.FakeAuthRepository
@@ -62,7 +63,8 @@ class SettingsViewModelTest {
         revenueRepository = revenue,
         premiumManager = premiumManager,
         rewardedAdManager = rewardedAdManager,
-        platformRewardedAd = platformRewardedAd
+        platformRewardedAd = platformRewardedAd,
+        demoManager = DemoManagerImpl()
     )
 
     @Test
