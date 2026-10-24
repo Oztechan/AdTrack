@@ -4,6 +4,7 @@
 import config.BuildType
 import config.key.Key
 import config.key.secret
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     libs.plugins.apply {
@@ -65,12 +66,12 @@ android {
 }
 
 kotlin {
-    // Pin the Kotlin JVM target to match compileOptions above. Without this it follows whatever
-    // JDK Gradle runs on, which breaks the build on any JDK newer than JAVA_VERSION:
+    // Pin the Kotlin JVM target to the same JAVA_VERSION compileOptions uses above. Without this
+    // it follows whatever JDK Gradle runs on, which breaks on any JDK newer than JAVA_VERSION:
     // "Inconsistent JVM-target compatibility ... 'compileDebugJavaWithJavac' (21) and
-    // 'compileDebugKotlin' (25)". :common pins the same value for its androidTarget.
+    // 'compileDebugKotlin' (25)".
     compilerOptions {
-        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
+        jvmTarget.set(JvmTarget.fromTarget(ProjectSettings.JAVA_VERSION.majorVersion))
     }
 }
 
