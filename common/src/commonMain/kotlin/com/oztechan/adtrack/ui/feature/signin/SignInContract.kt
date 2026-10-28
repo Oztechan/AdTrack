@@ -20,6 +20,7 @@ sealed interface SignInEffect : BaseEffect {
 
 interface SignInEvent : BaseEvent {
     fun onSignInClick()
+    fun onDemoClick()
 }
 
 class SignInData : BaseData

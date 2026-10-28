@@ -5,6 +5,7 @@
 package com.oztechan.adtrack.ui.feature.signin
 
 import com.oztechan.adtrack.data.auth.browser.AuthCancelledException
+import com.oztechan.adtrack.demo.DemoManagerImpl
 import com.oztechan.adtrack.fakes.FakeAuthRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -35,7 +36,7 @@ class SignInViewModelTest {
 
     @Test
     fun successful_sign_in_emits_navigate_to_dashboard() = runTest(dispatcher) {
-        val viewModel = SignInViewModel(FakeAuthRepository(signInResult = Result.success(Unit)))
+        val viewModel = SignInViewModel(FakeAuthRepository(signInResult = Result.success(Unit)), DemoManagerImpl())
         val effects = mutableListOf<SignInEffect>()
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.effect.collect(effects::add) }
 
@@ -48,7 +49,8 @@ class SignInViewModelTest {
 
     @Test
     fun failed_sign_in_emits_error() = runTest(dispatcher) {
-        val viewModel = SignInViewModel(FakeAuthRepository(signInResult = Result.failure(RuntimeException("boom"))))
+        val auth = FakeAuthRepository(signInResult = Result.failure(RuntimeException("boom")))
+        val viewModel = SignInViewModel(auth, DemoManagerImpl())
         val effects = mutableListOf<SignInEffect>()
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.effect.collect(effects::add) }
 
@@ -60,7 +62,8 @@ class SignInViewModelTest {
 
     @Test
     fun cancellation_does_not_emit_error() = runTest(dispatcher) {
-        val viewModel = SignInViewModel(FakeAuthRepository(signInResult = Result.failure(AuthCancelledException())))
+        val auth = FakeAuthRepository(signInResult = Result.failure(AuthCancelledException()))
+        val viewModel = SignInViewModel(auth, DemoManagerImpl())
         val effects = mutableListOf<SignInEffect>()
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.effect.collect(effects::add) }
 
@@ -68,5 +71,19 @@ class SignInViewModelTest {
         advanceUntilIdle()
 
         assertTrue(effects.isEmpty())
+    }
+
+    @Test
+    fun demo_click_enters_demo_and_navigates_to_dashboard() = runTest(dispatcher) {
+        val demoManager = DemoManagerImpl()
+        val viewModel = SignInViewModel(FakeAuthRepository(signInResult = Result.success(Unit)), demoManager)
+        val effects = mutableListOf<SignInEffect>()
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.effect.collect(effects::add) }
+
+        viewModel.event.onDemoClick()
+        advanceUntilIdle()
+
+        assertTrue(demoManager.isDemo)
+        assertEquals(SignInEffect.NavigateToDashboard, effects.single())
     }
 }

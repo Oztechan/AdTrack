@@ -10,7 +10,7 @@ import com.oztechan.adtrack.data.admob.api.AdMobApi
 import com.oztechan.adtrack.data.auth.di.authModule
 import com.oztechan.adtrack.di.testPlatformDeps
 import com.oztechan.adtrack.domain.PeriodCalculator
-import com.oztechan.adtrack.domain.repository.RevenueRepository
+import com.oztechan.adtrack.domain.repository.RevenueRepositoryImpl
 import org.junit.runner.RunWith
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
@@ -35,6 +35,7 @@ class AdMobModuleTest {
 
         assertNotNull(koin.getOrNull<AdMobApi>())
         assertNotNull(koin.getOrNull<PeriodCalculator>())
-        assertNotNull(koin.getOrNull<RevenueRepository>())
+        // Provided concretely; the RevenueRepository interface binding lives in demoModule.
+        assertNotNull(koin.getOrNull<RevenueRepositoryImpl>())
     }
 }
