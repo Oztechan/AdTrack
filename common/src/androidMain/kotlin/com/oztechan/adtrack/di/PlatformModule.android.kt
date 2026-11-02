@@ -18,6 +18,10 @@ import org.koin.dsl.module
 
 private const val SECURE_PREFS_NAME = "adtrack_secure_prefs"
 
+// Jetpack Security Crypto (MasterKey / EncryptedSharedPreferences) is deprecated as of
+// security-crypto 1.1.0 with no in-library replacement. It still works correctly; suppress the
+// deprecation here until we migrate the secure store off it (tracked separately).
+@Suppress("DEPRECATION")
 actual val platformModule: Module = module {
     // Secure store (EncryptedSharedPreferences) — auth tokens. Wiped on uninstall like all app data.
     single<Settings> {
