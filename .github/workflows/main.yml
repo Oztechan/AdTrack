@@ -310,3 +310,16 @@ jobs:
           channel: adtrack-github
           status: FAILED
           color: danger
+
+  # Auto-approve Renovate PRs once the build/test jobs pass. The `needs` edge is the "all green" gate
+  # (no watching/polling), and the shared reusable does the code-owner approval. Replaces the old
+  # standalone renovate.yml that watched checks and timed out red.
+  RenovateAutoApprove:
+    needs: [ CodeAnalysis, Test, Coverage, AndroidBuild, iOSBuild ]
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.user.login == 'renovate[bot]' &&
+      !contains(github.head_ref, 'major')
+    uses: Oztechan/Global/.github/workflows/reusable-renovate-approve.yml@bd0bde4c7b7997d28bf6f29778b0f2f46cd5133f
+    secrets:
+      PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
