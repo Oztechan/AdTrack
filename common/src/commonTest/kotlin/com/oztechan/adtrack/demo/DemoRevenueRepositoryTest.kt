@@ -10,6 +10,7 @@ import com.oztechan.adtrack.fakes.fakeAccount
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 
 class DemoRevenueRepositoryTest {
@@ -32,6 +33,16 @@ class DemoRevenueRepositoryTest {
         assertTrue(repository.getAppBreakdown(Period.LAST_30_DAYS).isNotEmpty())
         assertTrue(repository.getRevenueSeries(Period.LAST_30_DAYS).isNotEmpty())
         assertTrue(repository.getFormatBreakdown(Period.TODAY, "demo-weather-android").isNotEmpty())
+    }
+
+    @Test
+    fun sample_series_differs_between_periods() = runTest {
+        demoManager.enterDemo()
+
+        val thirty = repository.getRevenueSeries(Period.LAST_30_DAYS)
+        val ninety = repository.getRevenueSeries(Period.LAST_90_DAYS)
+
+        assertNotEquals(thirty.size, ninety.size)
     }
 
     @Test
