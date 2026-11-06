@@ -91,16 +91,18 @@ internal object DemoData {
         FormatRevenue(AdFormat.REWARDED, "Rewarded", 3.7, 160, 7)
     )
 
-    // A daily series over the last min(days, 30) days, waving gently around the daily average so the
-    // chart looks natural. Ends today so the dashboard reads as "live".
+    // A series whose point count, spacing and scale all vary by period, so switching periods visibly
+    // changes the chart (like the real data differs between, say, 30 and 90 days). Each point is one
+    // bucket (day / week / month) worth of earnings, waving gently; the last bucket ends today.
     fun series(period: Period): List<RevenuePoint> {
-        val count = minOf(period.days, 30)
+        val count = period.points
+        val stepDays = (period.days / count).coerceAtLeast(1)
+        val perBucket = DAILY_EARNINGS * stepDays
         val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
-        return (count - 1 downTo 0).map { back ->
-            val index = count - 1 - back
+        return (0 until count).map { index ->
             RevenuePoint(
-                date = today.minus(DatePeriod(days = back)),
-                earnings = DAILY_EARNINGS * (1.0 + 0.3 * sin(index.toDouble()))
+                date = today.minus(DatePeriod(days = (count - 1 - index) * stepDays)),
+                earnings = perBucket * (1.0 + 0.3 * sin(index.toDouble()))
             )
         }
     }
@@ -112,6 +114,16 @@ internal object DemoData {
             Period.LAST_90_DAYS -> 90
             Period.LAST_365_DAYS -> 365
             Period.LIFETIME -> 540
+        }
+
+    // Number of chart buckets per period: daily for 30 days, ~weekly for 90, ~monthly for a year+.
+    private val Period.points: Int
+        get() = when (this) {
+            Period.TODAY -> 1
+            Period.LAST_30_DAYS -> 30
+            Period.LAST_90_DAYS -> 13
+            Period.LAST_365_DAYS -> 12
+            Period.LIFETIME -> 18
         }
 
     private const val DAILY_EARNINGS = 14.20
