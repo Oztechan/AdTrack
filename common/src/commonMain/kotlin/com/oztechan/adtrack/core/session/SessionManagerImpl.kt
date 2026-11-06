@@ -7,14 +7,18 @@ package com.oztechan.adtrack.core.session
 import com.oztechan.adtrack.core.storage.PreferenceStorage
 
 /**
- * Increments and persists the launch count once, when first created. As a Koin singleton this object
- * is built once per cold start, so [count] reflects the current session number for the whole launch.
- * Backed by [PreferenceStorage] (not the Keychain), so the count is wiped on uninstall.
+ * Persists the launch count in [PreferenceStorage] (not the Keychain), so it is wiped on uninstall.
+ * Construction has no side effect: [count] purely reads the stored value, and [registerSession] is
+ * the only thing that advances it — so reading the count from anywhere is always safe.
  */
-class SessionManagerImpl(storage: PreferenceStorage) : SessionManager {
+class SessionManagerImpl(private val storage: PreferenceStorage) : SessionManager {
 
-    override val count: Long = ((storage.getLong(KEY_SESSION_COUNT) ?: 0L) + 1)
-        .also { storage.putLong(KEY_SESSION_COUNT, it) }
+    override val count: Long
+        get() = storage.getLong(KEY_SESSION_COUNT) ?: 0L
+
+    override fun registerSession() {
+        storage.putLong(KEY_SESSION_COUNT, count + 1)
+    }
 
     private companion object {
         const val KEY_SESSION_COUNT = "session_count"

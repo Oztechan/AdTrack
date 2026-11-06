@@ -8,6 +8,7 @@ import com.oztechan.adtrack.ads.interstitial.di.interstitialModule
 import com.oztechan.adtrack.ads.premium.di.premiumModule
 import com.oztechan.adtrack.ads.rewarded.di.rewardedModule
 import com.oztechan.adtrack.core.network.di.networkModule
+import com.oztechan.adtrack.core.session.SessionManager
 import com.oztechan.adtrack.core.session.di.sessionModule
 import com.oztechan.adtrack.data.admob.di.adMobModule
 import com.oztechan.adtrack.data.auth.di.authModule
@@ -30,4 +31,7 @@ fun initKoin(appDeclaration: KoinAppDeclaration = {}) = startKoin {
         interstitialModule,
         viewModelModule
     )
+}.apply {
+    // A fresh Koin graph means the app just started — record this launch as a new session.
+    koin.get<SessionManager>().registerSession()
 }

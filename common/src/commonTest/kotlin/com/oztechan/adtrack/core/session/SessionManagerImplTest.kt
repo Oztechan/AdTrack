@@ -13,24 +13,40 @@ import kotlin.test.assertEquals
 class SessionManagerImplTest {
 
     @Test
-    fun first_launch_counts_as_session_one() {
+    fun count_starts_at_zero_before_any_session() {
         val manager = SessionManagerImpl(PreferenceStorage(MapSettings()))
+        assertEquals(0L, manager.count)
+    }
+
+    @Test
+    fun registering_sessions_increments_the_persisted_count() {
+        val manager = SessionManagerImpl(PreferenceStorage(MapSettings()))
+
+        manager.registerSession()
+        assertEquals(1L, manager.count)
+
+        manager.registerSession()
+        assertEquals(2L, manager.count)
+    }
+
+    @Test
+    fun reading_count_does_not_advance_it() {
+        val manager = SessionManagerImpl(PreferenceStorage(MapSettings()))
+        manager.registerSession()
+
+        // Reading repeatedly must not change the count.
+        assertEquals(1L, manager.count)
+        assertEquals(1L, manager.count)
         assertEquals(1L, manager.count)
     }
 
     @Test
-    fun each_new_instance_increments_the_persisted_count() {
-        // A fresh instance per launch, sharing the same backing store, keeps counting up.
+    fun constructing_a_new_instance_does_not_advance_the_count() {
+        // The key safety property: only registerSession() advances; construction has no side effect.
         val settings: Settings = MapSettings()
+        SessionManagerImpl(PreferenceStorage(settings)).registerSession()
 
+        // A fresh instance (e.g. next launch, or an incidental inject just to read) sees 1, not 2.
         assertEquals(1L, SessionManagerImpl(PreferenceStorage(settings)).count)
-        assertEquals(2L, SessionManagerImpl(PreferenceStorage(settings)).count)
-        assertEquals(3L, SessionManagerImpl(PreferenceStorage(settings)).count)
-    }
-
-    @Test
-    fun count_is_stable_within_a_single_instance() {
-        val manager = SessionManagerImpl(PreferenceStorage(MapSettings()))
-        assertEquals(manager.count, manager.count)
     }
 }

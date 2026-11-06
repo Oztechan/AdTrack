@@ -34,7 +34,9 @@ private class FakeDemoManager(demo: Boolean) : DemoManager {
     }
 }
 
-private class FakeSessionManager(override val count: Long) : SessionManager
+private class FakeSessionManager(override val count: Long) : SessionManager {
+    override fun registerSession() = Unit
+}
 
 private class FakePlatformInterstitialAd(var ready: Boolean = false) : PlatformInterstitialAd {
     var loadCount = 0
