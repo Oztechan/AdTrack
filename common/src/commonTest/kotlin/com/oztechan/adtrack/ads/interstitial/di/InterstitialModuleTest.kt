@@ -9,7 +9,11 @@ import com.oztechan.adtrack.ads.interstitial.InterstitialManager
 import com.oztechan.adtrack.ads.interstitial.PlatformInterstitialAd
 import com.oztechan.adtrack.ads.premium.PremiumManager
 import com.oztechan.adtrack.ads.premium.PremiumManagerImpl
+import com.oztechan.adtrack.core.session.SessionManager
+import com.oztechan.adtrack.core.session.SessionManagerImpl
 import com.oztechan.adtrack.core.storage.PreferenceStorage
+import com.oztechan.adtrack.demo.DemoManager
+import com.oztechan.adtrack.demo.DemoManagerImpl
 import com.russhwolf.settings.MapSettings
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
@@ -37,6 +41,8 @@ class InterstitialModuleTest {
                 module {
                     single<PremiumManager> { PremiumManagerImpl(PreferenceStorage(MapSettings())) }
                     single<PlatformInterstitialAd> { NoopPlatformInterstitialAd() }
+                    single<DemoManager> { DemoManagerImpl() }
+                    single<SessionManager> { SessionManagerImpl(PreferenceStorage(MapSettings())) }
                 },
                 interstitialModule
             )
