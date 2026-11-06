@@ -9,6 +9,7 @@ import com.oztechan.adtrack.ads.premium.PremiumManager
 import com.oztechan.adtrack.ads.rewarded.PlatformRewardedAd
 import com.oztechan.adtrack.ads.rewarded.RewardedAdManager
 import com.oztechan.adtrack.core.viewmodel.SEEDViewModel
+import com.oztechan.adtrack.demo.DemoManager
 import com.oztechan.adtrack.domain.repository.AuthRepository
 import com.oztechan.adtrack.domain.repository.RevenueRepository
 import kotlinx.coroutines.launch
@@ -18,7 +19,8 @@ class SettingsViewModel(
     private val revenueRepository: RevenueRepository,
     private val premiumManager: PremiumManager,
     private val rewardedAdManager: RewardedAdManager,
-    private val platformRewardedAd: PlatformRewardedAd
+    private val platformRewardedAd: PlatformRewardedAd,
+    private val demoManager: DemoManager
 ) : SEEDViewModel<SettingsState, SettingsEffect, SettingsEvent, SettingsData>(
     initialState = SettingsState(),
     initialData = SettingsData()
@@ -44,6 +46,8 @@ class SettingsViewModel(
     override fun onBackClick() = sendEffect { SettingsEffect.NavigateBack }
 
     override fun onSignOutClick() {
+        // Works for both a real session (clears the token) and demo mode (just leaves demo).
+        demoManager.exitDemo()
         authRepository.signOut()
         revenueRepository.invalidate()
         sendEffect { SettingsEffect.NavigateToSignIn }

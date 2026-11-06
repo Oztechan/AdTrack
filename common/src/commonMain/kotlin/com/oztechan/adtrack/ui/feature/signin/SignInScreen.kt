@@ -16,6 +16,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -50,7 +51,8 @@ fun SignInScreen(
     SignInContent(
         state = state,
         snackbarHostState = snackbarHostState,
-        onSignInClick = viewModel.event::onSignInClick
+        onSignInClick = viewModel.event::onSignInClick,
+        onDemoClick = viewModel.event::onDemoClick
     )
 }
 
@@ -58,7 +60,8 @@ fun SignInScreen(
 private fun SignInContent(
     state: SignInState,
     snackbarHostState: SnackbarHostState,
-    onSignInClick: () -> Unit
+    onSignInClick: () -> Unit,
+    onDemoClick: () -> Unit
 ) {
     Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { padding ->
         Column(
@@ -79,6 +82,9 @@ private fun SignInContent(
                 Button(onClick = onSignInClick) {
                     Text("Sign in with Google")
                 }
+                TextButton(onClick = onDemoClick, modifier = Modifier.padding(top = 8.dp)) {
+                    Text("Explore demo")
+                }
             }
         }
     }
@@ -88,7 +94,7 @@ private fun SignInContent(
 @Composable
 private fun SignInContentPreview() {
     AdTrackTheme {
-        SignInContent(SignInState(), remember { SnackbarHostState() }, {})
+        SignInContent(SignInState(), remember { SnackbarHostState() }, {}, {})
     }
 }
 
@@ -96,6 +102,6 @@ private fun SignInContentPreview() {
 @Composable
 private fun SignInLoadingPreview() {
     AdTrackTheme {
-        SignInContent(SignInState(isLoading = true), remember { SnackbarHostState() }, {})
+        SignInContent(SignInState(isLoading = true), remember { SnackbarHostState() }, {}, {})
     }
 }

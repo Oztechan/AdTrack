@@ -11,6 +11,7 @@ import com.oztechan.adtrack.ads.rewarded.di.rewardedModule
 import com.oztechan.adtrack.core.network.di.networkModule
 import com.oztechan.adtrack.data.admob.di.adMobModule
 import com.oztechan.adtrack.data.auth.di.authModule
+import com.oztechan.adtrack.demo.di.demoModule
 import com.oztechan.adtrack.di.testPlatformDeps
 import com.oztechan.adtrack.domain.model.Period
 import com.oztechan.adtrack.ui.feature.appdetail.AppDetailViewModel
@@ -60,6 +61,7 @@ class ViewModelModuleTest {
             modules(
                 viewModelModule,
                 adMobModule,
+                demoModule,
                 authModule,
                 networkModule,
                 premiumModule,

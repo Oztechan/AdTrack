@@ -7,16 +7,23 @@ package com.oztechan.adtrack.ui.feature.signin
 import androidx.lifecycle.viewModelScope
 import com.oztechan.adtrack.core.viewmodel.SEEDViewModel
 import com.oztechan.adtrack.data.auth.browser.AuthCancelledException
+import com.oztechan.adtrack.demo.DemoManager
 import com.oztechan.adtrack.domain.repository.AuthRepository
 import kotlinx.coroutines.launch
 
 class SignInViewModel(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val demoManager: DemoManager
 ) : SEEDViewModel<SignInState, SignInEffect, SignInEvent, SignInData>(
     initialState = SignInState(),
     initialData = SignInData()
 ),
     SignInEvent {
+
+    override fun onDemoClick() {
+        demoManager.enterDemo()
+        sendEffect { SignInEffect.NavigateToDashboard }
+    }
 
     override fun onSignInClick() {
         if (state.value.isLoading) return
