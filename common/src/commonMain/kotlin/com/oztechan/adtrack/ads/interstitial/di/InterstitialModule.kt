@@ -11,5 +11,5 @@ import org.koin.dsl.module
 
 val interstitialModule = module {
     single { InterstitialAdConfig(BuildKonfig.ADMOB_INTERSTITIAL_UNIT_ID) }
-    single { InterstitialManager(get(), get()) }
+    single { InterstitialManager(get(), get(), get(), get()) }
 }

@@ -8,6 +8,7 @@ import com.oztechan.adtrack.ads.interstitial.di.interstitialModule
 import com.oztechan.adtrack.ads.premium.di.premiumModule
 import com.oztechan.adtrack.ads.rewarded.di.rewardedModule
 import com.oztechan.adtrack.core.network.di.networkModule
+import com.oztechan.adtrack.core.session.di.sessionModule
 import com.oztechan.adtrack.data.admob.di.adMobModule
 import com.oztechan.adtrack.data.auth.di.authModule
 import com.oztechan.adtrack.demo.di.demoModule
@@ -20,6 +21,7 @@ fun initKoin(appDeclaration: KoinAppDeclaration = {}) = startKoin {
     modules(
         platformModule,
         networkModule,
+        sessionModule,
         authModule,
         adMobModule,
         demoModule,
