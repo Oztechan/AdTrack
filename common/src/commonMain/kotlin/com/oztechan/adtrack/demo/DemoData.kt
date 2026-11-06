@@ -116,14 +116,15 @@ internal object DemoData {
             Period.LIFETIME -> 540
         }
 
-    // Number of chart buckets per period: daily for 30 days, ~weekly for 90, ~monthly for a year+.
+    // Number of chart buckets per period: daily for 30 and 90 days, ~weekly for a year, ~10-day
+    // buckets for lifetime. Kept <= the period's day count so every bucket maps to a distinct date.
     private val Period.points: Int
         get() = when (this) {
             Period.TODAY -> 1
             Period.LAST_30_DAYS -> 30
-            Period.LAST_90_DAYS -> 13
-            Period.LAST_365_DAYS -> 12
-            Period.LIFETIME -> 18
+            Period.LAST_90_DAYS -> 90
+            Period.LAST_365_DAYS -> 52
+            Period.LIFETIME -> 54
         }
 
     private const val DAILY_EARNINGS = 14.20
