@@ -20,9 +20,8 @@ import kotlin.math.sin
 import kotlin.time.Clock
 
 /**
- * Deterministic sample data for [DemoRevenueRepository]. Numbers are plausible but obviously
- * belong to a "Demo account", so a reviewer (or a curious user) sees a realistic dashboard without
- * a real AdMob account. Values scale by the selected period's day count.
+ * Deterministic sample data for [DemoRevenueRepository]: plausible figures for a "Demo account",
+ * scaled by the selected period's day count.
  */
 @Suppress("MagicNumber") // hand-tuned sample figures
 internal object DemoData {
@@ -91,9 +90,8 @@ internal object DemoData {
         FormatRevenue(AdFormat.REWARDED, "Rewarded", 3.7, 160, 7)
     )
 
-    // A series whose point count, spacing and scale all vary by period, so switching periods visibly
-    // changes the chart (like the real data differs between, say, 30 and 90 days). Each point is one
-    // bucket (day / week / month) worth of earnings, waving gently; the last bucket ends today.
+    // Point count, spacing and scale all vary by period, so switching periods visibly changes the
+    // chart. Each point is one bucket of earnings, waving gently; the last bucket ends today.
     fun series(period: Period): List<RevenuePoint> {
         val count = period.points
         val stepDays = (period.days / count).coerceAtLeast(1)
@@ -107,15 +105,10 @@ internal object DemoData {
         }
     }
 
-    // The one fact everything else derives from: how old the demo account is. A real reporting window
-    // can never show more history than the account has, so every period below is capped at this age —
-    // on a 10-day-old account "last 90 days", "last 365 days" and "lifetime" are all the same 10 days.
-    // Change this single value to simulate a younger or older account.
+    // Demo account age. Every window is capped at it, so a young account shows the same history for
+    // "last 90 days" and "lifetime", like real data. Change it to simulate an older/younger account.
     private const val ACCOUNT_AGE_DAYS = 547 // ~1.5 years
 
-    // Days of history each period covers, each capped at the account's age (see [ACCOUNT_AGE_DAYS]).
-    // Lifetime is simply the full age; the shorter windows are their nominal length until the account
-    // is younger than that, after which they collapse onto the age like the real data would.
     private val Period.days: Int
         get() = when (this) {
             Period.TODAY -> 1
@@ -125,16 +118,14 @@ internal object DemoData {
             Period.LIFETIME -> ACCOUNT_AGE_DAYS
         }.coerceAtMost(ACCOUNT_AGE_DAYS)
 
-    // Number of chart buckets per period: daily for 30 and 90 days, ~weekly for a year, ~10-day
-    // buckets for lifetime. Never more buckets than the (age-capped) window has days, so every bucket
-    // still maps to a distinct date even on a young account.
+    // Chart buckets per period, never more than the window has days so each maps to a distinct date.
     private val Period.points: Int
         get() = when (this) {
             Period.TODAY -> 1
             Period.LAST_30_DAYS -> 30
             Period.LAST_90_DAYS -> 90
             Period.LAST_365_DAYS -> 52
-            Period.LIFETIME -> days / 10 // ~10-day buckets across the lifetime span
+            Period.LIFETIME -> days / 10
         }.coerceAtMost(days)
 
     private const val DAILY_EARNINGS = 14.20
