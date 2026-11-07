@@ -113,7 +113,9 @@ internal object DemoData {
             Period.LAST_30_DAYS -> 30
             Period.LAST_90_DAYS -> 90
             Period.LAST_365_DAYS -> 365
-            Period.LIFETIME -> 540
+            // A demo account has no real launch date, so show ~1.5 years of history, derived from the
+            // year rather than hard-coded, so lifetime stays relative to the other periods.
+            Period.LIFETIME -> Period.LAST_365_DAYS.days * 3 / 2
         }
 
     // Number of chart buckets per period: daily for 30 and 90 days, ~weekly for a year, ~10-day
@@ -124,7 +126,7 @@ internal object DemoData {
             Period.LAST_30_DAYS -> 30
             Period.LAST_90_DAYS -> 90
             Period.LAST_365_DAYS -> 52
-            Period.LIFETIME -> 54
+            Period.LIFETIME -> days / 10 // ~10-day buckets across the ~1.5-year span
         }
 
     private const val DAILY_EARNINGS = 14.20
