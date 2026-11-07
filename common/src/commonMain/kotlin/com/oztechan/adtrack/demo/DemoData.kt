@@ -107,27 +107,35 @@ internal object DemoData {
         }
     }
 
+    // The one fact everything else derives from: how old the demo account is. A real reporting window
+    // can never show more history than the account has, so every period below is capped at this age —
+    // on a 10-day-old account "last 90 days", "last 365 days" and "lifetime" are all the same 10 days.
+    // Change this single value to simulate a younger or older account.
+    private const val ACCOUNT_AGE_DAYS = 547 // ~1.5 years
+
+    // Days of history each period covers, each capped at the account's age (see [ACCOUNT_AGE_DAYS]).
+    // Lifetime is simply the full age; the shorter windows are their nominal length until the account
+    // is younger than that, after which they collapse onto the age like the real data would.
     private val Period.days: Int
         get() = when (this) {
             Period.TODAY -> 1
             Period.LAST_30_DAYS -> 30
             Period.LAST_90_DAYS -> 90
             Period.LAST_365_DAYS -> 365
-            // A demo account has no real launch date, so show ~1.5 years of history, derived from the
-            // year rather than hard-coded, so lifetime stays relative to the other periods.
-            Period.LIFETIME -> Period.LAST_365_DAYS.days * 3 / 2
-        }
+            Period.LIFETIME -> ACCOUNT_AGE_DAYS
+        }.coerceAtMost(ACCOUNT_AGE_DAYS)
 
     // Number of chart buckets per period: daily for 30 and 90 days, ~weekly for a year, ~10-day
-    // buckets for lifetime. Kept <= the period's day count so every bucket maps to a distinct date.
+    // buckets for lifetime. Never more buckets than the (age-capped) window has days, so every bucket
+    // still maps to a distinct date even on a young account.
     private val Period.points: Int
         get() = when (this) {
             Period.TODAY -> 1
             Period.LAST_30_DAYS -> 30
             Period.LAST_90_DAYS -> 90
             Period.LAST_365_DAYS -> 52
-            Period.LIFETIME -> days / 10 // ~10-day buckets across the ~1.5-year span
-        }
+            Period.LIFETIME -> days / 10 // ~10-day buckets across the lifetime span
+        }.coerceAtMost(days)
 
     private const val DAILY_EARNINGS = 14.20
     private const val DAILY_IMPRESSIONS = 1_900L
