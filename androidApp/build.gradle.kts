@@ -61,7 +61,11 @@ android {
     }
 
     // Robolectric needs the merged resources/manifest to resolve a Context and screen metrics.
-    testOptions.unitTests.isIncludeAndroidResources = true
+    testOptions.unitTests.apply {
+        isIncludeAndroidResources = true
+        // Robolectric 4.17 reaches jdk.internal.access.SharedSecrets, sealed on JDK 17+.
+        all { it.jvmArgs("--add-opens=java.base/jdk.internal.access=ALL-UNNAMED") }
+    }
 }
 
 dependencies {

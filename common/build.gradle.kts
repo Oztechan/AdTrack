@@ -147,7 +147,11 @@ android {
 
         unitTests.apply {
             isIncludeAndroidResources = true
-            all { it.systemProperty("robolectric.pixelCopyRenderMode", "hardware") }
+            all {
+                it.systemProperty("robolectric.pixelCopyRenderMode", "hardware")
+                // Robolectric 4.17 reaches jdk.internal.access.SharedSecrets, sealed on JDK 17+.
+                it.jvmArgs("--add-opens=java.base/jdk.internal.access=ALL-UNNAMED")
+            }
         }
     }
 }
