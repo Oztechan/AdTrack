@@ -26,16 +26,18 @@ dependencyResolutionManagement {
 }
 
 // region SubMob shared libraries
-// Co-develop from the sibling Oztechan/SubMob checkouts when present (edits show up instantly via a
-// Gradle composite build); otherwise — CI, or a clone without the siblings — resolve the published
-// versions declared in gradle/libs.versions.toml. Substitution is explicit because vanniktech sets
-// the module group late, which the automatic composite substitution can miss.
+// Built from the submodule in submodule/, pinned to a release tag, so a library change arrives here
+// as a reviewable pointer bump instead of a published version. A clone without submodules falls
+// back to the versions in gradle/libs.versions.toml. Substitution is explicit because vanniktech
+// sets the module group late, which the automatic composite substitution can miss.
+// A composite build allows only one Android Gradle plugin version, so AdTrack and the tag it
+// points at must stay on the same one.
 listOf(
     "LogMob",
 ).forEach { dirName ->
     val artifact = dirName.lowercase()
-    val dir = file("../SubMob/$dirName")
-    if (dir.isDirectory) {
+    val dir = file("submodule/$dirName")
+    if (dir.resolve("settings.gradle.kts").isFile) {
         includeBuild(dir) {
             dependencySubstitution {
                 substitute(module("com.github.submob:$artifact")).using(project(":$artifact"))
