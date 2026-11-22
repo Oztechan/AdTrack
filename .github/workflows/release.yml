@@ -42,7 +42,7 @@ jobs:
     steps:
 
       - name: Setup Gradle Repo
-        uses: Oztechan/Global/actions/setup-gradle-repo@8610938e630b3ed86127765237fe3647b9fabd4f
+        uses: Oztechan/Global/actions/setup-gradle-repo@8610938e630b3ed86127765237fe3647b9fabd4f # develop
 
       - name: Adding secret files
         uses: ./.github/actions/add-secret-files
@@ -55,7 +55,7 @@ jobs:
         run: ./gradlew :androidApp:bundleRelease
 
       - name: Upload App Bundle
-        uses: actions/upload-artifact@v7.0.2
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: androidApp-aab
           path: androidApp/build/outputs/bundle/release/androidApp-release.aab
@@ -72,10 +72,10 @@ jobs:
     steps:
 
       - name: Clone Repo # needed for the local add-secret-files composite action
-        uses: actions/checkout@v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Download App Bundle
-        uses: actions/download-artifact@v8.0.2
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: androidApp-aab
 
@@ -87,7 +87,7 @@ jobs:
           GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
 
       - name: Upload to Google Play (internal)
-        uses: r0adkll/upload-google-play@v1.1.5
+        uses: r0adkll/upload-google-play@e738b9dd8f2476ea806d921b64aacd24f34515a5 # v1.1.5
         with:
           serviceAccountJson: service_account.json
           packageName: com.oztechan.adtrack
@@ -106,7 +106,7 @@ jobs:
     steps:
 
       - name: Setup Gradle Repo
-        uses: Oztechan/Global/actions/setup-gradle-repo@8610938e630b3ed86127765237fe3647b9fabd4f
+        uses: Oztechan/Global/actions/setup-gradle-repo@8610938e630b3ed86127765237fe3647b9fabd4f # develop
 
       - name: Adding secret files
         uses: ./.github/actions/add-secret-files
@@ -118,10 +118,10 @@ jobs:
         run: sudo xcode-select --switch /Applications/Xcode_26.6.app
 
       - name: Disable Kotlin incremental native for CI
-        uses: Oztechan/Global/actions/disable-kotlin-incremental-native@4ddf8deebb68c6630773bdff9d83f8566310b703
+        uses: Oztechan/Global/actions/disable-kotlin-incremental-native@4ddf8deebb68c6630773bdff9d83f8566310b703 # develop
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1.343.0
+        uses: ruby/setup-ruby@be3c7df29b3349ec6bcfc6b4792f1cf9f5237d18 # v1.343.0
         with:
           ruby-version: '4.0'
           bundler-cache: true
@@ -145,7 +145,7 @@ jobs:
         if: needs.GenerateGradleArtifacts.outputs.status == 'success' &&
           needs.UploadToGooglePlay.outputs.status == 'success' &&
           needs.UploadToAppStore.outputs.status == 'success'
-        uses: voxmedia/github-action-slack-notify-build@v2
+        uses: voxmedia/github-action-slack-notify-build@373da97827332b19e753c84d1e5b7937dbe0fbfa # v2
         with:
           channel: adtrack-github
           status: SUCCESS
@@ -155,7 +155,7 @@ jobs:
         if: false == (needs.GenerateGradleArtifacts.outputs.status == 'success') ||
           false == (needs.UploadToGooglePlay.outputs.status == 'success') ||
           false == (needs.UploadToAppStore.outputs.status == 'success')
-        uses: voxmedia/github-action-slack-notify-build@v2
+        uses: voxmedia/github-action-slack-notify-build@373da97827332b19e753c84d1e5b7937dbe0fbfa # v2
         with:
           channel: adtrack-github
           status: FAILED
