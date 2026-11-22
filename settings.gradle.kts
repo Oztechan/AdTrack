@@ -26,7 +26,7 @@ dependencyResolutionManagement {
 }
 
 // region SubMob shared libraries
-// Built from the submodule in submob/, pinned to a release tag, so a library change arrives here
+// Built from the submodule in submodule/, pinned to a release tag, so a library change arrives here
 // as a reviewable pointer bump instead of a published version. A clone without submodules falls
 // back to the versions in gradle/libs.versions.toml. Substitution is explicit because vanniktech
 // sets the module group late, which the automatic composite substitution can miss.
@@ -36,7 +36,7 @@ listOf(
     "LogMob",
 ).forEach { dirName ->
     val artifact = dirName.lowercase()
-    val dir = file("submob/$dirName")
+    val dir = file("submodule/$dirName")
     if (dir.resolve("settings.gradle.kts").isFile) {
         includeBuild(dir) {
             dependencySubstitution {

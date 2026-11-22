@@ -1,4 +1,4 @@
-[submodule "submob/LogMob"]
-	path = submob/LogMob
+[submodule "submodule/LogMob"]
+	path = submodule/LogMob
 	url = https://github.com/SubMob/LogMob.git
 	branch = v3.0.15
