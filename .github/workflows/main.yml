@@ -48,7 +48,7 @@ jobs:
     steps:
 
       - name: Setup Gradle Repo
-        uses: Oztechan/Global/actions/setup-gradle-repo@8610938e630b3ed86127765237fe3647b9fabd4f # develop
+        uses: Oztechan/Global/actions/setup-gradle-repo@3b97f22e81f7d532557bbc8f70621fcea33b2645 # v1.0.168
 
       - name: Detekt
         run: ./gradlew detektAll
@@ -68,7 +68,7 @@ jobs:
     steps:
 
       - name: Setup Gradle Repo
-        uses: Oztechan/Global/actions/setup-gradle-repo@8610938e630b3ed86127765237fe3647b9fabd4f # develop
+        uses: Oztechan/Global/actions/setup-gradle-repo@3b97f22e81f7d532557bbc8f70621fcea33b2645 # v1.0.168
 
       # JVM/Android only. The iOS native test binary links Crashlytics' cinterop, which forces
       # `-framework FirebaseCore` etc. — unavailable to a plain KMP test link. Same commonTest logic
@@ -110,7 +110,7 @@ jobs:
     steps:
 
       - name: Setup Gradle Repo
-        uses: Oztechan/Global/actions/setup-gradle-repo@8610938e630b3ed86127765237fe3647b9fabd4f # develop
+        uses: Oztechan/Global/actions/setup-gradle-repo@3b97f22e81f7d532557bbc8f70621fcea33b2645 # v1.0.168
 
       # Kover aggregates JVM/Android unit-test coverage at the root into build/reports/kover/report.xml.
       - name: Generate Coverage
@@ -137,7 +137,7 @@ jobs:
     steps:
 
       - name: Setup Gradle Repo
-        uses: Oztechan/Global/actions/setup-gradle-repo@8610938e630b3ed86127765237fe3647b9fabd4f # develop
+        uses: Oztechan/Global/actions/setup-gradle-repo@3b97f22e81f7d532557bbc8f70621fcea33b2645 # v1.0.168
 
       - name: Adding secret files
         uses: ./.github/actions/add-secret-files
@@ -173,7 +173,7 @@ jobs:
     steps:
 
       - name: Setup Gradle Repo
-        uses: Oztechan/Global/actions/setup-gradle-repo@8610938e630b3ed86127765237fe3647b9fabd4f # develop
+        uses: Oztechan/Global/actions/setup-gradle-repo@3b97f22e81f7d532557bbc8f70621fcea33b2645 # v1.0.168
 
       - name: Adding secret files
         uses: ./.github/actions/add-secret-files
@@ -187,7 +187,7 @@ jobs:
         run: sudo xcode-select --switch /Applications/Xcode_26.6.app
 
       - name: Disable Kotlin incremental native for CI
-        uses: Oztechan/Global/actions/disable-kotlin-incremental-native@4ddf8deebb68c6630773bdff9d83f8566310b703 # develop
+        uses: Oztechan/Global/actions/disable-kotlin-incremental-native@3b97f22e81f7d532557bbc8f70621fcea33b2645 # v1.0.168
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@be3c7df29b3349ec6bcfc6b4792f1cf9f5237d18 # v1.343.0
@@ -320,6 +320,6 @@ jobs:
       github.event_name == 'pull_request' &&
       github.event.pull_request.user.login == 'renovate[bot]' &&
       !contains(github.head_ref, 'major')
-    uses: Oztechan/Global/.github/workflows/reusable-renovate-approve.yml@bd0bde4c7b7997d28bf6f29778b0f2f46cd5133f # develop
+    uses: Oztechan/Global/.github/workflows/reusable-renovate-approve.yml@3b97f22e81f7d532557bbc8f70621fcea33b2645 # v1.0.168
     secrets:
       PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
